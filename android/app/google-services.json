@@ -1,0 +1,37 @@
+{
+  "project_info": {
+    "project_number": "863743504248",
+    "project_id": "mtm-icarm",
+    "storage_bucket": "mtm-icarm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863743504248:android:1ce3ce0654df343358e28d",
+        "android_client_info": {
+          "package_name": "com.mtm.icarm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqqXVEIYUFgkgKRreyC3UQdqnbN0ezi4g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863743504248-svlagv8um238gjs1ic9pvkr8vunu61iu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mtm.icarm"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

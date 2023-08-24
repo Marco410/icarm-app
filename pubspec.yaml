@@ -1,0 +1,154 @@
+name: icarm
+description: icarm App
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0
+
+environment:
+  sdk: '>=3.0.5 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+ 
+  flutter_localized_locales: ^2.0.3
+  http: ^0.13.3
+  provider: ^6.0.0
+  global_configuration: ^2.0.0-nullsafety.1
+  flutter_secure_storage: ^4.2.1
+  flutter_switch: ^0.3.2
+  intl: ^0.18.0
+  flutter_sfsymbols: ^2.0.0
+  card_swiper: ^1.0.4
+  shimmer: ^2.0.0
+  rxdart: ^0.27.7
+  carousel_slider: ^4.2.1
+  font_awesome_flutter: ^10.4.0
+  path_provider: ^2.0.0
+  percent_indicator: ^4.2.3
+  crypto: ^3.0.2
+  uuid: ^3.0.7
+  convert: ^3.1.0
+  flutter_keyboard_visibility: ^5.0.0
+  flutter_bloc: ^8.1.2
+  equatable: ^2.0.5
+  shared_preferences: ^2.0.20
+  cached_network_image: ^3.2.1
+  firebase_messaging: ^14.3.0
+  firebase_core: ^2.8.0
+  sqflite: ^2.0.3+1
+  get: ^4.6.5
+  animation_wrappers: ^3.0.0
+  video_player: ^2.2.3
+  chewie: ^1.5.0
+  syncfusion_flutter_pdfviewer: ^19.4.56-beta
+  flutter_html: ^2.2.1
+  flutter_platform_alert: ^0.4.0
+  audioplayers: ^5.1.0
+  lottie: 1.2.2
+  curved_navigation_bar: ^1.0.3
+  url_launcher: ^6.1.12
+
+
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.9.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/image/logoApps.png"
+
+flutter:
+
+  uses-material-design: true
+
+  fonts:
+    - family: sficonsets
+      fonts:
+        - asset: assets/icon/sficonsets.ttf
+    - family: gainers
+      fonts:
+        - asset: assets/icon/ic_gainers.ttf
+    - family: message
+      fonts:
+        - asset: assets/icon/ic_message.ttf
+    - family: tab
+      fonts:
+        - asset: assets/icon/ic_tab.ttf
+    - family: wallet
+      fonts:
+        - asset: assets/icon/ic_wallet.ttf
+    - family: tab1
+      fonts:
+        - asset: assets/icon/ic_tab1.ttf
+    - family: tab2
+      fonts:
+        - asset: assets/icon/ic_tab2.ttf
+    - family: tab3
+      fonts:
+        - asset: assets/icon/ic_tab3.ttf
+    - family: tab4
+      fonts:
+        - asset: assets/icon/ic_tab4.ttf
+    - family: tab5
+      fonts:
+        - asset: assets/icon/ic_tab5.ttf
+    - family: loser
+      fonts:
+        - asset: assets/icon/ic_loser.ttf
+    - family: Sans
+      fonts:
+        - asset: assets/font/OpenSans-Bold.ttf
+          weight: 800
+        - asset: assets/font/OpenSans-Semibold.ttf
+          weight: 600
+        - asset: assets/font/OpenSans-Regular.ttf
+          weight: 400
+        - asset: assets/font/OpenSans-Light.ttf
+          weight: 200
+    - family: Popins
+      fonts:
+        - asset: assets/font/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/font/Poppins-SemiBold.ttf
+          weight: 600
+    - family: Berlin
+      fonts:
+        - asset: assets/font/BRLNSDB.TTF
+          weight: 700
+    - family: Lemon
+      fonts:
+        - asset: assets/font/Lemon-Regular.ttf
+          weight: 400
+    - family: Gotik
+      fonts:
+        - asset: assets/font/GOTHIC.TTF
+          weight: 400
+        - asset: assets/font/GOTHICB.TTF
+          weight: 600
+    - family: Pragmatica
+      fonts:
+        - asset: assets/font/pragmatica_bold.ttf
+          weight: 500
+
+  assets:
+    - assets/cfg/
+    - assets/image/
+    - assets/image/home/
+    - assets/avatars/
+    - assets/icon/
+    - assets/sounds/
+    - assets/video/
+
+flutter_intl:
+  #se cambia a true si queremos agregar más lenguajes
+  enabled: true
+  main_locale: es
+  class_name: S
