@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'package:icarm/services/base_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:global_configuration/global_configuration.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../DB/database.dart';
@@ -140,7 +137,6 @@ class PushNotificationService extends ChangeNotifier {
   }
 
   updateFirebaseToken() async {
-    final baseService = BaseService();
     final prefs = new PreferenciasUsuario();
 
     /* final String uFirebaseUrl =

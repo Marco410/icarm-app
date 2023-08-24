@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:icarm/setting/style.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/load_data_service.dart';
 import '../../services/page_service.dart';
 
 class bottomNavBar extends StatefulWidget {
@@ -38,11 +37,7 @@ class _bottomNavBarState extends State<bottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    final loadDataService =
-        Provider.of<LoadDataService>(context, listen: false);
-
     final pageService = Provider.of<PageService>(context, listen: false);
-    loadDataService.load_data(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

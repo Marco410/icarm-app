@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
 import 'package:icarm/screen/setting/themes.dart';
 
 import 'package:icarm/generated/l10n.dart';
-import 'package:icarm/blocs/preferences_bloc.dart';
 
 import 'package:icarm/screen/screens.dart';
-import 'package:provider/provider.dart';
-
-import '../../services/auth_service.dart';
 
 import 'package:icarm/setting/style.dart';
 
+// ignore: must_be_immutable
 class setting extends StatefulWidget {
   ThemeBloc? themeBloc;
 
@@ -30,91 +25,79 @@ class _settingState extends State<setting> {
   String _img = "assets/image/setting/lightMode.png";
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PreferencesBloc, PreferencesState>(
-        builder: (context, state) {
-      return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          elevation: 0.2,
-          iconTheme: IconThemeData(
-              color: Theme.of(context).textSelectionTheme.selectionHandleColor),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Text(
-            S.of(context)!.settings,
-            style: TextStyle(
-                color:
-                    Theme.of(context).textSelectionTheme.selectionHandleColor,
-                fontFamily: "Popins",
-                fontSize: 17.0),
-          ),
-          systemOverlayStyle: SystemUiOverlayStyle.light,
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 0.2,
+        iconTheme: IconThemeData(
+            color: Theme.of(context).textSelectionTheme.selectionHandleColor),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          S.of(context)!.settings,
+          style: TextStyle(
+              color: Theme.of(context).textSelectionTheme.selectionHandleColor,
+              fontFamily: "Popins",
+              fontSize: 17.0),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  ///
-                  /// Change image header and theme color if user click image
-                  ///
-                  if (theme == true) {
-                    setState(() {
-                      _img = "assets/image/setting/nightMode.png";
-                      theme = false;
-                    });
-                    themeBloc.selectedTheme.add(_buildLightTheme());
-                  } else {
-                    themeBloc.selectedTheme.add(_buildDarkTheme());
-                    setState(() {
-                      theme = true;
-                      _img = "assets/image/setting/lightMode.png";
-                    });
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: Container(
-                    height: 125.0,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        image: DecorationImage(
-                            image: AssetImage(_img), fit: BoxFit.cover)),
-                  ),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            InkWell(
+              onTap: () {
+                ///
+                /// Change image header and theme color if user click image
+                ///
+                if (theme == true) {
+                  setState(() {
+                    _img = "assets/image/setting/nightMode.png";
+                    theme = false;
+                  });
+                  themeBloc.selectedTheme.add(_buildLightTheme());
+                } else {
+                  themeBloc.selectedTheme.add(_buildDarkTheme());
+                  setState(() {
+                    theme = true;
+                    _img = "assets/image/setting/lightMode.png";
+                  });
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                child: Container(
+                  height: 125.0,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      image: DecorationImage(
+                          image: AssetImage(_img), fit: BoxFit.cover)),
                 ),
               ),
-              /* 
+            ),
+            /* 
               SizedBox(
                 height: 20.0,
               ),
               listSetting("SIGNAL NOTIFICATION", "Enabled"), */
-              SizedBox(
-                height: 10.0,
-              ),
-              InkWell(
-                onTap: () => _mostrarAlert(context),
-                child: listSetting(S.of(context)!.languaje,
-                    _localizeLocale(context, state.locale)),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              InkWell(
-                onTap: () {
-                  final authService =
-                      Provider.of<AuthService>(context, listen: false);
-                  authService.logout();
-                  Navigator.of(context).pushReplacement(PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => new login()));
-                },
-                child:
-                    listSetting(S.of(context)!.sesion, S.of(context)!.signOut),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
+            SizedBox(
+              height: 10.0,
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                    PageRouteBuilder(pageBuilder: (_, __, ___) => new login()));
+              },
+              child: listSetting(S.of(context)!.sesion, S.of(context)!.signOut),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
 
-              /* ///
+            /* ///
               /// Navigate to theme screen
               ///
               InkWell(
@@ -123,11 +106,10 @@ class _settingState extends State<setting> {
                         pageBuilder: (_, __, ___) => new seeAllTemplate()));
                   },
                   child: listSetting("UI KIT WALLET", "See all template")), */
-            ],
-          ),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
   Widget listSetting(String header, String title) {
@@ -224,8 +206,6 @@ class _settingState extends State<setting> {
 
   void _mostrarAlert(BuildContext context) {
     String _vista = S.of(context)!.select;
-    PreferencesBloc pref;
-    final preferencesBloc = context.read<PreferencesBloc>();
     showDialog(
         context: context,
         builder: (context) {
@@ -241,13 +221,7 @@ class _settingState extends State<setting> {
                             value: e.toString(),
                           ))
                       .toList(),
-                  onChanged: (_value) {
-                    setState(() {
-                      preferencesBloc
-                          .add(ChangeLocale(Locale(_value.toString())));
-                      Navigator.of(context).pop();
-                    });
-                  },
+                  onChanged: (_value) {},
                   hint: Text(_vista),
                 ),
               ],
@@ -262,6 +236,7 @@ class _settingState extends State<setting> {
   }
 
   String _localizeLocale(BuildContext context, Locale locale) {
+    // ignore: unnecessary_null_comparison
     if (locale == null) {
       String local =
           Locale(Localizations.localeOf(context).toString()).toString();

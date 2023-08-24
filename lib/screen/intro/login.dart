@@ -15,8 +15,6 @@ import 'package:icarm/generated/l10n.dart';
 import 'package:icarm/services/notification_service.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/auth_service.dart';
-
 class login extends StatefulWidget {
   login();
   @override
@@ -237,30 +235,8 @@ class _loginState extends State<login> {
                                   borderRadius:
                                       new BorderRadius.circular(20.0))),
                           onPressed: () async {
-                            final authService = Provider.of<AuthService>(
-                                context,
-                                listen: false);
                             if (_formKey.currentState!.validate()) {
-                              try {
-                                final result =
-                                    await InternetAddress.lookup('google.com');
-                                if (result.isNotEmpty &&
-                                    result[0].rawAddress.isNotEmpty) {
-                                  final Map<String, dynamic> resp =
-                                      await authService.login(
-                                          _emailController.text,
-                                          _passwordController.text);
-                                  if (!resp['error']) {
-                                    Navigator.of(context).pushReplacement(
-                                        PageRouteBuilder(
-                                            pageBuilder: (_, __, ___) =>
-                                                bottomNavBar()));
-                                  } else {
-                                    NotificationService.showSnackBarError(
-                                        resp['message'], context);
-                                  }
-                                }
-                              } on SocketException catch (_) {
+                              try {} on SocketException catch (_) {
                                 print('not connected');
                                 NotificationService.showSnackBarError(
                                     S.of(context)!.checkConection, context);

@@ -3,14 +3,9 @@
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:icarm/repositories/preferences_repository_impl.dart';
 import 'package:icarm/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:icarm/screen/splash/splash_screen.dart';
-import 'package:icarm/services/auth_service.dart';
-import 'package:icarm/services/base_service.dart';
-import 'package:icarm/services/load_data_service.dart';
 import 'package:icarm/services/notification_service.dart';
 import 'package:icarm/services/page_service.dart';
 import 'package:icarm/services/push_notifications_service.dart';
@@ -21,12 +16,9 @@ import 'package:icarm/share_prefs/prefs_usuario.dart';
 import 'package:provider/provider.dart';
 import 'package:icarm/generated/l10n.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:icarm/blocs/preferences_bloc.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
 import 'package:icarm/screen/screens.dart';
-import 'package:global_configuration/global_configuration.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'DB/database.dart';
@@ -40,33 +32,17 @@ void main() async {
   await PushNotificationService.initializeApp(
       DefaultFirebaseConfig.platformOptions);
   //se cargan las preferencias de idioma
-  final preferencesRepository = PreferencesRepositoryImpl();
 
-  final preferencesBloc = PreferencesBloc(
-    preferencesRepository: preferencesRepository,
-    initialLocale: await preferencesRepository.locale,
-  );
   //Cargar el archivo de configuraciones en assets/cfg
-  await GlobalConfiguration().loadFromAsset("config");
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(
-        create: (context) => preferencesBloc,
-      ),
-    ],
-    child: AppState(),
-  ));
+  runApp(AppState());
 }
 
 class AppState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => AuthService()),
-      ChangeNotifierProvider(create: (_) => BaseService()),
       ChangeNotifierProvider(create: (_) => RadioService()),
       ChangeNotifierProvider(create: (_) => PushNotificationService()),
-      ChangeNotifierProvider(create: (_) => LoadDataService()),
       ChangeNotifierProvider(create: (_) => PageService()),
     ], child: myApp());
   }
@@ -140,37 +116,27 @@ class _myAppState extends State<myApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PreferencesBloc, PreferencesState>(
-        builder: (context, state) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-
-      /// StreamBuilder for themeBloc
-      return StreamBuilder<ThemeData>(
-        initialData: _themeBloc.initialTheme().data,
-        stream: _themeBloc.themeDataStream,
-        builder: (BuildContext context, AsyncSnapshot<ThemeData> snapshot) {
-          return MaterialApp(
-            title: 'ICARM',
-            theme: snapshot.data,
-            debugShowCheckedModeBanner: false,
-            scaffoldMessengerKey: NotificationService.messengerkey,
-            home: SplashScreen(),
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              S.delegate,
-              LocaleNamesLocalizationsDelegate(),
-            ],
-            supportedLocales: S.delegate.supportedLocales,
-            locale: state.locale,
-            routes: PageRoutes().routes(),
-          );
-        },
-      );
-    });
+    return StreamBuilder<ThemeData>(
+      initialData: _themeBloc.initialTheme().data,
+      stream: _themeBloc.themeDataStream,
+      builder: (BuildContext context, AsyncSnapshot<ThemeData> snapshot) {
+        return MaterialApp(
+          title: 'ICARM',
+          theme: snapshot.data,
+          debugShowCheckedModeBanner: false,
+          scaffoldMessengerKey: NotificationService.messengerkey,
+          home: SplashScreen(),
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            S.delegate,
+            LocaleNamesLocalizationsDelegate(),
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          routes: PageRoutes().routes(),
+        );
+      },
+    );
   }
 }

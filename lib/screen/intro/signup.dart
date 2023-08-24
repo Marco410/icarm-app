@@ -5,7 +5,6 @@ import 'package:icarm/screen/setting/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:icarm/setting/style.dart';
 import 'package:icarm/generated/l10n.dart';
-import 'package:icarm/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 class signUp extends StatefulWidget {
@@ -147,9 +146,6 @@ class _signUpState extends State<signUp> {
                                   borderRadius:
                                       new BorderRadius.circular(20.0))),
                           onPressed: () async {
-                            final authService = Provider.of<AuthService>(
-                                context,
-                                listen: false);
                             if (_formKey.currentState!.validate()) {
                               /* final String resp = await authService.createUser(
                                   _emailController.text,

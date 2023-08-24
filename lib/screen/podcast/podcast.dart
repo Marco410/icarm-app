@@ -1,10 +1,6 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:provider/provider.dart';
-
-import '../../services/radio_service.dart';
 
 class PodcastPage extends StatefulWidget {
   const PodcastPage({
@@ -41,7 +37,7 @@ class _PodcastPageState extends State<PodcastPage> {
               data: '''
               <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" style="border-radius:100px" src="https://embed.podcasts.apple.com/mx/podcast/amor-restauraci%C3%B3n-morelia/id1540637772" width="100%" height="${MediaQuery.of(context).size.height * 0.70}"  allow="autoplay; clipboard-write; encrypted-media;" loading="lazy"  ></iframe>
             ''',
-              style: {"footer": Style(display: Display.NONE)},
+              style: {"footer": Style(display: Display.none)},
             ),
           ),
         ),
