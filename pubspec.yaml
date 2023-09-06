@@ -17,7 +17,6 @@ dependencies:
  
   flutter_localized_locales: ^2.0.3
   http: ^0.13.3
-  provider: ^6.0.0
   global_configuration: ^2.0.0-nullsafety.1
   intl: ^0.18.0
   flutter_sfsymbols: ^2.0.0
@@ -28,8 +27,8 @@ dependencies:
   flutter_bloc: ^8.1.2
   shared_preferences: ^2.0.20
   cached_network_image: ^3.2.1
-  firebase_messaging: ^14.3.0
-  firebase_core: ^2.8.0
+  firebase_messaging: ^14.6.7
+  firebase_core: ^2.15.1
   sqflite: ^2.0.3+1
   get: ^4.6.5
   animation_wrappers: ^3.0.0
@@ -42,7 +41,12 @@ dependencies:
   lottie: ^2.6.0
   curved_navigation_bar: ^1.0.3
   url_launcher: ^6.1.12
-
+  go_router: ^10.1.0
+  flutter_riverpod: ^2.3.7
+  bot_toast: ^4.0.4
+  internet_connection_checker: ^1.0.0+1
+  flutter_svg: ^2.0.7
+  accordion: ^2.6.0
 
   
 dev_dependencies:
@@ -63,75 +67,12 @@ flutter:
     - family: sficonsets
       fonts:
         - asset: assets/icon/sficonsets.ttf
-    - family: gainers
-      fonts:
-        - asset: assets/icon/ic_gainers.ttf
-    - family: message
-      fonts:
-        - asset: assets/icon/ic_message.ttf
-    - family: tab
-      fonts:
-        - asset: assets/icon/ic_tab.ttf
-    - family: wallet
-      fonts:
-        - asset: assets/icon/ic_wallet.ttf
-    - family: tab1
-      fonts:
-        - asset: assets/icon/ic_tab1.ttf
-    - family: tab2
-      fonts:
-        - asset: assets/icon/ic_tab2.ttf
-    - family: tab3
-      fonts:
-        - asset: assets/icon/ic_tab3.ttf
-    - family: tab4
-      fonts:
-        - asset: assets/icon/ic_tab4.ttf
-    - family: tab5
-      fonts:
-        - asset: assets/icon/ic_tab5.ttf
-    - family: loser
-      fonts:
-        - asset: assets/icon/ic_loser.ttf
-    - family: Sans
-      fonts:
-        - asset: assets/font/OpenSans-Bold.ttf
-          weight: 800
-        - asset: assets/font/OpenSans-Semibold.ttf
-          weight: 600
-        - asset: assets/font/OpenSans-Regular.ttf
-          weight: 400
-        - asset: assets/font/OpenSans-Light.ttf
-          weight: 200
-    - family: Popins
-      fonts:
-        - asset: assets/font/Poppins-Regular.ttf
-          weight: 400
-        - asset: assets/font/Poppins-SemiBold.ttf
-          weight: 600
-    - family: Berlin
-      fonts:
-        - asset: assets/font/BRLNSDB.TTF
-          weight: 700
-    - family: Lemon
-      fonts:
-        - asset: assets/font/Lemon-Regular.ttf
-          weight: 400
-    - family: Gotik
-      fonts:
-        - asset: assets/font/GOTHIC.TTF
-          weight: 400
-        - asset: assets/font/GOTHICB.TTF
-          weight: 600
-    - family: Pragmatica
-      fonts:
-        - asset: assets/font/pragmatica_bold.ttf
-          weight: 500
 
   assets:
     - assets/cfg/
     - assets/image/
     - assets/image/home/
+    - assets/image/events/
     - assets/avatars/
     - assets/icon/
     - assets/sounds/

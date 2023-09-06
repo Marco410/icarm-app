@@ -3,25 +3,18 @@
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:icarm/routes/routes.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:icarm/screen/splash/splash_screen.dart';
-import 'package:icarm/services/notification_service.dart';
-import 'package:icarm/services/page_service.dart';
-import 'package:icarm/services/push_notifications_service.dart';
-import 'package:icarm/services/radio_service.dart';
-import 'package:icarm/setting/firebase_config.dart';
-
-import 'package:icarm/share_prefs/prefs_usuario.dart';
-import 'package:provider/provider.dart';
-import 'package:icarm/generated/l10n.dart';
-
+import 'package:icarm/config/services/notification_ui_service.dart';
+import 'package:icarm/config/setting/firebase_config.dart';
+import 'package:icarm/config/share_prefs/prefs_usuario.dart';
+import 'package:icarm/config/generated/l10n.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-
-import 'package:icarm/screen/screens.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'DB/database.dart';
+import 'config/DB/database.dart';
+import 'presentation/providers/providers.dart';
+import 'package:bot_toast/bot_toast.dart';
+import 'presentation/routes/app_router.dart';
 
 /// Run first apps open
 void main() async {
@@ -29,65 +22,47 @@ void main() async {
   //se carga la clase con unica instancia de preferencias de usuario
   final prefs = new PreferenciasUsuario();
   await prefs.initPrefs();
-  await PushNotificationService.initializeApp(
-      DefaultFirebaseConfig.platformOptions);
+
+  /*  await PushNotificationService.initializeApp(
+      DefaultFirebaseConfig.platformOptions); */
   //se cargan las preferencias de idioma
 
-  //Cargar el archivo de configuraciones en assets/cfg
-  runApp(AppState());
+  runApp(ProviderScope(child: AppState()));
 }
 
-class AppState extends StatelessWidget {
+class AppState extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => RadioService()),
-      ChangeNotifierProvider(create: (_) => PushNotificationService()),
-      ChangeNotifierProvider(create: (_) => PageService()),
-    ], child: myApp());
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(firebaseInitProvider(DefaultFirebaseConfig.platformOptions));
+
+    return myApp();
   }
 }
 
-class myApp extends StatefulWidget {
+class myApp extends ConsumerStatefulWidget {
   myApp({Key? key}) : super(key: key);
 
   _myAppState createState() => _myAppState();
 }
 
-class _myAppState extends State<myApp> {
-  late ThemeBloc _themeBloc;
+class _myAppState extends ConsumerState<myApp> {
   final GlobalKey<NavigatorState> navigatorKey =
       new GlobalKey<NavigatorState>();
   final GlobalKey<ScaffoldMessengerState> messengerKey =
       new GlobalKey<ScaffoldMessengerState>();
   var databaseFuture = DatabaseHelper.db.database;
-  PushNotificationService? notiService = PushNotificationService();
 
   @override
   void initState() {
     PushNotificationService.messagesStream.listen((message) {
       print("message.notification!.title");
-      print(message.notification!.title);
+      print(message.notification!);
       get_notis(message);
 
-      NotificationService.showSnackBarSuccess("Nueva notificación", context);
-
-      final snackBar = SnackBar(
-          backgroundColor: Theme.of(context).secondaryHeaderColor,
-          elevation: 5.0,
-          behavior: SnackBarBehavior.floating,
-          action: SnackBarAction(
-              label: "Ver",
-              textColor: Colors.white,
-              onPressed: () {
-                //navigatorKey.currentState!.pushNamed(PageRoutes.noti);
-              }),
-          content: Text(
-              "Nueva notificación: " + message.notification!.title.toString()));
-      messengerKey.currentState?.showSnackBar(snackBar);
+      NotificationUI.instance.notificationAlert(
+          message.notification!.title!, message.notification!.body!);
     });
     super.initState();
-    _themeBloc = ThemeBloc();
   }
 
   Future get_notis(RemoteMessage message) async {
@@ -116,27 +91,22 @@ class _myAppState extends State<myApp> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ThemeData>(
-      initialData: _themeBloc.initialTheme().data,
-      stream: _themeBloc.themeDataStream,
-      builder: (BuildContext context, AsyncSnapshot<ThemeData> snapshot) {
-        return MaterialApp(
-          title: 'ICARM',
-          theme: snapshot.data,
-          debugShowCheckedModeBanner: false,
-          scaffoldMessengerKey: NotificationService.messengerkey,
-          home: SplashScreen(),
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            S.delegate,
-            LocaleNamesLocalizationsDelegate(),
-          ],
-          supportedLocales: S.delegate.supportedLocales,
-          routes: PageRoutes().routes(),
-        );
-      },
+    final appRouter = ref.watch(appRouterProvider);
+
+    return MaterialApp.router(
+      title: 'ICARM',
+      debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: NotificationService.messengerkey,
+      routerConfig: appRouter,
+      builder: BotToastInit(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        S.delegate,
+        LocaleNamesLocalizationsDelegate(),
+      ],
+      supportedLocales: S.delegate.supportedLocales,
     );
   }
 }
