@@ -3,6 +3,8 @@ import 'package:icarm/config/services/http_general_service.dart';
 import 'package:icarm/config/setting/api.dart';
 import 'package:icarm/presentation/models/YoutubeModel.dart';
 
+import '../../config/setting/const.dart';
+
 final isLiveProvider = StateProvider.autoDispose<List<Item>>((ref) {
   return [];
 });
@@ -12,9 +14,9 @@ final liveProvider = FutureProvider.autoDispose<void>((ref) async {
       url: YOUTUBE_API,
       authorization: false,
       params: {
-        "key": "AIzaSyDm0BpLBLeitra16WD2X8DHZene06mJ_KM",
+        "key": GOOGLE_KEY,
         "eventType": "live",
-        "channelId": "UCWiKT0FHEO4wIVJhHJMECWA",
+        "channelId": CHANNEL_YOUTUBE_ID,
         "type": "video",
       });
   YoutubeModel isLive = youtubeModelFromJson(resp);

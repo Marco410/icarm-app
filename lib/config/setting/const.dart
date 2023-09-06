@@ -20,3 +20,6 @@ const String CREATE_NOTI_TABLE = '''
           seen TEXT
         )
     ''';
+
+const String GOOGLE_KEY = "AIzaSyDm0BpLBLeitra16WD2X8DHZene06mJ_KM";
+const String CHANNEL_YOUTUBE_ID = "UCWiKT0FHEO4wIVJhHJMECWA";
