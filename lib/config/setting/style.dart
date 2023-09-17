@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ColorStyle {
   static final primaryColor = Color(0xFF2A2A2A); //#D90000
   static final secondaryColor = Color(0xffA9BFE9);
+  static final thirdColor = Color(0xff454FD8);
   static const hintDarkColor = Color(0xFF8F9098);
 
   static final background = Colors.white;
@@ -18,7 +19,7 @@ class TxtStyle {
       fontFamily: "Montserrat",
       fontSize: 23.0,
       fontWeight: FontWeight.w800,
-      color: Colors.white,
+      color: ColorStyle.primaryColor,
       letterSpacing: 1.5);
 
   static final headerWhiteStyle = TextStyle(
@@ -33,6 +34,12 @@ class TxtStyle {
       fontSize: 13.0,
       color: Colors.white,
       fontWeight: FontWeight.w400);
+
+  static final labelText = TextStyle(
+      fontFamily: "Montserrat",
+      fontSize: 14,
+      color: ColorStyle.primaryColor,
+      fontWeight: FontWeight.bold);
 
   static final hintText = TextStyle(
       fontFamily: "Montserrat",

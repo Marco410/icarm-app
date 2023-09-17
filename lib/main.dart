@@ -14,7 +14,7 @@ import 'package:sqflite/sqflite.dart';
 import 'config/DB/database.dart';
 import 'presentation/providers/providers.dart';
 import 'package:bot_toast/bot_toast.dart';
-import 'presentation/routes/app_router.dart';
+import 'config/routes/app_router.dart';
 
 /// Run first apps open
 void main() async {
@@ -23,8 +23,6 @@ void main() async {
   final prefs = new PreferenciasUsuario();
   await prefs.initPrefs();
 
-  /*  await PushNotificationService.initializeApp(
-      DefaultFirebaseConfig.platformOptions); */
   //se cargan las preferencias de idioma
 
   runApp(ProviderScope(child: AppState()));

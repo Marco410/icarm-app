@@ -20,9 +20,6 @@ Future<String?> httpBase(
   if (await InternetConnectionChecker().hasConnection) {
     var url = Uri.https(base_url, path, params);
 
-    print("url");
-    print(url);
-
     headers ??= {};
     headers["Content-type"] = "application/json";
     headers["Accept"] = "*/*";

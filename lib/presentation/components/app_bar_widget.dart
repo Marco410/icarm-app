@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/style.dart';
 
 class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
+  final bool backButton;
   const AppBarWidget({
+    this.backButton = false,
     super.key,
   });
 
@@ -22,14 +25,23 @@ class _AppBarWidgetState extends State<AppBarWidget> {
     return AppBar(
         backgroundColor: ColorStyle.whiteBacground,
         elevation: 0,
-        leading: InkWell(
-          onTap: () => Scaffold.of(context).openDrawer(),
-          child: Icon(
-            Icons.menu_rounded,
-            color: ColorStyle.primaryColor,
-            size: 34,
-          ),
-        ),
+        leading: (widget.backButton)
+            ? InkWell(
+                onTap: () => context.pop(),
+                child: Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: ColorStyle.primaryColor,
+                  size: 26,
+                ),
+              )
+            : InkWell(
+                onTap: () => Scaffold.of(context).openDrawer(),
+                child: Icon(
+                  Icons.menu_rounded,
+                  color: ColorStyle.primaryColor,
+                  size: 34,
+                ),
+              ),
         title: ImageIcon(
           AssetImage("assets/image/logo.png"),
           color: Colors.black,

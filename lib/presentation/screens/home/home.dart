@@ -11,7 +11,7 @@ import 'package:icarm/presentation/components/content_ad_widget.dart';
 import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/video_home_widget.dart';
 import 'package:icarm/presentation/providers/youtube_provider.dart';
-import 'package:icarm/presentation/routes/routes.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:icarm/config/setting/style.dart';
 
@@ -77,18 +77,16 @@ class _HomeState extends ConsumerState<Home> {
       ),
       ContentAdWidget(
         image: "assets/image/home/iglesia.png",
-        title: "Bienvenidos",
+        title: "Somos",
         subTitle: "A&R Morelia",
         buttonText: "Conócenos",
-        actionButton: () {
-          Navigator.pushReplacementNamed(context, PageRoutes.home);
-        },
+        actionButton: () {},
       ),
       ContentAdWidget(
         image: "assets/image/home/podcast.png",
         title: "Escucha nuestro podcast",
         subTitle: "Podcast",
-        buttonText: "Escuchalo",
+        buttonText: "Escuchar",
         actionButton: () {},
       ),
       ContentAdWidget(
@@ -96,6 +94,13 @@ class _HomeState extends ConsumerState<Home> {
         title: "Transmisiones en vivo",
         subTitle: "Predicas online",
         buttonText: "Ver más",
+        actionButton: () {},
+      ),
+      ContentAdWidget(
+        image: "assets/image/home/noches.png",
+        title: "Noches de Restauración",
+        subTitle: "Sábados",
+        buttonText: "Escuchar",
         actionButton: () {},
       ),
     ];
@@ -137,7 +142,8 @@ class _HomeState extends ConsumerState<Home> {
                       children: [
                         Text(
                           "¡Bienvenidos!",
-                          style: TxtStyle.headerStyle,
+                          style: TxtStyle.headerStyle
+                              .copyWith(color: Colors.white),
                         ),
                         SizedBox(
                           height: 15,
@@ -159,130 +165,190 @@ class _HomeState extends ConsumerState<Home> {
                       ],
                     )),
               ),
-              CarouselWidget(
-                  textItems: textItems,
-                  controller: _controllerC,
-                  current: _current,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _current = index;
-                    });
-                  },
-                  image: "assets/image/home/iglesia.png",
-                  mainColor: ColorStyle.primaryColor),
               Container(
-                height: 45,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          blurRadius: 4,
+                          spreadRadius: -3,
+                          offset: Offset(0, -1))
+                    ],
+                    borderRadius: BorderRadius.circular(15)),
+                margin: EdgeInsets.all(20),
+                padding: EdgeInsets.symmetric(vertical: 40, horizontal: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    FadedScaleAnimation(
-                      child: LinkWidget(
-                        text: 'Online',
-                      ),
+                    Text(
+                      "HORARIOS",
+                      style: TxtStyle.headerStyle
+                          .copyWith(color: ColorStyle.primaryColor),
                     ),
-                    FadedScaleAnimation(
-                      child: LinkWidget(
-                        onTap: () {},
-                        text: 'Beteles',
-                      ),
+                    SizedBox(
+                      height: 15,
                     ),
-                    FadedScaleAnimation(
-                      child: LinkWidget(
-                        text: 'Banco de Alimentos',
-                      ),
+                    Text(
+                      "Servicios generales",
+                      style: TxtStyle.labelText.copyWith(fontSize: 17),
                     ),
-                    FadedScaleAnimation(
-                      child: LinkWidget(
-                        text: 'Retiro de Transformación',
-                      ),
+                    SizedBox(
+                      height: 5,
                     ),
-                    FadedScaleAnimation(
-                      child: LinkWidget(
-                        text: 'Refugios',
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Domingos",
+                          style: TxtStyle.labelText,
+                        ),
+                        Text(" - 11:30 AM"),
+                      ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Miércoles",
+                          style: TxtStyle.labelText,
+                        ),
+                        Text(" - 07:15 PM"),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Jóvenes",
+                      style: TxtStyle.labelText.copyWith(fontSize: 17),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Viernes"),
+                        Text(" - 06:15 PM"),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Noches de Restauración",
+                      style: TxtStyle.labelText.copyWith(fontSize: 17),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Sábados"),
+                        Text(" - 08:30 PM"),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CarouselWidget(
+                        textItems: textItems,
+                        controller: _controllerC,
+                        current: _current,
+                        size: 0.22,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        },
+                        image: "assets/image/home/iglesia.png",
+                        mainColor: ColorStyle.primaryColor),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.info_outline),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                  width: 1.5, color: ColorStyle.primaryColor)),
+                          child: Row(
+                            children: [
+                              Icon(Icons.notifications),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("Recordarme")
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.share_rounded)
+                      ],
+                    )
                   ],
                 ),
               ),
               Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    image: DecorationImage(
-                        colorFilter:
-                            ColorFilter.mode(Colors.black54, BlendMode.darken),
-                        image: AssetImage("assets/image/home/iglesia.png"),
-                        fit: BoxFit.cover),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FadedScaleAnimation(
+                margin:
+                    EdgeInsets.only(top: 20, bottom: 50, left: 15, right: 15),
+                child: Column(
+                  children: [
+                    Text(
+                      "VISITANOS",
+                      style: TxtStyle.headerStyle
+                          .copyWith(color: ColorStyle.primaryColor),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Puerto de Coatzacoalcos #95Col. Tinijaro Morelia, Michoacán CP. 58337",
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        //https://www.google.com/maps/place/Amor+y+Restauración+Morelia/@19.6981592,-101.2609889,17z/data=!4m6!3m5!1s0x842d09518248bf2d:0xcb807614fc0e69f1!8m2!3d19.698084!4d-101.258508!16s%2Fg%2F1pty9q8v7?hl=es-ES&entry=tts&shorturl=1
+                        final Uri toLaunch = Uri(
+                            scheme: 'https',
+                            host: 'www.google.com',
+                            path:
+                                'maps/place/Amor+y+Restauración+Morelia/@19.6981592,-101.2609889,17z/data=!4m6!3m5!1s0x842d09518248bf2d:0xcb807614fc0e69f1!8m2!3d19.698084!4d-101.258508!16s%2Fg%2F1pty9q8v7',
+                            queryParameters: {
+                              "hl": "es-ES",
+                              "entry": "tts",
+                              "shorturl": "1"
+                            });
+
+                        launchUrl(toLaunch,
+                            mode: LaunchMode.externalApplication);
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+                        decoration: BoxDecoration(
+                            color: ColorStyle.primaryColor,
+                            borderRadius: BorderRadius.circular(8)),
                         child: Text(
-                          "Bienvenidos",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30),
+                          "Abrir mapa",
+                          style: TxtStyle.labelText
+                              .copyWith(color: Colors.white, fontSize: 14),
                         ),
                       ),
-                    ],
-                  )),
-              Container(
-                padding: EdgeInsets.only(top: 15, left: 15),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Nuestros Horarios",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: 26,
-                      color: ColorStyle.primaryColor,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: 15),
-                child: Row(
-                  children: [
-                    Expanded(
-                        flex: 2,
-                        child: Container(
-                            margin: EdgeInsets.only(top: 10, right: 5, left: 5),
-                            child: FadedScaleAnimation(
-                              child: HorarioWidget(
-                                horario: "7:15pm",
-                                tipo: "General",
-                                dia: 'Miércoles',
-                              ),
-                            ))),
-                    Expanded(
-                        flex: 2,
-                        child: Container(
-                            margin: EdgeInsets.only(top: 10, right: 5, left: 5),
-                            child: FadedScaleAnimation(
-                              child: HorarioWidget(
-                                horario: "6:00pm",
-                                tipo: "Jóvenes",
-                                dia: 'Viernes',
-                              ),
-                            ))),
-                    Expanded(
-                        flex: 2,
-                        child: Container(
-                            margin: EdgeInsets.only(top: 10, right: 5, left: 5),
-                            child: FadedScaleAnimation(
-                              child: HorarioWidget(
-                                horario: "11:15am",
-                                tipo: "General",
-                                dia: 'Domingo',
-                              ),
-                            ))),
+                    )
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ),

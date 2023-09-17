@@ -341,7 +341,7 @@ class _BetelesPageState extends State<BetelesPage> {
                     Text(
                       "Encontrar un betel",
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
                       height: 10,
@@ -355,7 +355,7 @@ class _BetelesPageState extends State<BetelesPage> {
                 ),
               ),
               Expanded(
-                flex: 12,
+                flex: 16,
                 child: (loading)
                     ? Center(
                         child: CircularProgressIndicator(
@@ -462,7 +462,6 @@ class _BetelWidgetState extends State<BetelWidget> {
                     IconButton(
                         onPressed: () {
                           showMyDialog(widget.betel);
-                          print(widget.betel.first_name);
                         },
                         icon: Icon(
                           Icons.info_rounded,

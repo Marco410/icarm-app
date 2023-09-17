@@ -73,6 +73,7 @@ flutter:
     - assets/image/
     - assets/image/home/
     - assets/image/events/
+    - assets/image/online/
     - assets/avatars/
     - assets/icon/
     - assets/sounds/

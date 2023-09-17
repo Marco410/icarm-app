@@ -1,39 +1,61 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icarm/presentation/providers/providers.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 import 'package:icarm/config/setting/style.dart';
 
-import '../../providers/radio_service.dart';
+import '../../components/zcomponents.dart';
 
-class RadioPage extends StatefulWidget {
+class RadioPage extends ConsumerStatefulWidget {
   const RadioPage({
     Key? key,
   }) : super(key: key);
   @override
-  State<RadioPage> createState() => _RadioPageState();
+  ConsumerState<RadioPage> createState() => _RadioPageState();
 }
 
-class _RadioPageState extends State<RadioPage> {
-  bool loading = true;
+class _RadioPageState extends ConsumerState<RadioPage> {
+  bool loading = false;
+  final CarouselController _controllerC = CarouselController();
+  int _current = 0;
+
+  List<Widget> textItems = [
+    ContentAdWidget(
+      image: "assets/image/home/noches.png",
+      title: "Noches de Restauración",
+      subTitle: "Sábados",
+      buttonText: "Escuchar",
+      actionButton: () {},
+    ),
+    ContentAdWidget(
+      image: "assets/image/home/podcast.png",
+      title: "Escucha nuestro podcast",
+      subTitle: "Podcast",
+      buttonText: "Escuchar",
+      actionButton: () {},
+    ),
+    ContentAdWidget(
+      image: "assets/image/home/online.png",
+      title: "Transmisiones en vivo",
+      subTitle: "Predicas online",
+      buttonText: "Ver más",
+      actionButton: () {},
+    ),
+  ];
 
   void initState() {
-    final radioService = Provider.of<RadioService>(context, listen: false);
-
-    radioService.audioPlayerGet.onPlayerStateChanged.listen((event) {
-      setState(() {
-        radioService.isPlayingSet = event == PlayerState.playing;
+    Future.microtask(() {
+      final radioProvider = ref.watch(radioServiceProvider);
+      radioProvider.onPlayerStateChanged.listen((event) {
+        ref
+            .read(radioisPlayingProvider.notifier)
+            .update((state) => event == PlayerState.playing);
       });
     });
-
-    Future.delayed(Duration(milliseconds: 1000), () {
-      setState(() {
-        loading = false;
-      });
-    });
-
     super.initState();
   }
 
@@ -44,24 +66,28 @@ class _RadioPageState extends State<RadioPage> {
 
   @override
   Widget build(BuildContext context) {
-    final radioService = Provider.of<RadioService>(context);
+    ref.watch(radioServiceProvider);
+    final radioIsPlaying = ref.watch(radioisPlayingProvider);
 
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
         onTap: () async {
-          if (radioService.isPlayingGet) {
-            await radioService.audioPlayerGet.stop();
+          if (radioIsPlaying) {
+            ref.read(radioisPlayingProvider.notifier).update((state) => false);
+            await ref.refresh(radioServiceProvider).stop();
           } else {
+            ref.read(radioisPlayingProvider.notifier).update((state) => true);
             final url = "https://stream.zeno.fm/5dsk2i7levzvv";
-            await radioService.audioPlayerGet.play(UrlSource(url));
+            await ref.refresh(radioServiceProvider).play(UrlSource(url));
           }
         },
         child: Container(
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
-              color: ColorStyle.secondaryColor,
+              color: ColorStyle.whiteBacground,
+              border: Border.all(width: 8, color: Colors.black),
               boxShadow: [
                 BoxShadow(
                     color: Colors.black.withOpacity(0.4),
@@ -71,9 +97,9 @@ class _RadioPageState extends State<RadioPage> {
               ],
               borderRadius: BorderRadius.circular(100)),
           child: Icon(
-            radioService.isPlayingGet ? Icons.pause : Icons.play_arrow,
+            radioIsPlaying ? Icons.pause : Icons.play_arrow,
             size: 90,
-            color: ColorStyle.whiteBacground,
+            color: ColorStyle.primaryColor,
           ),
         ),
       ),
@@ -86,27 +112,28 @@ class _RadioPageState extends State<RadioPage> {
           height: MediaQuery.of(context).size.height,
           child: Column(
             children: [
+              Text(
+                "A&R Radio - En vivo",
+                style: TxtStyle.headerStyle
+                    .copyWith(color: ColorStyle.primaryColor, fontSize: 30),
+              ),
+              SizedBox(
+                height: 15,
+              ),
               Expanded(
                 flex: 8,
-                child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    margin: EdgeInsets.all(20),
-                    padding: EdgeInsets.all(50),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 8,
-                              spreadRadius: 0,
-                              offset: Offset(0, 0))
-                        ],
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Image.asset(
-                      "assets/image/logo.png",
-                      scale: 0.3,
-                    )),
+                child: CarouselWidget(
+                    textItems: textItems,
+                    controller: _controllerC,
+                    current: _current,
+                    size: 0.28,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    },
+                    image: "assets/image/home/iglesia.png",
+                    mainColor: ColorStyle.primaryColor),
               ),
               Expanded(
                 flex: 4,
@@ -129,7 +156,7 @@ class _RadioPageState extends State<RadioPage> {
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.normal)),
                         ),
-                        (radioService.isPlayingGet)
+                        (radioIsPlaying)
                             ? Lottie.network(
                                 "https://assets7.lottiefiles.com/packages/lf20_eN8m772nQj.json",
                                 height: 60)

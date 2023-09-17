@@ -9,6 +9,7 @@ class CarouselWidget extends StatelessWidget {
       required this.controller,
       required this.current,
       required this.mainColor,
+      required this.size,
       required this.onPageChanged});
 
   final List<Widget> textItems;
@@ -17,6 +18,7 @@ class CarouselWidget extends StatelessWidget {
   final Function onPageChanged;
   final String image;
   final Color mainColor;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class CarouselWidget extends StatelessWidget {
               autoPlay: false,
               initialPage: current,
               enlargeCenterPage: true,
-              height: MediaQuery.of(context).size.height * 0.24,
+              height: MediaQuery.of(context).size.height * size,
               animateToClosest: true,
               enlargeStrategy: CenterPageEnlargeStrategy.height,
               onPageChanged: onPageChanged as void Function(
