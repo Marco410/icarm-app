@@ -1,3 +1,5 @@
+export 'auth/login_page.dart';
+export 'auth/register.dart';
 export 'package:icarm/presentation/screens/setting/themes.dart';
 export 'package:icarm/presentation/screens/beteles/beteles.dart';
 export 'package:icarm/presentation/screens/church/church.dart';

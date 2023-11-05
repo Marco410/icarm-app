@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class ColorStyle {
   static final primaryColor = Color(0xFF2A2A2A); //#D90000
-  static final secondaryColor = Color(0xffA9BFE9);
-  static final thirdColor = Color(0xff454FD8);
+  static final secondaryColor = Color(0xff454FD8);
+  static final thirdColor = Color(0xffA9BFE9);
   static const hintDarkColor = Color(0xFF8F9098);
-
+  static const hintColor = Color(0xFFC5C6CC);
   static final background = Colors.white;
   static final fontColorLight = Color(0xFF656565);
   static final whiteBacground = Color(0xFFF4F5F7);

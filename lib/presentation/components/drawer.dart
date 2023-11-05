@@ -7,9 +7,7 @@ import 'package:icarm/presentation/components/sub_accordion_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MaterialDrawer extends StatefulWidget {
-  final String currentPage;
-
-  const MaterialDrawer({super.key, required this.currentPage});
+  const MaterialDrawer({super.key});
 
   @override
   State<MaterialDrawer> createState() => _MaterialDrawerState();

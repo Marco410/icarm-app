@@ -21,9 +21,7 @@ class _EventScreenState extends State<EventScreen> {
       appBar: AppBarWidget(
         backButton: true,
       ),
-      drawer: const MaterialDrawer(
-        currentPage: "Home",
-      ),
+      drawer: const MaterialDrawer(),
       body: Container(
         width: double.infinity,
         padding: EdgeInsets.only(top: 10, bottom: 10),

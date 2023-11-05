@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icarm/config/routes/app_router.dart';
 import 'package:icarm/config/setting/style.dart';
 
 class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final bool backButton;
+  final bool rightButtons;
   const AppBarWidget({
     this.backButton = false,
+    this.rightButtons = true,
     super.key,
   });
 
@@ -48,25 +51,32 @@ class _AppBarWidgetState extends State<AppBarWidget> {
           size: 50,
         ),
         actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              margin: EdgeInsets.only(right: 10),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.qr_code_rounded,
-                    color: Colors.black,
-                    size: 30,
+          (widget.rightButtons)
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    margin: EdgeInsets.only(right: 10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.qr_code_rounded,
+                          color: Colors.black,
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        InkWell(
+                            onTap: () {
+                              NavigationRoutes.goPerfil(context);
+                            },
+                            child:
+                                SvgPicture.asset("assets/icon/user-icon.svg")),
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  SvgPicture.asset("assets/icon/user-icon.svg"),
-                ],
-              ),
-            ),
-          ),
+                )
+              : SizedBox(),
         ]);
   }
 }

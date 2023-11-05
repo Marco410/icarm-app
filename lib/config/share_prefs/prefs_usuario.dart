@@ -16,44 +16,84 @@ class PreferenciasUsuario with ChangeNotifier {
     this._prefs = await SharedPreferences.getInstance();
   }
 
-  String get fl_usuario {
-    return _prefs.getString("fl_usuario")!;
+  String get usuarioID {
+    return _prefs.getString("usuarioID")!;
   }
 
-  set fl_usuario(String value) {
-    _prefs.setString("fl_usuario", value);
+  set usuarioID(String value) {
+    _prefs.setString("usuarioID", value);
   }
 
-  String get ds_login {
-    return _prefs.getString("ds_login")!;
+  String get nombre {
+    return _prefs.getString("nombre")!;
   }
 
-  set ds_login(String value) {
-    _prefs.setString("ds_login", value);
+  set nombre(String value) {
+    _prefs.setString("nombre", value);
   }
 
-  String get ds_nombres {
-    return _prefs.getString("ds_nombres")!;
+  String get aPaterno {
+    return _prefs.getString("aPaterno")!;
   }
 
-  set ds_nombres(String value) {
-    _prefs.setString("ds_nombres", value);
+  set aPaterno(String value) {
+    _prefs.setString("aPaterno", value);
   }
 
-  String get ds_apaterno {
-    return _prefs.getString("ds_apaterno")!;
+  String get aMaterno {
+    return _prefs.getString("aMaterno")!;
   }
 
-  set ds_apaterno(String value) {
-    _prefs.setString("ds_apaterno", value);
+  set aMaterno(String value) {
+    _prefs.setString("aMaterno", value);
   }
 
-  String get ds_email {
-    return _prefs.getString("ds_email")!;
+  String get email {
+    return _prefs.getString("email")!;
   }
 
-  set ds_email(String value) {
-    _prefs.setString("ds_email", value);
+  set email(String value) {
+    _prefs.setString("email", value);
+  }
+
+  String get fechaNacimiento {
+    return _prefs.getString("fechaNacimiento")!;
+  }
+
+  set fechaNacimiento(String value) {
+    _prefs.setString("fechaNacimiento", value);
+  }
+
+  String get telefono {
+    return _prefs.getString("telefono")!;
+  }
+
+  set telefono(String value) {
+    _prefs.setString("telefono", value);
+  }
+
+  String get sexo {
+    return _prefs.getString("sexo")!;
+  }
+
+  set sexo(String value) {
+    _prefs.setString("sexo", value);
+  }
+
+  String get pais {
+    return _prefs.getString("pais")!;
+  }
+
+  set pais(String value) {
+    _prefs.setString("pais", value);
+  }
+
+  List<String> get usuarioRol {
+    return _prefs.getStringList("usuarioRol")!;
+  }
+
+  set usuarioRol(List<String> value) {
+    _prefs.setStringList("usuarioRol", value);
   }
 
   String get ds_token_notificaciones {

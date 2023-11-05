@@ -13,19 +13,24 @@ class NotificationUI {
   // Notification warning
   void notificationWarning(String text) {
     BotToast.showNotification(
-      duration: const Duration(seconds: 3),
-      backgroundColor: Colors.amber,
+      duration: const Duration(seconds: 10),
+      backgroundColor: ColorStyle.secondaryColor,
+      borderRadius: 20.0,
+      margin: EdgeInsets.only(left: 20, right: 20, top: 20),
       leading: (cancel) => SizedBox.fromSize(
           size: const Size(40, 40),
           child: const Icon(FontAwesomeIcons.circleExclamation,
               color: Colors.white)),
-      title: (_) => Text(
-        text,
-        style:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      title: (_) => Padding(
+        padding: const EdgeInsets.all(15),
+        child: Text(
+          text,
+          style: const TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+        ),
       ),
       trailing: (cancel) => IconButton(
-        icon: const Icon(Icons.cancel, color: Colors.redAccent),
+        icon: const Icon(Icons.cancel, color: Colors.white),
         onPressed: cancel,
       ),
     );
@@ -103,7 +108,7 @@ class NotificationUI {
           width: 40,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(12)),
-          child: Image.asset("assets/image/logo.png")),
+          child: Icon(Icons.check)),
       title: (_) => Text(
         msg,
         style: const TextStyle(
@@ -120,7 +125,7 @@ class NotificationUI {
   void notificationNoInternet() {
     BotToast.showNotification(
       borderRadius: 12,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 7),
       backgroundColor: Colors.blueGrey,
       leading: (cancel) => SizedBox.fromSize(
           size: const Size(40, 40),

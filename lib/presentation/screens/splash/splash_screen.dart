@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import '../../../config/routes/app_router.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,7 +18,15 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> navigatorPage() async {
-    NavigationRoutes.goHome(context);
+    const storage = FlutterSecureStorage();
+    final prefs = PreferenciasUsuario();
+
+    String token = (await storage.read(key: "tokenAuth")) ?? '';
+    if (prefs.usuarioID.isNotEmpty || token.isNotEmpty) {
+      NavigationRoutes.goHome(context);
+    } else {
+      NavigationRoutes.goLogin(context);
+    }
   }
 
   @override

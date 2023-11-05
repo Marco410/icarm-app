@@ -27,9 +27,7 @@ class _MainHomeState extends ConsumerState<MainHome> {
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       appBar: AppBarWidget(),
-      drawer: const MaterialDrawer(
-        currentPage: "Home",
-      ),
+      drawer: const MaterialDrawer(),
       body: bodyAsync.when(
           data: (widgetBody) => widgetBody,
           error: (_, __) => const Text('Ocurrio un error'),

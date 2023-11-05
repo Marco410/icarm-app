@@ -47,6 +47,8 @@ dependencies:
   internet_connection_checker: ^1.0.0+1
   flutter_svg: ^2.0.7
   accordion: ^2.6.0
+  flutter_secure_storage: ^9.0.0
+  searchable_listview: ^2.7.1
 
   
 dev_dependencies:
@@ -76,6 +78,7 @@ flutter:
     - assets/image/online/
     - assets/avatars/
     - assets/icon/
+    - assets/logos/
     - assets/sounds/
     - assets/video/
 

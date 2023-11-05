@@ -17,7 +17,7 @@ class YoutubeLiveBannerWidget extends StatelessWidget {
       onTap: () {
         final Uri toLaunch = Uri(
             scheme: 'https',
-            host: 'www.youtube.com',
+            host: 'youtube.com',
             path: 'watch',
             queryParameters: {"v": "${lives[0].id.videoId}"});
 

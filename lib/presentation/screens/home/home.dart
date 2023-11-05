@@ -120,9 +120,9 @@ class _HomeState extends ConsumerState<Home> {
               (lives.length != 0)
                   ? YoutubeLiveBannerWidget(lives: lives)
                   : SizedBox(),
-              Image.asset(
+              /*  Image.asset(
                 "assets/image/home/event.jpg",
-              ),
+              ), */
               Container(
                 height: mediaHeight,
                 width: mediaWidth,
@@ -230,7 +230,10 @@ class _HomeState extends ConsumerState<Home> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Viernes"),
+                        Text(
+                          "Viernes",
+                          style: TxtStyle.labelText,
+                        ),
                         Text(" - 06:15 PM"),
                       ],
                     ),
@@ -247,7 +250,10 @@ class _HomeState extends ConsumerState<Home> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Sábados"),
+                        Text(
+                          "Sábados",
+                          style: TxtStyle.labelText,
+                        ),
                         Text(" - 08:30 PM"),
                       ],
                     ),
