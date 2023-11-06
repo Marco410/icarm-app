@@ -14,18 +14,12 @@ class ChurchPage extends StatefulWidget {
 }
 
 class _ChurchPageState extends State<ChurchPage> {
-  bool loading = true;
+  bool loading = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    Future.delayed(Duration(milliseconds: 1000), () {
-      setState(() {
-        loading = false;
-      });
-    });
   }
 
   @override

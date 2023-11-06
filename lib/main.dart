@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, unused_result
 
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,6 +12,7 @@ import 'package:icarm/config/generated/l10n.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:sqflite/sqflite.dart';
 import 'config/DB/database.dart';
+import 'presentation/providers/notification_provider.dart';
 import 'presentation/providers/providers.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'config/routes/app_router.dart';
@@ -84,6 +85,8 @@ class _myAppState extends ConsumerState<myApp> {
       'seen': "0"
     });
     batch.commit();
+    ref.refresh(getNotiListProvider);
+    ref.refresh(newNotiSearchProvider);
   }
 
   @override

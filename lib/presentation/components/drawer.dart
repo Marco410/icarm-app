@@ -25,7 +25,7 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
         acerca_de:
             "Deberás traer: \n -Una colchoneta o hule espuma para dormir individual.\n-Una cobija.\n-Pijama o pants cómodos para dormir.\n-Un pantalón cómodo para todo el Retiro.\n-Dos playeras o blusas.\n-Suéter o chamarra.\n-Ropa interior suficiente.\n-Toalla.\n-Artículos de aseo personal.\n-Sobre todo, un corazón dispuesto.",
         image: 'events/retiro.jpg'),
-    Event(
+    /* Event(
         title: "Aniversario",
         text: "8, 9 y 10 de Noviembre",
         image: 'events/retiro.jpg',
@@ -42,7 +42,7 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
         direccion:
             "Puerto Coatzacoalcos #91 Col. Tinijaro Morelia, Mich. México",
         acerca_de: "",
-        selected: false)
+        selected: false) */
   ];
 
   List<Online> onlines = [
@@ -132,7 +132,7 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                   title: "Online",
                   subtitle: "Accede a nuestros recursos en linea",
                   isOpen: links[1],
-                  content: ListView.builder(
+                  content: /*  ListView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.all(0),
                       physics: NeverScrollableScrollPhysics(),
@@ -151,7 +151,8 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                           image: onlines[index].image,
                           onTapContent: () {},
                         );
-                      }),
+                      }) */
+                      Text("En construcción"),
                 ),
               ),
               const SizedBox(

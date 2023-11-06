@@ -58,10 +58,13 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     margin: EdgeInsets.only(right: 10),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.qr_code_rounded,
-                          color: Colors.black,
-                          size: 30,
+                        InkWell(
+                          onTap: () => context.pushNamed('qr'),
+                          child: Icon(
+                            Icons.qr_code_rounded,
+                            color: Colors.black,
+                            size: 30,
+                          ),
                         ),
                         SizedBox(
                           width: 5,

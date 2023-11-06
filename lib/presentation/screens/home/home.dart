@@ -5,6 +5,7 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/presentation/components/carousel_widget.dart';
 import 'package:icarm/presentation/components/components.dart';
 import 'package:icarm/presentation/components/content_ad_widget.dart';
@@ -15,6 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:icarm/config/setting/style.dart';
 
+import '../../providers/home_provider.dart';
+
 class Home extends ConsumerStatefulWidget {
   Home();
 
@@ -23,7 +26,7 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home> {
   bool loadCard = true;
-  bool loading = true;
+  bool loading = false;
   Future delayedLoading = Future(() => null);
 
   late VideoPlayerController _controller;
@@ -45,13 +48,13 @@ class _HomeState extends ConsumerState<Home> {
         _controller.play();
       });
 
-    try {
+    /*  try {
       delayedLoading = Future.delayed(Duration(milliseconds: 1300), () {
         setState(() {
           loading = false;
         });
       });
-    } catch (e) {}
+    } catch (e) {} */
 
     super.initState();
   }
@@ -72,35 +75,30 @@ class _HomeState extends ConsumerState<Home> {
         image: "assets/image/home/refugio.png",
         title: "Centros de restauración",
         subTitle: "Conócelos",
-        buttonText: "Ver más",
         actionButton: () {},
       ),
       ContentAdWidget(
         image: "assets/image/home/iglesia.png",
         title: "Somos",
         subTitle: "A&R Morelia",
-        buttonText: "Conócenos",
         actionButton: () {},
       ),
       ContentAdWidget(
         image: "assets/image/home/podcast.png",
         title: "Escucha nuestro podcast",
         subTitle: "Podcast",
-        buttonText: "Escuchar",
         actionButton: () {},
       ),
       ContentAdWidget(
         image: "assets/image/home/online.png",
         title: "Transmisiones en vivo",
         subTitle: "Predicas online",
-        buttonText: "Ver más",
         actionButton: () {},
       ),
       ContentAdWidget(
         image: "assets/image/home/noches.png",
         title: "Noches de Restauración",
         subTitle: "Sábados",
-        buttonText: "Escuchar",
         actionButton: () {},
       ),
     ];
@@ -157,10 +155,14 @@ class _HomeState extends ConsumerState<Home> {
                           height: 15,
                         ),
                         CustomButton(
-                          text: "Ver predicaciones",
+                          text: "¡Escucha la radio en vivo!",
                           loading: false,
                           color: Colors.white,
-                          onTap: () {},
+                          onTap: () {
+                            ref
+                                .read(currentIndexPage.notifier)
+                                .update((state) => 3);
+                          },
                         )
                       ],
                     )),
@@ -275,29 +277,34 @@ class _HomeState extends ConsumerState<Home> {
                     SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(Icons.info_outline),
-                        Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 25),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                  width: 1.5, color: ColorStyle.primaryColor)),
-                          child: Row(
-                            children: [
-                              Icon(Icons.notifications),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text("Recordarme")
-                            ],
+                    InkWell(
+                      onTap: () => NotificationUI.instance.notificationSuccess(
+                          "¡Ya recibirás las alertas de los eventos y demás!"),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(Icons.info_outline),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 25),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                    width: 1.5,
+                                    color: ColorStyle.primaryColor)),
+                            child: Row(
+                              children: [
+                                Icon(Icons.notifications),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text("Recordarme")
+                              ],
+                            ),
                           ),
-                        ),
-                        Icon(Icons.share_rounded)
-                      ],
+                          Icon(Icons.share_rounded)
+                        ],
+                      ),
                     )
                   ],
                 ),

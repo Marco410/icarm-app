@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/api.dart';
-import 'package:sqflite/sqflite.dart';
-import '../../config/DB/database.dart';
 import '../../config/routes/app_router.dart';
 import '../../config/services/http_general_service.dart';
 import '../../config/services/notification_ui_service.dart';
@@ -81,11 +78,10 @@ final registerProvider = FutureProvider.family<void, RegisterUserData>(
     final Map<String, dynamic> resp = json.decode(decodedResp);
     if (resp["status"] == 'Success') {
       AuthService.storeData(resp);
-
       NavigationRoutes.goHome(registerUserData.context);
     } else {
-      NotificationUI.instance
-          .notificationWarning('Ocurrió un error al registrarte.');
+      NotificationUI.instance.notificationWarning(
+          'Ocurrió un error al registrarte. ${resp["description"]["message"]}');
     }
   }
 });

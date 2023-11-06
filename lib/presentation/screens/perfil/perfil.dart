@@ -1,25 +1,18 @@
 // ignore_for_file: must_be_immutable, unused_result
 
-import 'dart:async';
-import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/app_bar_widget.dart';
-import 'package:icarm/presentation/components/carousel_widget.dart';
-import 'package:icarm/presentation/components/components.dart';
-import 'package:icarm/presentation/components/content_ad_widget.dart';
 import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/drawer.dart';
-import 'package:icarm/presentation/components/video_home_widget.dart';
 import 'package:icarm/presentation/providers/auth_service.dart';
 import 'package:icarm/presentation/providers/youtube_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:video_player/video_player.dart';
 import 'package:icarm/config/setting/style.dart';
+
+import '../../providers/notification_provider.dart';
 
 class PerfilPage extends ConsumerStatefulWidget {
   PerfilPage();
@@ -42,10 +35,10 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
 
   Widget build(BuildContext context) {
     ref.watch(liveProvider);
+    ref.watch(newNotiSearchProvider);
+    final newNoti = ref.watch(newNotiProvider);
     final prefs = PreferenciasUsuario();
 
-    final mediaHeight = MediaQuery.of(context).size.height;
-    final mediaWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       appBar: AppBarWidget(
@@ -80,7 +73,8 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
               icon: 'noti.svg',
               title: 'NOTIFICACIONES',
               subtitle: 'Configura las notificaciones que recibirás.',
-              onTap: () {},
+              onTap: () => context.pushNamed('notifications'),
+              showDot: newNoti,
             ),
             MenuItemWidget(
               icon: 'kids.svg',
@@ -90,6 +84,16 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                 context.pushNamed('kids');
               },
             ),
+            (prefs.usuarioRol.contains('1') || prefs.usuarioRol.contains('5'))
+                ? MenuItemWidget(
+                    icon: 'books.svg',
+                    title: 'PASE LISTA',
+                    subtitle: 'Pasa la lista a los alumnos',
+                    onTap: () {
+                      context.pushNamed('scanner');
+                    },
+                  )
+                : SizedBox(),
             CustomButton(
               text: "Cerrar Sesión",
               onTap: () {
@@ -110,11 +114,13 @@ class MenuItemWidget extends StatelessWidget {
   final String title;
   final String subtitle;
   final Function onTap;
+  final bool showDot;
   const MenuItemWidget(
       {super.key,
       required this.icon,
       required this.title,
       required this.subtitle,
+      this.showDot = false,
       required this.onTap});
 
   @override
@@ -129,26 +135,37 @@ class MenuItemWidget extends StatelessWidget {
         )),
         child: Row(
           children: [
-            SvgPicture.asset("assets/icon/${icon}", height: 40),
-            SizedBox(
-              width: 15,
+            Expanded(
+                flex: 2,
+                child: SvgPicture.asset("assets/icon/${icon}", height: 40)),
+            Expanded(
+              flex: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TxtStyle.labelText.copyWith(fontSize: 16),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    subtitle,
+                    style: TxtStyle.hintText,
+                  )
+                ],
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TxtStyle.labelText.copyWith(fontSize: 16),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  subtitle,
-                  style: TxtStyle.hintText,
-                )
-              ],
-            )
+            (showDot)
+                ? Expanded(
+                    flex: 1,
+                    child: Icon(
+                      Icons.circle,
+                      size: 12,
+                      color: ColorStyle.secondaryColor,
+                    ))
+                : SizedBox()
           ],
         ),
       ),

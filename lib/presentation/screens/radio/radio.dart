@@ -28,21 +28,18 @@ class _RadioPageState extends ConsumerState<RadioPage> {
       image: "assets/image/home/noches.png",
       title: "Noches de Restauración",
       subTitle: "Sábados",
-      buttonText: "Escuchar",
       actionButton: () {},
     ),
     ContentAdWidget(
       image: "assets/image/home/podcast.png",
       title: "Escucha nuestro podcast",
       subTitle: "Podcast",
-      buttonText: "Escuchar",
       actionButton: () {},
     ),
     ContentAdWidget(
       image: "assets/image/home/online.png",
       title: "Transmisiones en vivo",
       subTitle: "Predicas online",
-      buttonText: "Ver más",
       actionButton: () {},
     ),
   ];
@@ -155,6 +152,14 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.normal)),
+                        ),
+                        Text(
+                          'Puede tardar algunos segundos en empezar.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold),
                         ),
                         (radioIsPlaying)
                             ? Lottie.network(

@@ -3,7 +3,9 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class BetelesPage extends StatefulWidget {
   const BetelesPage({
@@ -14,7 +16,6 @@ class BetelesPage extends StatefulWidget {
 }
 
 class _BetelesPageState extends State<BetelesPage> {
-  bool loading = true;
   List<Betel> betelesList = [
     Betel(
       img:
@@ -311,14 +312,7 @@ class _BetelesPageState extends State<BetelesPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    Future.delayed(Duration(milliseconds: 1000), () {
-      setState(() {
-        loading = false;
-      });
-    });
   }
 
   @override
@@ -356,21 +350,15 @@ class _BetelesPageState extends State<BetelesPage> {
               ),
               Expanded(
                 flex: 16,
-                child: (loading)
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          color: ColorStyle.primaryColor,
-                        ),
-                      )
-                    : SingleChildScrollView(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                            itemCount: betelesList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return BetelWidget(betelesList[index]);
-                            }),
-                      ),
+                child: SingleChildScrollView(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: betelesList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return BetelWidget(betelesList[index]);
+                      }),
+                ),
               )
             ],
           ),
@@ -409,9 +397,23 @@ class _BetelWidgetState extends State<BetelWidget> {
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
-                child: Image.network(
+                child: /* Image.network(
                   widget.betel.img,
                   scale: 2,
+                ) */
+                    CachedNetworkImage(
+                  imageUrl: widget.betel.img,
+                  placeholder: (context, url) =>
+                      LoadingStandardWidget.loadingWidget(),
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.fitWidth),
+                    ),
+                  ),
+                  height: 150,
                 ),
               ),
             ),

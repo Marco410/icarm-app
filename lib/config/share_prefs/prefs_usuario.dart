@@ -17,7 +17,7 @@ class PreferenciasUsuario with ChangeNotifier {
   }
 
   String get usuarioID {
-    return _prefs.getString("usuarioID")!;
+    return _prefs.getString("usuarioID") ?? '';
   }
 
   set usuarioID(String value) {

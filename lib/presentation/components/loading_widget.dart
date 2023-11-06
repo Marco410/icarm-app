@@ -7,7 +7,7 @@ class LoadingStandardWidget {
   static Widget loadingWidget() {
     return Center(
       child: CircularProgressIndicator(
-        color: ColorStyle.primaryColor,
+        color: ColorStyle.secondaryColor,
       ),
     );
   }

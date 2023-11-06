@@ -103,7 +103,7 @@ class _EventScreenState extends State<EventScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
+                    /* Row(
                       children: [
                         Expanded(
                           child: CustomButton(
@@ -136,7 +136,7 @@ class _EventScreenState extends State<EventScreen> {
                         size: 'sm',
                         color: ColorStyle.primaryColor,
                         textColor: Colors.white,
-                        loading: false)
+                        loading: false) */
                   ],
                 ),
               ),

@@ -13,7 +13,7 @@ class NotificationUI {
   // Notification warning
   void notificationWarning(String text) {
     BotToast.showNotification(
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 4),
       backgroundColor: ColorStyle.secondaryColor,
       borderRadius: 20.0,
       margin: EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -158,10 +158,10 @@ class NotificationUI {
                   padding: const EdgeInsets.all(10),
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                  child: ImageIcon(
-                    AssetImage("assets/icons/directorio.png"),
-                    color: ColorStyle.primaryColor,
-                    size: 1,
+                  child: Icon(
+                    Icons.warning_amber_rounded,
+                    size: 50,
+                    color: ColorStyle.secondaryColor,
                   ),
                 ),
                 Text(
@@ -196,7 +196,7 @@ class NotificationUI {
                 padding:
                     const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
                 decoration: BoxDecoration(
-                    color: ColorStyle.primaryColor,
+                    color: ColorStyle.secondaryColor,
                     borderRadius: BorderRadius.circular(10)),
                 child: const Text(
                   "Confirmar",

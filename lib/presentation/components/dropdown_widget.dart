@@ -50,6 +50,7 @@ class DropdownWidget extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
                 decoration: BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: ColorStyle.hintColor)),
                 child: Row(
