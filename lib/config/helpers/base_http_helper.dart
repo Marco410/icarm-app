@@ -14,6 +14,7 @@ Future<String?> httpBase(
     Map<String, String>? params,
     bool log = false,
     bool successMessage = false,
+    bool showNoti = true,
     bool authorization = false}) async {
   http.Response response = http.Response("", 500);
   /* try { */
@@ -58,11 +59,15 @@ Future<String?> httpBase(
     } else {
       final Map<String, dynamic> resp = json.decode(data);
 
-      if (resp["status"] != 'Success') {
-        NotificationUI.instance.notificationAlert('${resp['message']}', "");
+      if (resp["status"] == 'Success') {
+        if (showNoti) {
+          NotificationUI.instance.notificationAlert('${resp['message']}', "");
+        }
         return data;
       }
-      NotificationUI.instance.notificationError("Ocurrió un error");
+      if (showNoti) {
+        NotificationUI.instance.notificationError("Ocurrió un error");
+      }
       return data;
     }
   } else {

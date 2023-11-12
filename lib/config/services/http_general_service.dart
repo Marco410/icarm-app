@@ -11,6 +11,7 @@ class BaseHttpService {
         type: "GET",
         path: url,
         authorization: authorization,
+        showNoti: false,
         params: params);
     return (response != null) ? response : "";
   }
@@ -31,12 +32,14 @@ class BaseHttpService {
   static Future<String> basePost(
       {required String url,
       bool authorization = false,
+      bool showNoti = true,
       required Map<String, dynamic> body}) async {
     String? response = await httpBase(
         base_url: BASE_URL,
         type: "POST",
         path: url,
         authorization: authorization,
+        showNoti: showNoti,
         body: body);
     return (response != null) ? response : "";
   }

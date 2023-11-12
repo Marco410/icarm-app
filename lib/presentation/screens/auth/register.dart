@@ -63,6 +63,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     List<User> findUsersList = ref.watch(findUsersRegisterList);
+
     return GestureDetector(
       onTap: unFocusFields,
       child: Scaffold(
@@ -119,40 +120,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   ),
                   (findUsersList.length != 0)
                       ? GestureDetector(
-                          onTap: () async {
-                            final res =
-                                await showUsersRegister(context, findUsersList);
-
-                            if (res != null) {
-                              final userFinded = res[0] as User;
-
-                              print(userFinded.email);
-                              if (userFinded.email.isNotEmpty) {
-                                NotificationUI.instance.notificationWarning(
-                                    "Parece que ${userFinded.nombre} ya tiene usuario, intenta iniciar sesión con tu correo y contraseña.");
-                                return;
-                              }
-
-                              setState(() {
-                                if (userFinded.nombre.indexOf(" ").isNaN) {
-                                  nombreController.text =
-                                      "${userFinded.nombre[0].toUpperCase()}${userFinded.nombre.substring(1, userFinded.nombre.indexOf(" ")).toLowerCase()} ${userFinded.nombre[userFinded.nombre.indexOf(" ") + 1].toUpperCase()}${userFinded.nombre.substring(userFinded.nombre.indexOf(" ") + 2).toLowerCase()}";
-                                } else {
-                                  nombreController.text =
-                                      "${userFinded.nombre[0].toUpperCase()}${userFinded.nombre.substring(1).toLowerCase()}";
-                                }
-
-                                aPaternoController.text =
-                                    "${userFinded.apellidoPaterno[0].toUpperCase()}${userFinded.apellidoPaterno.substring(1).toLowerCase()}";
-                                aMaternoController.text =
-                                    "${userFinded.apellidoMaterno[0].toUpperCase()}${userFinded.apellidoMaterno.substring(1).toLowerCase()}";
-                                telefonoController.text = userFinded.telefono;
-                                nacimientoController.text =
-                                    userFinded.fechaNacimiento;
-                                user_id = userFinded.id;
-                              });
-                            }
-                          },
+                          onTap: () => selectUserFinded(),
                           child: FadedScaleAnimation(
                             child: Text(
                               "Puede que ya tengamos tu registro. Da clic aquí para obtenerlo.",
@@ -352,6 +320,45 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         a_paterno: aPaternoController.text,
         a_materno: aMaternoController.text,
         context: context)));
+    List<User> findUsersList = ref.watch(findUsersRegisterList);
+    if (findUsersList.length != 0) {
+      selectUserFinded();
+    }
+  }
+
+  selectUserFinded() async {
+    List<User> findUsersList = ref.watch(findUsersRegisterList);
+
+    final res = await showUsersRegister(context, findUsersList);
+
+    if (res != null) {
+      final userFinded = res[0] as User;
+
+      print(userFinded.email);
+      if (userFinded.email.isNotEmpty) {
+        NotificationUI.instance.notificationWarning(
+            "${userFinded.nombre} ya tenemos tu registro, intenta iniciar sesión con tu correo y contraseña.");
+        return;
+      }
+
+      setState(() {
+        if (userFinded.nombre.indexOf(" ").isNaN) {
+          nombreController.text =
+              "${userFinded.nombre[0].toUpperCase()}${userFinded.nombre.substring(1, userFinded.nombre.indexOf(" ")).toLowerCase()} ${userFinded.nombre[userFinded.nombre.indexOf(" ") + 1].toUpperCase()}${userFinded.nombre.substring(userFinded.nombre.indexOf(" ") + 2).toLowerCase()}";
+        } else {
+          nombreController.text =
+              "${userFinded.nombre[0].toUpperCase()}${userFinded.nombre.substring(1).toLowerCase()}";
+        }
+
+        aPaternoController.text =
+            "${userFinded.apellidoPaterno[0].toUpperCase()}${userFinded.apellidoPaterno.substring(1).toLowerCase()}";
+        aMaternoController.text =
+            "${userFinded.apellidoMaterno[0].toUpperCase()}${userFinded.apellidoMaterno.substring(1).toLowerCase()}";
+        telefonoController.text = userFinded.telefono;
+        nacimientoController.text = userFinded.fechaNacimiento;
+        user_id = userFinded.id;
+      });
+    }
   }
 
   unFocusFields() {

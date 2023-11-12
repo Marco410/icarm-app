@@ -25,7 +25,7 @@ class PreferenciasUsuario with ChangeNotifier {
   }
 
   String get nombre {
-    return _prefs.getString("nombre")!;
+    return _prefs.getString("nombre") ?? '';
   }
 
   set nombre(String value) {
@@ -33,7 +33,7 @@ class PreferenciasUsuario with ChangeNotifier {
   }
 
   String get aPaterno {
-    return _prefs.getString("aPaterno")!;
+    return _prefs.getString("aPaterno") ?? '';
   }
 
   set aPaterno(String value) {
@@ -41,7 +41,7 @@ class PreferenciasUsuario with ChangeNotifier {
   }
 
   String get aMaterno {
-    return _prefs.getString("aMaterno")!;
+    return _prefs.getString("aMaterno") ?? '';
   }
 
   set aMaterno(String value) {
@@ -89,7 +89,7 @@ class PreferenciasUsuario with ChangeNotifier {
   }
 
   List<String> get usuarioRol {
-    return _prefs.getStringList("usuarioRol")!;
+    return _prefs.getStringList("usuarioRol") ?? [];
   }
 
   set usuarioRol(List<String> value) {
@@ -97,7 +97,7 @@ class PreferenciasUsuario with ChangeNotifier {
   }
 
   String get ds_token_notificaciones {
-    return _prefs.getString("ds_token_notificaciones")!;
+    return _prefs.getString("ds_token_notificaciones") ?? '';
   }
 
   set ds_token_notificaciones(String value) {

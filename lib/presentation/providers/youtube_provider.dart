@@ -10,16 +10,21 @@ final isLiveProvider = StateProvider.autoDispose<List<Item>>((ref) {
 });
 
 final liveProvider = FutureProvider.autoDispose<void>((ref) async {
-  String resp = await BaseHttpService.baseGetYoutube(
-      url: YOUTUBE_API,
-      authorization: false,
-      params: {
-        "key": GOOGLE_KEY,
-        "eventType": "live",
-        "channelId": CHANNEL_YOUTUBE_ID,
-        "type": "video",
-      });
-  YoutubeModel isLive = youtubeModelFromJson(resp);
+  try {
+    String resp = await BaseHttpService.baseGetYoutube(
+        url: YOUTUBE_API,
+        authorization: false,
+        params: {
+          "key": GOOGLE_KEY,
+          "eventType": "live",
+          "channelId": CHANNEL_YOUTUBE_ID,
+          "type": "video",
+        });
+    YoutubeModel isLive = youtubeModelFromJson(resp);
 
-  ref.read(isLiveProvider.notifier).update((state) => isLive.items);
+    ref.read(isLiveProvider.notifier).update((state) => isLive.items);
+  } catch (e) {
+    print("Error youtube");
+    print(e);
+  }
 });

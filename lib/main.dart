@@ -1,7 +1,4 @@
 // ignore_for_file: must_be_immutable, unused_result
-
-import 'dart:async';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,8 +7,6 @@ import 'package:icarm/config/setting/firebase_config.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/config/generated/l10n.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-import 'package:sqflite/sqflite.dart';
-import 'config/DB/database.dart';
 import 'presentation/providers/notification_provider.dart';
 import 'presentation/providers/providers.dart';
 import 'package:bot_toast/bot_toast.dart';

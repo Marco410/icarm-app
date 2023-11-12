@@ -8,7 +8,6 @@ import 'package:icarm/config/DB/database.dart';
 import 'package:icarm/config/services/http_general_service.dart';
 import 'package:icarm/config/setting/api.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
-import 'package:icarm/presentation/providers/notification_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 final prefs = new PreferenciasUsuario();
@@ -38,13 +37,20 @@ final firebaseInitProvider =
 });
 
 final updateFirebaseTokenProvider = FutureProvider<void>((ref) async {
+  if (prefs.usuarioID == "" || prefs.ds_token_notificaciones == '') {
+    return;
+  }
+
   final Map<String, dynamic> registerUser = {
     "userId": prefs.usuarioID,
     "firebase_token": prefs.ds_token_notificaciones,
   };
 
   await BaseHttpService.basePost(
-      url: UPDATE_FIREBASE_USER_URL, authorization: false, body: registerUser);
+      url: UPDATE_FIREBASE_USER_URL,
+      authorization: false,
+      body: registerUser,
+      showNoti: false);
 });
 var databaseFuture = DatabaseHelper.db.database;
 

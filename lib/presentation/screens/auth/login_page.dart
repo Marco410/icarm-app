@@ -129,9 +129,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      "Continuar sin iniciar sesión",
-                    ),
                   ],
                 ),
                 SizedBox(

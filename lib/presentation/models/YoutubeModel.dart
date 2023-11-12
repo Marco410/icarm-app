@@ -28,7 +28,7 @@ class YoutubeModel {
         kind: json["kind"] ?? '',
         etag: json["etag"] ?? '',
         regionCode: json["regionCode"] ?? '',
-        pageInfo: PageInfo.fromJson(json["pageInfo"]),
+        pageInfo: PageInfo.fromJson(json["pageInfo"] ?? {}),
         items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
       );
 
@@ -95,8 +95,8 @@ class PageInfo {
   });
 
   factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(
-        totalResults: json["totalResults"],
-        resultsPerPage: json["resultsPerPage"],
+        totalResults: json["totalResults"] ?? 0,
+        resultsPerPage: json["resultsPerPage"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
