@@ -130,7 +130,7 @@ class _ChurchPageState extends State<ChurchPage> {
                   height: 10,
                 ),
                 Text(
-                  'Hoy a 13 años hemos experimentado un maravilloso crecimiento , pues miles de personas han venido a la salvación de Cristo , Dios a traído gente maravillosa y creativa a las filas de la iglesia; Personas que han servido a Dios con todo su corazón, personas que han vivido una transformación real y verdadera.',
+                  'Hoy a 16 años hemos experimentado un maravilloso crecimiento , pues miles de personas han venido a la salvación de Cristo , Dios a traído gente maravillosa y creativa a las filas de la iglesia; Personas que han servido a Dios con todo su corazón, personas que han vivido una transformación real y verdadera.',
                   textAlign: TextAlign.justify,
                   style: TextStyle(),
                 ),

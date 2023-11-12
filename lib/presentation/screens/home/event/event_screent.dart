@@ -92,14 +92,59 @@ class _EventScreenState extends State<EventScreen> {
                       textAlign: TextAlign.center,
                       style: TxtStyle.hintText,
                     ),
-                    SizedBox(
-                      height: 45,
-                    ),
-                    Text(
-                      "Regístrate:",
-                      textAlign: TextAlign.center,
-                      style: TxtStyle.headerStyle.copyWith(fontSize: 20),
-                    ),
+                    LineWidget(),
+                    (widget.event.invitados.isNotEmpty)
+                        ? Column(
+                            children: [
+                              Text(
+                                "Invitados especiales:",
+                                textAlign: TextAlign.center,
+                                style:
+                                    TxtStyle.headerStyle.copyWith(fontSize: 20),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              SizedBox(
+                                height: 300,
+                                child: ListView.builder(
+                                  itemCount: widget.event.invitados.length,
+                                  itemBuilder: (context, index) => Container(
+                                    padding: EdgeInsets.all(10),
+                                    margin: EdgeInsets.only(
+                                        top: 10,
+                                        bottom: 10,
+                                        left: 30,
+                                        right: 30),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              blurRadius: 10,
+                                              spreadRadius: -7,
+                                              offset: Offset(0, 0))
+                                        ],
+                                        color: ColorStyle.whiteBacground),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          widget.event.invitados[index].name,
+                                          style: TxtStyle.headerStyle.copyWith(
+                                              color: Colors.black87,
+                                              fontSize: 15),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : SizedBox(),
                     SizedBox(
                       height: 10,
                     ),

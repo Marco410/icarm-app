@@ -26,8 +26,6 @@ class _NotiPreviewPageState extends ConsumerState<NotiPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
     final notiSelected = ref.watch(notiSelectedGetProvider);
     return Scaffold(
       appBar: AppBarWidget(

@@ -17,14 +17,19 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
   List<bool> links = [false, false, false, false, false, false, false];
   List<Event> events = [
     Event(
-        title: "Retiro de Transformación",
-        text: "29, 30 de Septiembre y 1 de Octubre",
+        title: "16° Aniversario",
+        text: "8 al 10 de Noviembre",
         selected: true,
-        horario: "29-sept, 18:00 – 01-oct, 20:30",
-        direccion: "La Goleta, Expoferia S/N, 61301, La Goleta, Mich. México",
+        horario: "",
+        direccion: "Puerto de Coatzacoalcos #95, 58337, Morelia Mich.",
         acerca_de:
-            "Deberás traer: \n -Una colchoneta o hule espuma para dormir individual.\n-Una cobija.\n-Pijama o pants cómodos para dormir.\n-Un pantalón cómodo para todo el Retiro.\n-Dos playeras o blusas.\n-Suéter o chamarra.\n-Ropa interior suficiente.\n-Toalla.\n-Artículos de aseo personal.\n-Sobre todo, un corazón dispuesto.",
-        image: 'events/retiro.jpg'),
+            "Ven y celebra con nosotros nuestro 16 aniversario \n Miércoles.\nServicio de Apertura \n7:00pm\nJueves\nSeminario para pastores y líderes\n9:00am\nServicio Especial\n7:00pm\nViernes\nSeminario para pastores y líderes\n9:00am\nServicio de Clausura\n7:00pm",
+        invitados: [
+          Invitado(name: "Pedro y Lety Cantú", image: ""),
+          Invitado(name: "Job Gonzalez", image: ""),
+          Invitado(name: "Oasis Ministry", image: ""),
+        ],
+        image: 'events/aniversario.jpg'),
     /* Event(
         title: "Aniversario",
         text: "8, 9 y 10 de Noviembre",
@@ -298,6 +303,7 @@ class Event {
   final String direccion;
   final String image;
   final String acerca_de;
+  final List<Invitado> invitados;
   bool selected;
 
   Event({
@@ -308,6 +314,7 @@ class Event {
     required this.selected,
     required this.direccion,
     required this.acerca_de,
+    required this.invitados,
   });
 }
 
@@ -322,5 +329,15 @@ class Online {
     required this.text,
     required this.image,
     required this.selected,
+  });
+}
+
+class Invitado {
+  final String name;
+  final String image;
+
+  Invitado({
+    required this.name,
+    required this.image,
   });
 }

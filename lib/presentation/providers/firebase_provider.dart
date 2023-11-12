@@ -5,7 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/DB/database.dart';
+import 'package:icarm/config/services/http_general_service.dart';
+import 'package:icarm/config/setting/api.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
+import 'package:icarm/presentation/providers/notification_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 final prefs = new PreferenciasUsuario();
@@ -24,6 +27,8 @@ final firebaseInitProvider =
   print(token);
   prefs.ds_token_notificaciones = token!;
 
+  ref.read(updateFirebaseTokenProvider);
+
   //Handlers
   FirebaseMessaging.onBackgroundMessage(
       PushNotificationService._backgroudHandler);
@@ -31,6 +36,17 @@ final firebaseInitProvider =
   FirebaseMessaging.onMessageOpenedApp
       .listen(PushNotificationService._onMessageOpenApp);
 });
+
+final updateFirebaseTokenProvider = FutureProvider<void>((ref) async {
+  final Map<String, dynamic> registerUser = {
+    "userId": prefs.usuarioID,
+    "firebase_token": prefs.ds_token_notificaciones,
+  };
+
+  await BaseHttpService.basePost(
+      url: UPDATE_FIREBASE_USER_URL, authorization: false, body: registerUser);
+});
+var databaseFuture = DatabaseHelper.db.database;
 
 class PushNotificationService {
   PushNotificationService() {
@@ -129,18 +145,5 @@ class PushNotificationService {
     await database.delete(TABLE, where: 'id = "$noti_id"');
 
     get_local_notifications();
-  }
-
-  updateFirebaseToken() async {
-    //final prefs = new PreferenciasUsuario();
-
-    /* final String uFirebaseUrl =
-        GlobalConfiguration().getValue('update_firebase_token');
-    final Map<String, dynamic> data = {
-      'ds_token_notificaciones': prefs.ds_token_notificaciones
-    };
-
-    var resp = await baseService.basePostAuth(uFirebaseUrl, data);
-    final Map<String, dynamic> decodedResp = json.decode(resp); */
   }
 }

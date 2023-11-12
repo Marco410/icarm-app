@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:icarm/config/share_prefs/prefs_usuario.dart';
-import 'package:icarm/presentation/components/app_bar_widget.dart';
 import 'package:icarm/presentation/components/drawer.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/components/zcomponents.dart';
@@ -32,7 +30,6 @@ class _QRConfirmState extends ConsumerState<QRConfirm> {
   }
 
   Widget build(BuildContext context) {
-    final prefs = PreferenciasUsuario();
     final userScanned = ref.watch(userNameScannedProvider);
     final userIDScanned = ref.watch(userIDScannedProvider);
     return Scaffold(

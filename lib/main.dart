@@ -48,45 +48,19 @@ class _myAppState extends ConsumerState<myApp> {
       new GlobalKey<NavigatorState>();
   final GlobalKey<ScaffoldMessengerState> messengerKey =
       new GlobalKey<ScaffoldMessengerState>();
-  var databaseFuture = DatabaseHelper.db.database;
 
   @override
   void initState() {
     PushNotificationService.messagesStream.listen((message) {
       print("message.notification!.title");
       print(message.notification!);
-      get_notis(message);
+
+      ref.refresh(storeNotificationProvider(message));
 
       NotificationUI.instance.notificationAlert(
           message.notification!.title!, message.notification!.body!);
     });
     super.initState();
-  }
-
-  Future get_notis(RemoteMessage message) async {
-    final Database database = await databaseFuture;
-    const TABLE = "notificaciones";
-    Batch batch = database.batch();
-    batch.insert(TABLE, {
-      'senderId': message.senderId.toString(),
-      'category': message.category.toString(),
-      'collapseKey': message.collapseKey.toString(),
-      'contentAvailable': message.contentAvailable.toString(),
-      'data': message.data.toString(),
-      'fromD': message.from.toString(),
-      'messageId': message.messageId.toString(),
-      'messageType': message.messageType.toString(),
-      'mutableContent': message.mutableContent.toString(),
-      'title': message.notification?.title.toString() ?? "Sin titulo",
-      'body': message.notification?.body.toString() ?? "Sin descripción",
-      'sentTime': DateTime.now().toString(),
-      'threadId': message.threadId.toString(),
-      'ttl': message.ttl.toString(),
-      'seen': "0"
-    });
-    batch.commit();
-    ref.refresh(getNotiListProvider);
-    ref.refresh(newNotiSearchProvider);
   }
 
   @override

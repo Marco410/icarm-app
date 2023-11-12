@@ -118,9 +118,9 @@ class _HomeState extends ConsumerState<Home> {
               (lives.length != 0)
                   ? YoutubeLiveBannerWidget(lives: lives)
                   : SizedBox(),
-              /*  Image.asset(
-                "assets/image/home/event.jpg",
-              ), */
+              Image.asset(
+                "assets/image/home/aniversario.jpg",
+              ),
               Container(
                 height: mediaHeight,
                 width: mediaWidth,

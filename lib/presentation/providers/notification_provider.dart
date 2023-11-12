@@ -1,5 +1,6 @@
 // ignore_for_file: unused_result
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/DB/database.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
@@ -65,4 +66,31 @@ final deleteNotiProvider = FutureProvider.family((ref, notiID) async {
   ref.refresh(newNotiSearchProvider);
 
   NotificationUI.instance.notificationSuccess("Notificación eliminada");
+});
+
+final storeNotificationProvider =
+    FutureProvider.family<void, RemoteMessage>((ref, message) async {
+  final Database database = await databaseFuture;
+  const TABLE = "notificaciones";
+  Batch batch = database.batch();
+  batch.insert(TABLE, {
+    'senderId': message.senderId.toString(),
+    'category': message.category.toString(),
+    'collapseKey': message.collapseKey.toString(),
+    'contentAvailable': message.contentAvailable.toString(),
+    'data': message.data.toString(),
+    'fromD': message.from.toString(),
+    'messageId': message.messageId.toString(),
+    'messageType': message.messageType.toString(),
+    'mutableContent': message.mutableContent.toString(),
+    'title': message.notification?.title.toString() ?? "Sin titulo",
+    'body': message.notification?.body.toString() ?? "Sin descripción",
+    'sentTime': DateTime.now().toString(),
+    'threadId': message.threadId.toString(),
+    'ttl': message.ttl.toString(),
+    'seen': "0"
+  });
+  batch.commit();
+  ref.refresh(getNotiListProvider);
+  ref.refresh(newNotiSearchProvider);
 });

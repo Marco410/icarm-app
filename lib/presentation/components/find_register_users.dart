@@ -1,20 +1,13 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/style.dart';
-import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/models/models.dart';
-import 'package:searchable_listview/searchable_listview.dart';
-
-import '../../presentation/providers/notification_service.dart';
 
 Future<dynamic> showUsersRegister(
     BuildContext context, List<User> options) async {
-  int maxItemsToShowSearch = 15;
-
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,

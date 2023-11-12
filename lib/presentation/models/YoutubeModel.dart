@@ -25,9 +25,9 @@ class YoutubeModel {
   });
 
   factory YoutubeModel.fromJson(Map<String, dynamic> json) => YoutubeModel(
-        kind: json["kind"],
-        etag: json["etag"],
-        regionCode: json["regionCode"],
+        kind: json["kind"] ?? '',
+        etag: json["etag"] ?? '',
+        regionCode: json["regionCode"] ?? '',
         pageInfo: PageInfo.fromJson(json["pageInfo"]),
         items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
       );

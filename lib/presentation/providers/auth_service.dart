@@ -86,28 +86,6 @@ final registerProvider = FutureProvider.family<void, RegisterUserData>(
   }
 });
 
-final updateFirebaseTokenProvider =
-    FutureProvider.family<void, String>((ref, userId) async {
-  final Map<String, dynamic> registerUser = {
-    "userId": userId,
-    "firebase_token": prefs.ds_token_notificaciones,
-  };
-
-  String decodedResp = "";
-
-  decodedResp = await BaseHttpService.basePost(
-      url: UPDATE_FIREBASE_USER_URL, authorization: false, body: registerUser);
-
-  if (decodedResp != "") {
-    final Map<String, dynamic> resp = json.decode(decodedResp);
-    if (resp["status"] == 'Success') {
-    } else {
-      NotificationUI.instance
-          .notificationWarning('Ocurrió un error al registrarte.');
-    }
-  }
-});
-
 final findUserRegisterProvider = FutureProvider.autoDispose
     .family<void, RegisterUserData>((ref, registerUserData) async {
   final Map<String, dynamic> findRegisterUser = {
