@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/services/http_general_service.dart';
 import 'package:icarm/config/setting/api.dart';
@@ -11,18 +13,28 @@ final isLiveProvider = StateProvider.autoDispose<List<Item>>((ref) {
 
 final liveProvider = FutureProvider.autoDispose<void>((ref) async {
   try {
-    String resp = await BaseHttpService.baseGetYoutube(
-        url: YOUTUBE_API,
-        authorization: false,
-        params: {
-          "key": GOOGLE_KEY,
-          "eventType": "live",
-          "channelId": CHANNEL_YOUTUBE_ID,
-          "type": "video",
-        });
-    YoutubeModel isLive = youtubeModelFromJson(resp);
+    DateTime time = DateTime.now();
+    //lun:1,mar:2,mier:3,juev:4,vier:5,sab:6,dom:7
+    if ([3, 5, 6, 7].contains(time.weekday)) {
+      String resp = await BaseHttpService.baseGetYoutube(
+          url: YOUTUBE_API,
+          authorization: false,
+          params: {
+            "key": GOOGLE_KEY,
+            "eventType": "live",
+            "channelId": CHANNEL_YOUTUBE_ID,
+            "type": "video",
+          });
 
-    ref.read(isLiveProvider.notifier).update((state) => isLive.items);
+      final Map<String, dynamic> decode = json.decode(resp);
+
+      YoutubeModel isLive = youtubeModelFromJson(resp);
+
+      ref.read(isLiveProvider.notifier).update((state) => isLive.items);
+      if (decode['error']['code'] == 403) {
+        return;
+      }
+    }
   } catch (e) {
     print("Error youtube");
     print(e);

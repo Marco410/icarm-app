@@ -3,6 +3,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -33,17 +34,17 @@ class _BetelesPageState extends State<BetelesPage> {
     ),
     Betel(
       img:
-          "https://static.wixstatic.com/media/bf53c1_f3df6b6dad814e51adee727e45c49296~mv2.jpg/v1/fill/w_322,h_324,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/Daniel.jpg",
-      first_name: "Daniel Alonso Huerta",
-      second_name: "",
+          "https://static.wixstatic.com/media/bf53c1_f780f95cdf3e4739804804a8bb0306aa~mv2.jpg/v1/fill/w_322,h_324,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/IMG_9955.jpg",
+      first_name: "Jose Mariano Paniagua Contreras",
+      second_name: "Sara Briyee Aguilar Rodriguez",
       anf_first_name: "Antonio Luis Serrano Chávez",
       anf_second_name: "Celia Durán",
-      direccion_first: "Republicano Patzcuarence #305",
-      direccion_second: "Col. Manuel García",
-      phone: "4432007447",
+      direccion_first: "Republicano Patzcuarence #304",
+      direccion_second: "Col. Manuel García Pueblita",
+      phone: "4436280013",
       mapUrl:
           "https://www.google.com/maps?q=Republicano+Patzcuarence+304,+Manuel+Garc%C3%ADa+Pueblita,+58337+Morelia,+Mich.&ftid=0x842d0950783bcac7:0xf4196945f40c9694",
-      contacto: "4432007447",
+      contacto: "4436280013",
     ),
     Betel(
       img:
@@ -315,6 +316,8 @@ class _BetelesPageState extends State<BetelesPage> {
     super.initState();
   }
 
+  final prefs = new PreferenciasUsuario();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -329,13 +332,15 @@ class _BetelesPageState extends State<BetelesPage> {
           child: Column(
             children: [
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Column(
                   children: [
                     Text(
-                      "Encontrar un betel",
+                      "${prefs.nombre} encuentra un betel",
+                      overflow: TextOverflow.fade,
                       style:
-                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(
                       height: 10,
@@ -343,7 +348,7 @@ class _BetelesPageState extends State<BetelesPage> {
                     Text(
                       "Un betel es un grupo pequeño donde cada semana compartimos un tiempo en familia y compartimos la palabra de Dios.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 14),
                     ),
                   ],
                 ),

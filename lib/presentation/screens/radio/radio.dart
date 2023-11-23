@@ -1,9 +1,10 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/presentation/providers/providers.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:icarm/config/setting/style.dart';
@@ -47,11 +48,10 @@ class _RadioPageState extends ConsumerState<RadioPage> {
   void initState() {
     Future.microtask(() {
       final radioProvider = ref.watch(radioServiceProvider);
-      radioProvider.onPlayerStateChanged.listen((event) {
-        ref
-            .read(radioisPlayingProvider.notifier)
-            .update((state) => event == PlayerState.playing);
-      });
+
+      radioProvider.playerStateStream.listen((state2) => ref
+          .read(radioisPlayingProvider.notifier)
+          .update((state) => state2.playing));
     });
     super.initState();
   }
@@ -73,11 +73,25 @@ class _RadioPageState extends ConsumerState<RadioPage> {
         onTap: () async {
           if (radioIsPlaying) {
             ref.read(radioisPlayingProvider.notifier).update((state) => false);
-            await ref.refresh(radioServiceProvider).stop();
+            ref.refresh(radioServiceProvider).pause();
           } else {
             ref.read(radioisPlayingProvider.notifier).update((state) => true);
             final url = "https://stream.zeno.fm/5dsk2i7levzvv";
-            await ref.refresh(radioServiceProvider).play(UrlSource(url));
+
+            ref.refresh(radioServiceProvider).setAudioSource((AudioSource.uri(
+                  Uri.parse(url),
+                  tag: MediaItem(
+                    id: '1',
+                    album: "Amor & Restauración Morelia",
+                    title: "Radio En Vivo | Amor & Restauración Morelia",
+                    artUri: Uri.parse(
+                        'https://i.scdn.co/image/84b0f6c8d93100326210caa5abdd4592f4abbbcd'),
+                  ),
+                )));
+
+            ref.refresh(radioServiceProvider).play();
+
+            //await ref.refresh(radioServiceProvider).play(UrlSource(url));
           }
         },
         child: Container(
@@ -113,6 +127,11 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                 "A&R Radio - En vivo",
                 style: TxtStyle.headerStyle
                     .copyWith(color: ColorStyle.primaryColor, fontSize: 30),
+              ),
+              Text(
+                "${prefs.nombre}, pronto podrás comentar sobre lo que escuchas.",
+                style: TxtStyle.hintText
+                    .copyWith(color: ColorStyle.primaryColor, fontSize: 11),
               ),
               SizedBox(
                 height: 15,

@@ -16,7 +16,7 @@ class MaterialDrawer extends StatefulWidget {
 class _MaterialDrawerState extends State<MaterialDrawer> {
   List<bool> links = [false, false, false, false, false, false, false];
   List<Event> events = [
-    Event(
+    /* Event(
         title: "16° Aniversario",
         text: "8 al 10 de Noviembre",
         selected: true,
@@ -29,7 +29,7 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
           Invitado(name: "Job Gonzalez", image: ""),
           Invitado(name: "Oasis Ministry", image: ""),
         ],
-        image: 'events/aniversario.jpg'),
+        image: 'events/aniversario.jpg'), */
     /* Event(
         title: "Aniversario",
         text: "8, 9 y 10 de Noviembre",
@@ -102,30 +102,36 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                   title: "Eventos",
                   subtitle: "Conoce nuestros próximos eventos",
                   isOpen: links[0],
-                  content: ListView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.all(0),
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: events.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return SubAccordionWidget(
-                          active: events[index].selected,
-                          onTap: () {
-                            setState(() {
-                              events[index].selected = !events[index].selected;
-                            });
-                          },
-                          title: events[index].title,
-                          text: events[index].text,
-                          image: events[index].image,
-                          onTapContent: () {
-                            context.pushNamed(
-                              "event",
-                              extra: events[index],
+                  content: (events.length != 0)
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.all(0),
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: events.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return SubAccordionWidget(
+                              active: events[index].selected,
+                              onTap: () {
+                                setState(() {
+                                  events[index].selected =
+                                      !events[index].selected;
+                                });
+                              },
+                              title: events[index].title,
+                              text: events[index].text,
+                              image: events[index].image,
+                              onTapContent: () {
+                                context.pushNamed(
+                                  "event",
+                                  extra: events[index],
+                                );
+                              },
                             );
-                          },
-                        );
-                      }),
+                          })
+                      : Text(
+                          "No hay eventos en los siguientes días.",
+                          style: TxtStyle.hintText,
+                        ),
                 ),
               ),
               const SizedBox(

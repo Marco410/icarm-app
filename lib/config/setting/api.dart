@@ -8,6 +8,7 @@ const String REGISTER_USER_URL = "${CARPETA}auth/register";
 const String UPDATE_USER_URL = "${CARPETA}auth/update";
 const String UPDATE_FIREBASE_USER_URL = "${CARPETA}auth/updateFirebase";
 const String FIND_REGISTER_USER_URL = "${CARPETA}auth/find";
+const String DELETE_ACCOUNT = "${CARPETA}auth/delete";
 
 const String REGISTER_KID_URL = "${CARPETA}app/kids/add";
 const String UPDATE_KID_URL = "${CARPETA}app/kids/update";

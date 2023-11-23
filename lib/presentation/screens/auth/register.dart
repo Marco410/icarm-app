@@ -1,9 +1,7 @@
 // ignore_for_file: unused_result
 
 import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/style.dart';
@@ -13,7 +11,6 @@ import 'package:icarm/presentation/components/dropdow_options.dart';
 import 'package:icarm/presentation/components/dropdown_widget.dart';
 import 'package:icarm/presentation/components/find_register_users.dart';
 import 'package:icarm/presentation/components/text_field.dart';
-import 'package:icarm/presentation/models/auth/authModels.dart';
 import 'package:icarm/presentation/providers/auth_service.dart';
 import 'package:intl/intl.dart';
 
@@ -209,14 +206,14 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     ),
                     readOnly: true,
                     textInputType: TextInputType.datetime,
-                    isRequired: true,
+                    isRequired: false,
                   ),
                   SizedBox(
                     height: 15,
                   ),
                   TextFieldWidget(
                     border: true,
-                    isRequired: true,
+                    isRequired: false,
                     textInputType: TextInputType.number,
                     label: "Teléfono",
                     hintText: 'Escribe aquí',
@@ -229,7 +226,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   DropdownWidget(
                       title: "Sexo",
                       option: sexo,
-                      isRequired: true,
+                      isRequired: false,
                       onTapFunction: () async {
                         final res = await showDropdownOptions(context,
                             MediaQuery.of(context).size.height * 0.4, sexoList);
@@ -246,7 +243,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   DropdownWidget(
                       title: "País",
                       option: pais,
-                      isRequired: true,
+                      isRequired: false,
                       onTapFunction: () async {
                         final res = await showDropdownOptions(context,
                             MediaQuery.of(context).size.height * 0.4, paisList);

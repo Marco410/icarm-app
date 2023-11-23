@@ -31,7 +31,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FadedScaleAnimation(
       child: InkWell(
-        onTap: onTap as void Function()?,
+        onTap: (loading) ? () => {} : onTap as void Function()?,
         child: Container(
           width: width ?? double.infinity,
           padding: EdgeInsets.symmetric(

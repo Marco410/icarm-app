@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/components/app_bar_widget.dart';
+import 'package:icarm/presentation/providers/providers.dart';
 
 import '../../components/drawer.dart';
 import '../../components/loading_widget.dart';
@@ -22,6 +23,7 @@ class _MainHomeState extends ConsumerState<MainHome> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(liveProvider);
     final bodyAsync = ref.watch(homeProvider);
 
     return Scaffold(
@@ -30,7 +32,8 @@ class _MainHomeState extends ConsumerState<MainHome> {
       drawer: const MaterialDrawer(),
       body: bodyAsync.when(
           data: (widgetBody) => widgetBody,
-          error: (_, __) => const Text('Ocurrio un error'),
+          error: (_, __) =>
+              Center(child: LoadingStandardWidget.loadingErrorWidget()),
           loading: () => Container(
                 margin: const EdgeInsets.only(top: 50),
                 child: LoadingStandardWidget.loadingWidget(),

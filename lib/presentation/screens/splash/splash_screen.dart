@@ -20,11 +20,7 @@ class SplashScreenState extends State<SplashScreen> {
   Future<void> navigatorPage() async {
     const storage = FlutterSecureStorage();
     final prefs = PreferenciasUsuario();
-    print("prefs.usuarioID");
-    print(prefs.usuarioID);
-    print("prefs.token");
     String token = (await storage.read(key: "tokenAuth")) ?? '';
-    print(token);
 
     if (prefs.usuarioID != "" && token.isNotEmpty) {
       NavigationRoutes.goHome(context);

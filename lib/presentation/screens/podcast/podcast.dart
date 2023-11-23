@@ -1,6 +1,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,6 +25,8 @@ class _PodcastPageState extends State<PodcastPage> {
     super.dispose();
   }
 
+  final prefs = new PreferenciasUsuario();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +36,7 @@ class _PodcastPageState extends State<PodcastPage> {
         endOffset: Offset(0, 0),
         slideCurve: Curves.linearToEaseOut,
         child: Container(
+          padding: EdgeInsets.only(left: 10, right: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -40,7 +44,7 @@ class _PodcastPageState extends State<PodcastPage> {
                 height: 30,
               ),
               Text(
-                "Escuchanos en:",
+                "${prefs.nombre} escuchanos en:",
                 style: TxtStyle.headerStyle,
                 textAlign: TextAlign.center,
               ),

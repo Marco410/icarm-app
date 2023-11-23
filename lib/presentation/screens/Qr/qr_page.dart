@@ -32,7 +32,7 @@ class _QRPageState extends ConsumerState<QRPage> {
   Widget build(BuildContext context) {
     final prefs = PreferenciasUsuario();
     Random random = new Random();
-    final qrData = "AYR${random.nextInt(99)}${prefs.usuarioID}";
+    final qrData = "AYR${random.nextInt(80) + 10}${prefs.usuarioID}";
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       appBar: AppBarWidget(

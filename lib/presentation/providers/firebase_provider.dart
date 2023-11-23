@@ -1,3 +1,5 @@
+// ignore_for_file: unused_result
+
 import 'dart:async';
 import 'dart:io';
 
@@ -8,6 +10,7 @@ import 'package:icarm/config/DB/database.dart';
 import 'package:icarm/config/services/http_general_service.dart';
 import 'package:icarm/config/setting/api.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
+import 'package:icarm/presentation/providers/notification_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 final prefs = new PreferenciasUsuario();
@@ -28,9 +31,17 @@ final firebaseInitProvider =
 
   ref.read(updateFirebaseTokenProvider);
 
+  FirebaseMessaging.onBackgroundMessage((message) {
+    ref.refresh(storeNotificationProvider(message));
+
+    print("Backgroud");
+
+    return PushNotificationService._backgroudHandler(message);
+  });
+
   //Handlers
-  FirebaseMessaging.onBackgroundMessage(
-      PushNotificationService._backgroudHandler);
+  /* FirebaseMessaging.onBackgroundMessage(
+      PushNotificationService._backgroudHandler); */
   FirebaseMessaging.onMessage.listen(PushNotificationService._onMessageHandler);
   FirebaseMessaging.onMessageOpenedApp
       .listen(PushNotificationService._onMessageOpenApp);
@@ -74,7 +85,7 @@ class PushNotificationService {
 
   static Future _backgroudHandler(RemoteMessage message) async {
     //cuando la aplicacion esta terminada
-    //print('on backgroud Handler ${message.messageId}');
+    print('on backgroud Handler ${message.messageId}');
     _messageStream.add(message);
   }
 
@@ -83,7 +94,6 @@ class PushNotificationService {
   }
 
   static Future _onMessageOpenApp(RemoteMessage message) async {
-    //print('on Message Open App Handler ${message.messageId}');
     print("_onMessageOpenApp");
     print(message);
     _messageStream.add(message);

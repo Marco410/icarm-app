@@ -14,6 +14,10 @@ import '../models/models.dart';
 const storage = FlutterSecureStorage();
 final prefs = PreferenciasUsuario();
 
+final updateKidProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
 final getKidsProvider = FutureProvider<List<Kid>?>((ref) async {
   final Map<String, String> getKids = {
     "user_id": prefs.usuarioID,

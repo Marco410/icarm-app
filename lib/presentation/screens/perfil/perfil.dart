@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/app_bar_widget.dart';
 import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/drawer.dart';
 import 'package:icarm/presentation/providers/auth_service.dart';
-import 'package:icarm/presentation/providers/youtube_provider.dart';
 import 'package:icarm/config/setting/style.dart';
 
 import '../../providers/notification_provider.dart';
@@ -34,7 +34,6 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
   }
 
   Widget build(BuildContext context) {
-    ref.watch(liveProvider);
     ref.watch(newNotiSearchProvider);
     final newNoti = ref.watch(newNotiProvider);
     final prefs = PreferenciasUsuario();
@@ -96,10 +95,26 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                 : SizedBox(),
             CustomButton(
               text: "Cerrar Sesión",
+              margin: EdgeInsets.only(top: 10, right: 30, left: 30),
               onTap: () {
                 ref.refresh(logoutProvider(context));
               },
               loading: false,
+              textColor: Colors.white,
+            ),
+            CustomButton(
+              text: "Eliminar mi cuenta",
+              margin: EdgeInsets.only(right: 30, left: 30),
+              onTap: () {
+                NotificationUI.instance.notificationToAcceptAction(context,
+                    "¿Estás seguro de eliminar tu cuenta? Se perderán todos tus datos.",
+                    () {
+                  ref.refresh(deleteAccountProvider(context));
+                });
+              },
+              color: Colors.red[300],
+              loading: false,
+              size: 'sm',
               textColor: Colors.white,
             )
           ],

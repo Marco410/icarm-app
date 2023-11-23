@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -62,20 +64,26 @@ class _KidsPageState extends ConsumerState<KidsPage> {
           kidsList.when(
               data: (data) {
                 if (data!.isEmpty) {
-                  LoadingStandardWidget.loadingNoDataWidget(
-                      "niños registrados");
+                  return Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: LoadingStandardWidget.loadingNoDataWidget(
+                          "hijos registrados"),
+                    ),
+                  );
+                } else {
+                  return Expanded(
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.all(0),
+                          itemCount: data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return KidLinkWidget(
+                              kid: data[index],
+                              ref: ref,
+                            );
+                          }));
                 }
-
-                return Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.all(0),
-                        itemCount: data.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return KidLinkWidget(
-                            kid: data[index],
-                          );
-                        }));
               },
               error: (_, __) => LoadingStandardWidget.loadingErrorWidget(),
               loading: () =>
@@ -83,6 +91,8 @@ class _KidsPageState extends ConsumerState<KidsPage> {
           CustomButton(
             text: "Registrar nuevo",
             onTap: () {
+              ref.read(updateKidProvider.notifier).update((state) => false);
+
               context.pushNamed('kidsAdd', pathParameters: {'type': 'create'});
             },
             loading: false,
@@ -97,13 +107,18 @@ class _KidsPageState extends ConsumerState<KidsPage> {
 
 class KidLinkWidget extends StatelessWidget {
   final Kid kid;
-  const KidLinkWidget({super.key, required this.kid});
+  WidgetRef ref;
+  KidLinkWidget({super.key, required this.kid, required this.ref});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.pushNamed('kidsAdd',
-          pathParameters: {'type': 'edit'}, extra: kid),
+      onTap: () {
+        ref.read(updateKidProvider.notifier).update((state) => true);
+
+        context.pushNamed('kidsAdd',
+            pathParameters: {'type': 'edit'}, extra: kid);
+      },
       child: Container(
           margin: EdgeInsets.only(left: 20, right: 20),
           padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),

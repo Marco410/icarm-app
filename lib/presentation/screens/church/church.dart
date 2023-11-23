@@ -3,6 +3,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChurchPage extends StatefulWidget {
@@ -21,6 +22,8 @@ class _ChurchPageState extends State<ChurchPage> {
     // TODO: implement initState
     super.initState();
   }
+
+  final prefs = new PreferenciasUsuario();
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +59,14 @@ class _ChurchPageState extends State<ChurchPage> {
                   "Amor & Restauración Morelia",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "${prefs.nombre} conoce más sobre nosotros:",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 15,

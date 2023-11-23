@@ -7,19 +7,24 @@ import 'package:icarm/config/setting/firebase_config.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/config/generated/l10n.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'presentation/providers/notification_provider.dart';
 import 'presentation/providers/providers.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'config/routes/app_router.dart';
 
 /// Run first apps open
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //se carga la clase con unica instancia de preferencias de usuario
   final prefs = new PreferenciasUsuario();
   await prefs.initPrefs();
 
-  //se cargan las preferencias de idioma
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+  );
 
   runApp(ProviderScope(child: AppState()));
 }

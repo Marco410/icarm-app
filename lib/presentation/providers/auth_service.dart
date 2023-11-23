@@ -59,7 +59,8 @@ final registerProvider = FutureProvider.family<void, RegisterUserData>(
     "email": registerUserData.email,
     "password": registerUserData.password,
     "telefono": registerUserData.telefono,
-    "sexo": registerUserData.sexo,
+    "sexo":
+        (registerUserData.sexo != "Seleccione") ? registerUserData.sexo : '',
     "pais_id": registerUserData.pais_id,
   };
 
@@ -114,6 +115,25 @@ final logoutProvider =
   AuthService.deleteData();
 
   NavigationRoutes.goLogin(context);
+});
+
+final deleteAccountProvider =
+    FutureProvider.family<void, BuildContext>((ref, context) async {
+  final Map<String, dynamic> userId = {"userId": prefs.usuarioID};
+
+  String decodedResp = await BaseHttpService.basePost(
+      url: DELETE_ACCOUNT, authorization: false, body: userId);
+
+  final Map<String, dynamic> resp = json.decode(decodedResp);
+
+  if (resp["status"] == 'Success') {
+    NotificationUI.instance.notificationSuccess('${resp['message']}');
+    AuthService.deleteData();
+    NavigationRoutes.goLogin(context);
+  } else {
+    NotificationUI.instance.notificationWarning(
+        'Ocurrió un error al registrarte. ${resp["description"]["message"]}');
+  }
 });
 
 class AuthService {
