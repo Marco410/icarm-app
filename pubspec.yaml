@@ -1,23 +1,21 @@
 name: icarm
 description: icarm App
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0
+version: 2.1.1
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
-
+  sdk: ">=3.0.5 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
- 
+
   flutter_localized_locales: ^2.0.3
   http: ^0.13.3
-  provider: ^6.0.0
   global_configuration: ^2.0.0-nullsafety.1
   intl: ^0.18.0
   flutter_sfsymbols: ^2.0.0
@@ -28,8 +26,8 @@ dependencies:
   flutter_bloc: ^8.1.2
   shared_preferences: ^2.0.20
   cached_network_image: ^3.2.1
-  firebase_messaging: ^14.3.0
-  firebase_core: ^2.8.0
+  firebase_messaging: ^14.7.4
+  firebase_core: ^2.22.0
   sqflite: ^2.0.3+1
   get: ^4.6.5
   animation_wrappers: ^3.0.0
@@ -38,13 +36,23 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.4.54
   flutter_html: ^3.0.0-beta.2
   flutter_platform_alert: ^0.4.0
-  audioplayers: ^5.1.0
   lottie: ^2.6.0
   curved_navigation_bar: ^1.0.3
   url_launcher: ^6.1.12
+  go_router: ^10.1.0
+  flutter_riverpod: ^2.3.7
+  bot_toast: ^4.0.4
+  internet_connection_checker: ^1.0.0+1
+  flutter_svg: ^2.0.9
+  accordion: ^2.6.0
+  flutter_secure_storage: ^9.0.0
+  searchable_listview: ^2.7.1
+  qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.1.0
+  just_audio: ^0.9.35
+  just_audio_background: ^0.0.1-beta.10
+  flutter_html_iframe: ^3.0.0-beta.2
 
-
-  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,84 +64,22 @@ flutter_icons:
   image_path: "assets/image/logoApps.png"
 
 flutter:
-
   uses-material-design: true
 
   fonts:
     - family: sficonsets
       fonts:
         - asset: assets/icon/sficonsets.ttf
-    - family: gainers
-      fonts:
-        - asset: assets/icon/ic_gainers.ttf
-    - family: message
-      fonts:
-        - asset: assets/icon/ic_message.ttf
-    - family: tab
-      fonts:
-        - asset: assets/icon/ic_tab.ttf
-    - family: wallet
-      fonts:
-        - asset: assets/icon/ic_wallet.ttf
-    - family: tab1
-      fonts:
-        - asset: assets/icon/ic_tab1.ttf
-    - family: tab2
-      fonts:
-        - asset: assets/icon/ic_tab2.ttf
-    - family: tab3
-      fonts:
-        - asset: assets/icon/ic_tab3.ttf
-    - family: tab4
-      fonts:
-        - asset: assets/icon/ic_tab4.ttf
-    - family: tab5
-      fonts:
-        - asset: assets/icon/ic_tab5.ttf
-    - family: loser
-      fonts:
-        - asset: assets/icon/ic_loser.ttf
-    - family: Sans
-      fonts:
-        - asset: assets/font/OpenSans-Bold.ttf
-          weight: 800
-        - asset: assets/font/OpenSans-Semibold.ttf
-          weight: 600
-        - asset: assets/font/OpenSans-Regular.ttf
-          weight: 400
-        - asset: assets/font/OpenSans-Light.ttf
-          weight: 200
-    - family: Popins
-      fonts:
-        - asset: assets/font/Poppins-Regular.ttf
-          weight: 400
-        - asset: assets/font/Poppins-SemiBold.ttf
-          weight: 600
-    - family: Berlin
-      fonts:
-        - asset: assets/font/BRLNSDB.TTF
-          weight: 700
-    - family: Lemon
-      fonts:
-        - asset: assets/font/Lemon-Regular.ttf
-          weight: 400
-    - family: Gotik
-      fonts:
-        - asset: assets/font/GOTHIC.TTF
-          weight: 400
-        - asset: assets/font/GOTHICB.TTF
-          weight: 600
-    - family: Pragmatica
-      fonts:
-        - asset: assets/font/pragmatica_bold.ttf
-          weight: 500
 
   assets:
     - assets/cfg/
     - assets/image/
     - assets/image/home/
+    - assets/image/events/
+    - assets/image/online/
     - assets/avatars/
     - assets/icon/
+    - assets/logos/
     - assets/sounds/
     - assets/video/
 

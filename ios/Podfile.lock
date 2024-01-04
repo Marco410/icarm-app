@@ -1,30 +1,32 @@
 PODS:
-  - audioplayers (0.0.1):
+  - audio_service (0.0.1):
     - Flutter
-  - Firebase/CoreOnly (10.6.0):
-    - FirebaseCore (= 10.6.0)
-  - Firebase/Messaging (10.6.0):
+  - audio_session (0.0.1):
+    - Flutter
+  - Firebase/CoreOnly (10.17.0):
+    - FirebaseCore (= 10.17.0)
+  - Firebase/Messaging (10.17.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.6.0)
-  - firebase_core (2.8.0):
-    - Firebase/CoreOnly (= 10.6.0)
+    - FirebaseMessaging (~> 10.17.0)
+  - firebase_core (2.22.0):
+    - Firebase/CoreOnly (= 10.17.0)
     - Flutter
-  - firebase_messaging (14.3.0):
-    - Firebase/Messaging (= 10.6.0)
+  - firebase_messaging (14.7.4):
+    - Firebase/Messaging (= 10.17.0)
     - firebase_core
     - Flutter
-  - FirebaseCore (10.6.0):
+  - FirebaseCore (10.17.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreInternal (10.7.0):
+  - FirebaseCoreInternal (10.19.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.7.0):
+  - FirebaseInstallations (10.19.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.6.0):
+  - FirebaseMessaging (10.17.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleDataTransport (~> 9.2)
@@ -38,45 +40,53 @@ PODS:
     - Flutter
   - flutter_platform_alert (0.0.1):
     - Flutter
-  - flutter_secure_storage (3.3.1):
+  - flutter_secure_storage (6.0.0):
     - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - GoogleDataTransport (9.2.1):
+  - GoogleDataTransport (9.3.0):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/AppDelegateSwizzler (7.11.0):
+  - GoogleUtilities/AppDelegateSwizzler (7.12.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.11.0):
+  - GoogleUtilities/Environment (7.12.0):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.11.0):
+  - GoogleUtilities/Logger (7.12.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/Network (7.11.0):
+  - GoogleUtilities/Network (7.12.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.11.0)"
-  - GoogleUtilities/Reachability (7.11.0):
+  - "GoogleUtilities/NSData+zlib (7.12.0)"
+  - GoogleUtilities/Reachability (7.12.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (7.11.0):
+  - GoogleUtilities/UserDefaults (7.12.0):
     - GoogleUtilities/Logger
-  - nanopb (2.30909.0):
-    - nanopb/decode (= 2.30909.0)
-    - nanopb/encode (= 2.30909.0)
-  - nanopb/decode (2.30909.0)
-  - nanopb/encode (2.30909.0)
+  - just_audio (0.0.1):
+    - Flutter
+  - MTBBarcodeScanner (5.0.11)
+  - nanopb (2.30909.1):
+    - nanopb/decode (= 2.30909.1)
+    - nanopb/encode (= 2.30909.1)
+  - nanopb/decode (2.30909.1)
+  - nanopb/encode (2.30909.1)
+  - package_info_plus (0.4.5):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - PromisesObjC (2.2.0)
+  - PromisesObjC (2.3.1)
+  - qr_code_scanner (0.2.0):
+    - Flutter
+    - MTBBarcodeScanner
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - sqflite (0.0.2):
+  - sqflite (0.0.3):
     - Flutter
     - FMDB (>= 2.7.5)
   - syncfusion_flutter_pdfviewer (0.0.1):
@@ -85,26 +95,30 @@ PODS:
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
-  - wakelock (0.0.1):
+  - wakelock_plus (0.0.1):
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
 
 DEPENDENCIES:
-  - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
+  - audio_service (from `.symlinks/plugins/audio_service/ios`)
+  - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_platform_alert (from `.symlinks/plugins/flutter_platform_alert/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - just_audio (from `.symlinks/plugins/just_audio/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - syncfusion_flutter_pdfviewer (from `.symlinks/plugins/syncfusion_flutter_pdfviewer/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
-  - wakelock (from `.symlinks/plugins/wakelock/ios`)
+  - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
@@ -117,12 +131,15 @@ SPEC REPOS:
     - FMDB
     - GoogleDataTransport
     - GoogleUtilities
+    - MTBBarcodeScanner
     - nanopb
     - PromisesObjC
 
 EXTERNAL SOURCES:
-  audioplayers:
-    :path: ".symlinks/plugins/audioplayers/ios"
+  audio_service:
+    :path: ".symlinks/plugins/audio_service/ios"
+  audio_session:
+    :path: ".symlinks/plugins/audio_session/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -135,8 +152,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_platform_alert/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  just_audio:
+    :path: ".symlinks/plugins/just_audio/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  qr_code_scanner:
+    :path: ".symlinks/plugins/qr_code_scanner/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
@@ -147,38 +170,43 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/ios"
-  wakelock:
-    :path: ".symlinks/plugins/wakelock/ios"
+  wakelock_plus:
+    :path: ".symlinks/plugins/wakelock_plus/ios"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
-  audioplayers: 455322b54050b30ea4b1af7cd9e9d105f74efa8c
-  Firebase: f13680471b021937f2230ea8503c7809d8c29806
-  firebase_core: 58542d7399889ebdbb034baa72d081e54c5c814d
-  firebase_messaging: 01a8db2962f81ea190d08db767aba2e7e805e647
-  FirebaseCore: fa80ad16a62d52f67274b5b88304c3a318bbf9a4
-  FirebaseCoreInternal: 8845798510aae74703467480f71ac613788d0696
-  FirebaseInstallations: 59c0e4c7a816a0f76710d83f77e5369b3e45eb96
-  FirebaseMessaging: fd93783258c53ae5cdb9b41bf0c51606a677f2d5
+  audio_service: f509d65da41b9521a61f1c404dd58651f265a567
+  audio_session: 4f3e461722055d21515cf3261b64c973c062f345
+  Firebase: f4ac0b02927af9253ae094d23deecf0890da7374
+  firebase_core: efc9455611b8769fa90fbdae5da182600bd6901c
+  firebase_messaging: 9c697d1ecfe77edf15d995b5048906ffc994c96c
+  FirebaseCore: 534544dd98cabcf4bf8598d88ec683b02319a528
+  FirebaseCoreInternal: b444828ea7cfd594fca83046b95db98a2be4f290
+  FirebaseInstallations: 033d199474164db20c8350736842a94fe717b960
+  FirebaseMessaging: 1367b28c0c83a63072af4a711328fcc2e6899902
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_platform_alert: 6a241c90f3cc350d0286deeefee9f52bee957019
-  flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
+  flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
-  GoogleUtilities: c2bdc4cf2ce786c4d2e6b3bcfd599a25ca78f06f
-  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
-  path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
-  PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
-  shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
-  sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
+  GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
+  just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
+  MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
+  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  package_info_plus: fd030dabf36271f146f1f3beacd48f564b0f17f7
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   syncfusion_flutter_pdfviewer: bb9998884b864cfedf72628df3503bdf57e397c0
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
-  video_player_avfoundation: 6d971a232d72e6ee25368378d48a079dea01f1cf
-  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
-  webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
+  video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
+  wakelock_plus: 8b09852c8876491e4b6d179e17dfe2a0b5f60d47
+  webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
 
-PODFILE CHECKSUM: 1bd47d3fb11090f41852e2aa85ff0b2e7860e858
+PODFILE CHECKSUM: 775997f741c536251164e3eacf6e34abf2eb7a17
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.14.3
