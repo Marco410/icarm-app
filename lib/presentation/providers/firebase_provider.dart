@@ -31,13 +31,17 @@ final firebaseInitProvider =
 
   ref.read(updateFirebaseTokenProvider);
 
-  FirebaseMessaging.onBackgroundMessage((message) {
-    ref.refresh(storeNotificationProvider(message));
+  try {
+    FirebaseMessaging.onBackgroundMessage((message) {
+      ref.refresh(storeNotificationProvider(message));
 
-    print("Backgroud");
+      print("Backgroud");
 
-    return PushNotificationService._backgroudHandler(message);
-  });
+      return PushNotificationService._backgroudHandler(message);
+    });
+  } catch (error) {
+    print("ERROR IN FIREBASE MESSAGIN BACKGROUND");
+  }
 
   //Handlers
   /* FirebaseMessaging.onBackgroundMessage(

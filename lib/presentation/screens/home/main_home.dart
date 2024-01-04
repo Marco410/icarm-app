@@ -39,10 +39,11 @@ class _MainHomeState extends ConsumerState<MainHome> {
                 child: LoadingStandardWidget.loadingWidget(),
               )),
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: ColorStyle.whiteBacground,
+        backgroundColor: ColorStyle.primaryColor,
         color: ColorStyle.primaryColor,
-        buttonBackgroundColor: ColorStyle.primaryColor,
-        animationDuration: Duration(milliseconds: 170),
+        buttonBackgroundColor: ColorStyle.secondaryColor,
+        animationDuration: Duration(milliseconds: 100),
+        animationCurve: Curves.easeOut,
         index: 2,
         items: <Widget>[
           Icon(

@@ -21,3 +21,23 @@ class KidRegisterData {
     required this.context,
   });
 }
+
+class KidRegisterTeacherData {
+  final String kid_id;
+  final BuildContext context;
+
+  KidRegisterTeacherData({
+    required this.kid_id,
+    required this.context,
+  });
+}
+
+class ExitClassData {
+  final String class_id;
+  final BuildContext context;
+
+  ExitClassData({
+    required this.class_id,
+    required this.context,
+  });
+}

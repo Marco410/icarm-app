@@ -12,14 +12,14 @@ import 'package:icarm/presentation/components/text_field.dart';
 import 'package:icarm/presentation/models/auth/authModels.dart';
 import 'package:icarm/presentation/providers/auth_service.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class ForgotPage extends ConsumerStatefulWidget {
+  const ForgotPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  ConsumerState<ForgotPage> createState() => _ForgotPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _ForgotPageState extends ConsumerState<ForgotPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController emailController = TextEditingController();

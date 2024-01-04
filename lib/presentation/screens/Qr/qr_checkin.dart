@@ -6,13 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/presentation/providers/kids_service.dart';
 import 'package:icarm/presentation/providers/pase_lista_service.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../components/zcomponents.dart';
 
 class QRScanner extends ConsumerStatefulWidget {
-  const QRScanner({Key? key}) : super(key: key);
+  final String? type;
+  const QRScanner({Key? key, required this.type}) : super(key: key);
 
   @override
   ConsumerState<QRScanner> createState() => _QRScannerState();
@@ -164,9 +166,18 @@ class _QRScannerState extends ConsumerState<QRScanner> {
 
       if (result!.code!.substring(0, 3) == 'AYR') {
         controller.dispose();
-        ref.refresh(getUserPaseListaProvider(resultCode));
 
-        context.pushReplacementNamed('confirm');
+        if (widget.type == "pase_lista") {
+          ref.refresh(getUserPaseListaProvider(resultCode));
+
+          context.pushReplacementNamed('confirm');
+        } else if (widget.type == 'kids') {
+          ref.refresh(getKidsProvider(resultCode));
+
+          context.pushReplacementNamed('confirm.kids',
+              pathParameters: {"userID": resultCode});
+          print("No esta en pase de lista");
+        }
       }
     });
   }

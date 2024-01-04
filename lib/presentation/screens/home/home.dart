@@ -123,11 +123,11 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                 (lives.length != 0)
                     ? YoutubeLiveBannerWidget(lives: lives)
                     : SizedBox(),
-                Image.asset(
+                /* Image.asset(
                   "assets/image/home/aniversario.jpg",
-                ),
+                ), */
                 Container(
-                  height: mediaHeight,
+                  height: mediaHeight * 0.8,
                   width: mediaWidth,
                   decoration: BoxDecoration(
                       image: DecorationImage(
@@ -166,6 +166,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                             text: "¡Escucha la radio en vivo!",
                             loading: false,
                             color: Colors.white,
+                            margin: EdgeInsets.all(0),
                             onTap: () {
                               ref
                                   .read(currentIndexPage.notifier)

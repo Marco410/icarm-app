@@ -39,3 +39,17 @@ class RegisterUserData {
     required this.context,
   });
 }
+
+class NotiUserData {
+  final String title;
+  final String msg;
+  final String userIDToSend;
+  final BuildContext context;
+
+  NotiUserData({
+    required this.title,
+    required this.msg,
+    required this.userIDToSend,
+    required this.context,
+  });
+}

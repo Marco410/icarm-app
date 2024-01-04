@@ -8,6 +8,7 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:icarm/config/setting/style.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/zcomponents.dart';
 
@@ -211,7 +212,30 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                   ),
                 ),
               ),
-              Expanded(flex: 5, child: SizedBox()),
+              Expanded(
+                  flex: 5,
+                  child: Container(
+                    decoration: BoxDecoration(),
+                    margin: EdgeInsets.only(right: 20),
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      onTap: () {
+                        launch("https://walink.co/99cfc1");
+                      },
+                      child: Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            color: ColorStyle.secondaryColor,
+                            borderRadius: BorderRadius.circular(50)),
+                        child: Icon(
+                          Icons.message,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  )),
             ],
           ),
         ),

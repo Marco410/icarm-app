@@ -20,7 +20,7 @@ class KidsPage extends ConsumerStatefulWidget {
 class _KidsPageState extends ConsumerState<KidsPage> {
   @override
   Widget build(BuildContext context) {
-    final kidsList = ref.watch(getKidsProvider);
+    final kidsList = ref.watch(getKidsProvider(prefs.usuarioID));
 
     return Scaffold(
       appBar: AppBarWidget(
@@ -57,6 +57,19 @@ class _KidsPageState extends ConsumerState<KidsPage> {
                   "Pases de lista, eventos y más",
                   style: TxtStyle.hintText,
                 ),
+                (prefs.usuarioRol.contains('1') ||
+                        prefs.usuarioRol.contains('6'))
+                    ? CustomButton(
+                        text: "Administración de niños",
+                        margin: EdgeInsets.only(
+                            top: 5, bottom: 5, left: 30, right: 30),
+                        onTap: () {
+                          context.pushNamed('kidsAdmin');
+                        },
+                        color: ColorStyle.primaryColor,
+                        textColor: Colors.white,
+                        loading: false)
+                    : SizedBox(),
                 LineWidget(),
               ],
             ),

@@ -1,20 +1,19 @@
 name: icarm
 description: icarm App
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 2.0.2
+version: 2.1.1
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
-
+  sdk: ">=3.0.5 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
- 
+
   flutter_localized_locales: ^2.0.3
   http: ^0.13.3
   global_configuration: ^2.0.0-nullsafety.1
@@ -44,7 +43,7 @@ dependencies:
   flutter_riverpod: ^2.3.7
   bot_toast: ^4.0.4
   internet_connection_checker: ^1.0.0+1
-  flutter_svg: ^2.0.7
+  flutter_svg: ^2.0.9
   accordion: ^2.6.0
   flutter_secure_storage: ^9.0.0
   searchable_listview: ^2.7.1
@@ -52,8 +51,8 @@ dependencies:
   qr_flutter: ^4.1.0
   just_audio: ^0.9.35
   just_audio_background: ^0.0.1-beta.10
+  flutter_html_iframe: ^3.0.0-beta.2
 
-  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,7 +64,6 @@ flutter_icons:
   image_path: "assets/image/logoApps.png"
 
 flutter:
-
   uses-material-design: true
 
   fonts:

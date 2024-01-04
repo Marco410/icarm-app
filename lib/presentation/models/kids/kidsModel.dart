@@ -78,7 +78,7 @@ class Kid {
         fechaNacimiento: DateTime.parse(json["fecha_nacimiento"]),
         createAt: DateTime.parse(json["created_at"]),
         sexo: json["sexo"],
-        enfermedad: json["enfermedad"],
+        enfermedad: json["enfermedad"] ?? '',
         active: json["active"],
       );
 

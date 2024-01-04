@@ -89,7 +89,8 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                     title: 'PASE LISTA',
                     subtitle: 'Pasa la lista a los alumnos',
                     onTap: () {
-                      context.pushNamed('scanner');
+                      context.pushNamed('scanner',
+                          pathParameters: {"type": "pase_lista"});
                     },
                   )
                 : SizedBox(),
@@ -97,7 +98,11 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
               text: "Cerrar Sesión",
               margin: EdgeInsets.only(top: 10, right: 30, left: 30),
               onTap: () {
-                ref.refresh(logoutProvider(context));
+                NotificationUI.instance.notificationToAcceptAction(context,
+                    "Tu sesión se cerrará. \n\n Tendrás que volver a agregar tu usuario y contraseña.",
+                    () {
+                  ref.refresh(logoutProvider(context));
+                });
               },
               loading: false,
               textColor: Colors.white,
@@ -112,10 +117,10 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                   ref.refresh(deleteAccountProvider(context));
                 });
               },
-              color: Colors.red[300],
+              color: Colors.white,
               loading: false,
               size: 'sm',
-              textColor: Colors.white,
+              textColor: Colors.black,
             )
           ],
         ),

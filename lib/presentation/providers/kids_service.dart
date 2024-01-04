@@ -18,9 +18,10 @@ final updateKidProvider = StateProvider<bool>((ref) {
   return false;
 });
 
-final getKidsProvider = FutureProvider<List<Kid>?>((ref) async {
+final getKidsProvider =
+    FutureProvider.family<List<Kid>?, String>((ref, userID) async {
   final Map<String, String> getKids = {
-    "user_id": prefs.usuarioID,
+    "user_id": userID,
   };
 
   String decodedResp = await BaseHttpService.baseGet(
@@ -63,7 +64,7 @@ final registerKid =
       NotificationUI.instance.notificationSuccess('Hij@ registrado con éxito.');
 
       kidRegister.context.pop();
-      ref.refresh(getKidsProvider);
+      ref.refresh(getKidsProvider(prefs.usuarioID));
     } else {
       NotificationUI.instance.notificationWarning(
           'No pudimos completar la operación, inténtelo más tarde.');
@@ -96,7 +97,7 @@ final update_kid =
 
       kidRegister.context.pop();
 
-      ref.refresh(getKidsProvider);
+      ref.refresh(getKidsProvider(prefs.usuarioID));
     } else {
       NotificationUI.instance.notificationWarning(
           'No pudimos completar la operación, inténtelo más tarde.');
@@ -118,7 +119,7 @@ final delete_kid =
 
       kidID.context.pop();
 
-      ref.refresh(getKidsProvider);
+      ref.refresh(getKidsProvider(prefs.usuarioID));
     } else {
       NotificationUI.instance.notificationWarning(
           'No pudimos completar la operación, inténtelo más tarde.');

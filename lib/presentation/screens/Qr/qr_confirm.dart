@@ -89,7 +89,8 @@ class _QRConfirmState extends ConsumerState<QRConfirm> {
                 : SizedBox(),
             CustomButton(
               text: "Cancelar",
-              onTap: () => context.pushReplacementNamed('scanner'),
+              onTap: () => context.pushReplacementNamed('scanner',
+                  pathParameters: {"type": "pase_lista"}),
               loading: false,
               color: ColorStyle.hintDarkColor,
               textColor: Colors.white,

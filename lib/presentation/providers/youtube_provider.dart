@@ -28,10 +28,13 @@ final liveProvider = FutureProvider.autoDispose<void>((ref) async {
 
       final Map<String, dynamic> decode = json.decode(resp);
 
-      YoutubeModel isLive = youtubeModelFromJson(resp);
-
-      ref.read(isLiveProvider.notifier).update((state) => isLive.items);
-      if (decode['error']['code'] == 403) {
+      if (decode['error'] == null) {
+        YoutubeModel isLive = youtubeModelFromJson(resp);
+        ref.read(isLiveProvider.notifier).update((state) => isLive.items);
+      } else {
+        if (decode['error']['code'] == 403) {
+          return;
+        }
         return;
       }
     }

@@ -138,7 +138,8 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () => setState(() => links[1] = !links[1]),
+                onTap: () => launch(
+                    "https://www.amoryrestauracionmorelia.org/online-1") /* setState(() => links[1] = !links[1]) */,
                 child: AccordionWidget(
                   title: "Online",
                   subtitle: "Accede a nuestros recursos en linea",
@@ -170,7 +171,8 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () => setState(() => links[3] = !links[3]),
+                onTap: () => launch(
+                    "https://www.amoryrestauracionmorelia.org/refugios-1") /* setState(() => links[3] = !links[3]) */,
                 child: AccordionWidget(
                   title: "Refugios",
                   subtitle: "Conoce nuestros centros",
@@ -182,7 +184,8 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () => setState(() => links[4] = !links[4]),
+                onTap: () => launch(
+                    "https://www.amoryrestauracionmorelia.org/alimentos-1") /* setState(() => links[4] = !links[4]) */,
                 child: AccordionWidget(
                   title: "Banco de alimentos",
                   subtitle: "Participa en el próximo",
@@ -194,7 +197,8 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () => setState(() => links[5] = !links[5]),
+                onTap: () => launch(
+                    "https://www.amoryrestauracionmorelia.org/iglesias-1") /* setState(() => links[5] = !links[5]) */,
                 child: AccordionWidget(
                   title: "Más iglesias",
                   subtitle: "Consulta más ubicaciones en México",
@@ -206,7 +210,8 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () => setState(() => links[6] = !links[6]),
+                onTap: () => launch(
+                    "https://www.amoryrestauracionmorelia.org/biblia-1") /* setState(() => links[6] = !links[6]) */,
                 child: AccordionWidget(
                   title: "Biblia",
                   subtitle: "Accede a nuestros planes de lectura",
@@ -233,7 +238,7 @@ class _MaterialDrawerState extends State<MaterialDrawer> {
                   InkWell(
                     onTap: () {
                       launch(
-                          "https://www.amoryrestauracionmorelia.org/whatsapp");
+                          "https://www.amoryrestauracionmorelia.org/whatsapp-1");
                     },
                     child: Image.network(
                       "https://static.wixstatic.com/media/3d0692_2abf6ec42ad54a56aa2258e118b24306~mv2.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/3d0692_2abf6ec42ad54a56aa2258e118b24306~mv2.png",
