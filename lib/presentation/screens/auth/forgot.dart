@@ -1,7 +1,6 @@
 // ignore_for_file: unused_result
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/routes/app_router.dart';
@@ -9,8 +8,8 @@ import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/text_field.dart';
-import 'package:icarm/presentation/models/auth/authModels.dart';
-import 'package:icarm/presentation/providers/auth_service.dart';
+
+import '../../controllers/auth_controller.dart';
 
 class ForgotPage extends ConsumerStatefulWidget {
   const ForgotPage({super.key});
@@ -23,15 +22,12 @@ class _ForgotPageState extends ConsumerState<ForgotPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passController = TextEditingController();
 
-  FocusNode passFocus = FocusNode();
   FocusNode emailFocus = FocusNode();
 
   bool loading = false;
 
   unFocusNodes() {
-    passFocus.unfocus();
     emailFocus.unfocus();
   }
 
@@ -60,11 +56,18 @@ class _ForgotPageState extends ConsumerState<ForgotPage> {
                   height: 15,
                 ),
                 Text(
-                  "¡Bienvenidos!",
+                  "Recupera tu contraseña",
                   style: TxtStyle.headerStyle,
                 ),
                 SizedBox(
                   height: 15,
+                ),
+                Text(
+                  "Escribe tu correo electronico para que te llegue un correo de recuperación.",
+                  style: TxtStyle.labelText,
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -77,28 +80,6 @@ class _ForgotPageState extends ConsumerState<ForgotPage> {
                       controller: emailController,
                       focusNode: emailFocus,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFieldWidget(
-                      border: true,
-                      isRequired: true,
-                      textInputType: TextInputType.text,
-                      isVisible: false,
-                      hintText: 'Contraseña',
-                      controller: passController,
-                      focusNode: passFocus,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    InkWell(
-                      onTap: () => context.pushNamed("forgot"),
-                      child: Text(
-                        "¿Olvidaste tu contraseña?",
-                        style: TxtStyle.labelText,
-                      ),
-                    ),
                   ],
                 ),
                 SizedBox(
@@ -107,24 +88,24 @@ class _ForgotPageState extends ConsumerState<ForgotPage> {
                 Column(
                   children: [
                     CustomButton(
-                      text: "Ingresar",
-                      onTap: () {
+                      text: "Recuperar contraseña",
+                      onTap: () async {
                         if (!_formKey.currentState!.validate()) {
                           NotificationUI.instance.notificationWarning(
                               "Revisa los datos que ingresaste.");
                           return;
                         }
-
                         setState(() => loading = true);
-                        ref.refresh(loginProvider(LoginData(
-                          context: context,
-                          email: emailController.text,
-                          password: passController.text,
-                        )));
 
-                        Future.delayed(const Duration(seconds: 2), () {
+                        bool resp = await AuthController.forgotPass(
+                            emailController.text, ref);
+
+                        if (resp) {
                           setState(() => loading = false);
-                        });
+                          context.pop();
+                        } else {
+                          setState(() => loading = false);
+                        }
                       },
                       loading: loading,
                       textColor: Colors.white,
@@ -141,6 +122,25 @@ class _ForgotPageState extends ConsumerState<ForgotPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("¿Ya tienes una cuenta?"),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        InkWell(
+                          onTap: () => context.pop(),
+                          child: Text(
+                            "Ingresa aquí",
+                            style: TxtStyle.labelText,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/components/zcomponents.dart';
-import 'package:icarm/presentation/providers/kids_service.dart';
 
 import '../../../../config/share_prefs/prefs_usuario.dart';
 import '../../../components/views/data_kid.dart';

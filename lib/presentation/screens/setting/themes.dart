@@ -28,10 +28,8 @@ class ThemeBloc {
         ThemeData(
             brightness: Brightness.light,
             scaffoldBackgroundColor: ColorStyle.background,
-            backgroundColor: ColorStyle.blackBackground,
             primaryColor: ColorStyle.primaryColor,
-            textSelectionTheme: TextSelectionThemeData(),
-            colorScheme: ColorScheme.fromSwatch()
-                .copyWith(secondary: ColorStyle.primaryColor)));
+            textSelectionTheme: TextSelectionThemeData(), colorScheme: ColorScheme.fromSwatch()
+                .copyWith(secondary: ColorStyle.primaryColor).copyWith(background: ColorStyle.blackBackground)));
   }
 }

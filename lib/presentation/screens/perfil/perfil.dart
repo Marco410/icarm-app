@@ -68,6 +68,15 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                 )
               ],
             ),
+            (prefs.pass_update == "1")
+                ? CustomButton(
+                    margin: EdgeInsets.all(0),
+                    text: "Da clic aquí para cambiar tu contraseña.",
+                    onTap: () => context.pushNamed('change.password'),
+                    textColor: Colors.white,
+                    color: Colors.blue,
+                    loading: false)
+                : SizedBox(),
             MenuItemWidget(
               icon: 'noti.svg',
               title: 'NOTIFICACIONES',

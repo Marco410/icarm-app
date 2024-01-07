@@ -154,6 +154,7 @@ class AuthService {
     prefs.telefono = resp['data']['user']['telefono'].toString();
     prefs.sexo = resp['data']['user']['sexo'].toString();
     prefs.pais = resp['data']['user']['pais_id'].toString();
+    prefs.pass_update = resp['data']['user']['pass_update'].toString();
 
     List<String> roles = [];
     for (final rol in resp['data']['user']['roles']) {

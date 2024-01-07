@@ -88,6 +88,14 @@ class PreferenciasUsuario with ChangeNotifier {
     _prefs.setString("pais", value);
   }
 
+  String get pass_update {
+    return _prefs.getString("pass_update")!;
+  }
+
+  set pass_update(String value) {
+    _prefs.setString("pass_update", value);
+  }
+
   List<String> get usuarioRol {
     return _prefs.getStringList("usuarioRol") ?? [];
   }

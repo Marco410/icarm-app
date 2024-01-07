@@ -12,6 +12,7 @@ import 'package:icarm/presentation/screens/perfil/perfil.dart';
 
 import '../../presentation/components/drawer.dart';
 import '../../presentation/screens/auth/forgot.dart';
+import '../../presentation/screens/perfil/change_password.dart';
 import '../../presentation/screens/perfil/kids/admin/teachers.dart';
 import '../../presentation/screens/perfil/notifications/noti_preview.dart';
 import '../../presentation/screens/screens.dart';
@@ -42,6 +43,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           name: 'perfil',
           builder: (context, state) => PerfilPage(),
           routes: [
+            GoRoute(
+              path: 'change-password',
+              name: 'change.password',
+              builder: (context, state) => ChangePasswordPage(),
+            ),
             GoRoute(
                 path: 'notifications',
                 name: 'notifications',

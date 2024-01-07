@@ -5,10 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/components/zcomponents.dart';
-import 'package:icarm/presentation/models/kids/kidsInClassModel.dart';
 
 import '../../../../../config/share_prefs/prefs_usuario.dart';
-import '../../../../components/sub_accordion_widget.dart';
 import '../../../../components/views/data_kid.dart';
 import '../../../../providers/teacher_kids_provider.dart';
 
