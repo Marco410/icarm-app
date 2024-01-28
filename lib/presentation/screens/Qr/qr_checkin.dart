@@ -11,6 +11,8 @@ import 'package:icarm/presentation/providers/pase_lista_service.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../components/zcomponents.dart';
+import '../../models/models.dart';
+import '../../providers/teacher_kids_provider.dart';
 
 class QRScanner extends ConsumerStatefulWidget {
   final String? type;
@@ -173,11 +175,17 @@ class _QRScannerState extends ConsumerState<QRScanner> {
           context.pushReplacementNamed('confirm');
         } else if (widget.type == 'kids') {
           ref.refresh(getKidsProvider(resultCode));
-
           context.pushReplacementNamed('confirm.kids',
               pathParameters: {"userID": resultCode});
           print("No esta en pase de lista");
         }
+      } else if (result!.code!.substring(0, 3) == 'KID') {
+        controller.dispose();
+
+        ref.refresh(registerKidTeacherProvider(
+            KidRegisterTeacherData(kid_id: resultCode, context: context)));
+
+        context.pushReplacementNamed('kidsAdmin');
       }
     });
   }

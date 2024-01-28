@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unused_result
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -161,6 +161,7 @@ Future<void> DataKid(
                                               focusNode: msgNode,
                                               controller: msgController,
                                               lines: 4,
+                                              capitalize: true,
                                             ),
                                             SizedBox(
                                               height: 15,
@@ -170,6 +171,7 @@ Future<void> DataKid(
                                               text: "Enviar",
                                               onTap: () {
                                                 if (msgController.text != "") {
+                                                  print("ASDSDA");
                                                   setState(() {
                                                     loadingNoti = true;
                                                   });
@@ -184,8 +186,21 @@ Future<void> DataKid(
                                                               .toString(),
                                                           context: context)));
 
+                                                  final Uri toLaunch = Uri(
+                                                      scheme: 'https',
+                                                      host: 'wa.me',
+                                                      path:
+                                                          '${kidClass.kid.user.telefono}',
+                                                      queryParameters: {
+                                                        "text":
+                                                            msgController.text
+                                                      });
+
                                                   Future.delayed(
                                                       Duration(seconds: 1), () {
+                                                    launchUrl(toLaunch,
+                                                        mode: LaunchMode
+                                                            .externalApplication);
                                                     msgController.text = "";
                                                     setState(() {
                                                       loadingNoti = false;

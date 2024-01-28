@@ -2,6 +2,7 @@ import 'package:flutter/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/presentation/models/kids/kidsModel.dart';
+import 'package:icarm/presentation/screens/drawer_menu/web_view.dart';
 
 import 'package:icarm/presentation/screens/home/main_home.dart';
 import 'package:icarm/presentation/screens/perfil/kids/admin/qr_confirm_kids.dart';
@@ -145,7 +146,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             return EventScreen(
               event: event,
             );
-          })
+          }),
+      GoRoute(
+          name: 'drawer',
+          path: 'drawer',
+          builder: (context, state) => SizedBox(),
+          routes: [
+            GoRoute(
+              name: 'web.view',
+              path: 'web-view:url',
+              builder: (context, state) {
+                String? url = state.pathParameters["url"];
+
+                return WebViewPage(url: url!);
+              },
+            )
+          ]),
     ]),
   ]);
 });

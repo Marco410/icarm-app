@@ -34,14 +34,15 @@ final registerKidTeacherProvider =
   if (decodedResp != "") {
     final Map<String, dynamic> resp = json.decode(decodedResp);
     if (resp["status"] == 'Success') {
-      NotificationUI.instance.notificationSuccess('Niño agregado con éxito');
+      NotificationUI.instance
+          .notificationSuccess('Niño agregado a tu salón con éxito');
       data.context.pop();
 
       ref.refresh(getKidsInClassroomProvider(prefs.usuarioID));
     } else {
       if (resp['description'] != null) {
         return NotificationUI.instance
-            .notificationWarning("Alerta:" + resp['description']['message']);
+            .notificationWarning("Alerta: " + resp['description']['message']);
       }
 
       NotificationUI.instance.notificationWarning(

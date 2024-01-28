@@ -102,7 +102,7 @@ class _KidsPageState extends ConsumerState<KidsPage> {
               loading: () =>
                   Expanded(child: LoadingStandardWidget.loadingWidget())),
           CustomButton(
-            text: "Registrar nuevo",
+            text: "Registrar a mi hijo",
             onTap: () {
               ref.read(updateKidProvider.notifier).update((state) => false);
 

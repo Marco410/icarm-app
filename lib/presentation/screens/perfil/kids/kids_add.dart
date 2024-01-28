@@ -339,7 +339,7 @@ class _KidViewWidgetState extends State<KidViewWidget> {
   Widget build(BuildContext context) {
     Random random = new Random();
 
-    final qrData = "AYR${random.nextInt(80) + 10}${widget.kid.id}";
+    final qrData = "KID${random.nextInt(80) + 10}${widget.kid.id}";
 
     return Container(
       width: double.infinity,

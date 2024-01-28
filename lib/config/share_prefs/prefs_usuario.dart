@@ -89,7 +89,7 @@ class PreferenciasUsuario with ChangeNotifier {
   }
 
   String get pass_update {
-    return _prefs.getString("pass_update")!;
+    return _prefs.getString("pass_update") ?? "";
   }
 
   set pass_update(String value) {

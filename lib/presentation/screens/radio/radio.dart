@@ -162,12 +162,6 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         FadedScaleAnimation(
-                          child: Text("Radio ICARM",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold)),
-                        ),
-                        FadedScaleAnimation(
                           child: Text("Una palabra, puede cambiar tu vida.",
                               textAlign: TextAlign.center,
                               style: TextStyle(

@@ -25,6 +25,11 @@ class _TeachersPageState extends ConsumerState<TeachersPage> {
     final teachers = ref.watch(getTeacherListProvider);
     final openList = ref.watch(openTeacherProvider);
 
+    Future<void> onRefresh(WidgetRef ref) async {
+      // ignore: unused_result
+      ref.refresh(getTeacherListProvider);
+    }
+
     return Scaffold(
       appBar: AppBarWidget(
         backButton: true,
@@ -32,157 +37,177 @@ class _TeachersPageState extends ConsumerState<TeachersPage> {
       ),
       body: Container(
         padding: EdgeInsets.only(left: 0, right: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Text(
-                "Hola ${prefs.nombre} bienvenido.",
-                style: TxtStyle.headerStyle,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Text(
-                "Aquí podrás ver los maestros de niños. En cada uno podras ver los niños que están en su salón.",
-                style: TxtStyle.hintText,
-                textAlign: TextAlign.justify,
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              "Maestros:",
-              style: TxtStyle.headerStyle,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: teachers.when(
-                data: (data) {
-                  if (data.isEmpty) {
-                    return LoadingStandardWidget.loadingNoDataWidget(
-                        "maestros");
-                  }
+        child: RefreshIndicator(
+          color: ColorStyle.primaryColor,
+          onRefresh: () => onRefresh(ref),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                    "Hola ${prefs.nombre} bienvenido.",
+                    style: TxtStyle.headerStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Text(
+                    "Aquí podrás ver los maestros de niños. En cada uno podras ver los niños que están en su salón.",
+                    style: TxtStyle.hintText,
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "Maestros:",
+                  style: TxtStyle.headerStyle,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: teachers.when(
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return LoadingStandardWidget.loadingNoDataWidget(
+                            "maestros");
+                      }
 
-                  return ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: (() {
-                          setState(() {
-                            openList[index] = !openList[index];
-                          });
+                      return RefreshIndicator(
+                        color: ColorStyle.primaryColor,
+                        onRefresh: () => onRefresh(ref),
+                        child: ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: (() {
+                                setState(() {
+                                  openList[index] = !openList[index];
+                                });
 
-                          ref
-                              .read(openTeacherProvider.notifier)
-                              .update((state) => openList);
-                        }),
-                        child: AccordionWidget(
-                          title: "${data[index].nombre} ",
-                          subtitle:
-                              "${data[index].apellidoPaterno} ${data[index].apellidoMaterno}",
-                          isOpen: openList[index],
-                          content: (data[index].classroom!.length != 0)
-                              ? ListView.builder(
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.all(0),
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: data[index].classroom!.length,
-                                  itemBuilder:
-                                      (BuildContext context, int indexC) {
-                                    return InkWell(
-                                      onTap: () {
-                                        DataKid(context, ref,
-                                            data[index].classroom![indexC]);
-                                      },
-                                      child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          margin: EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                  blurRadius: 10,
-                                                  spreadRadius: -9,
-                                                  offset: Offset(0, -1))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: Icon(
-                                                  (data[index]
-                                                              .classroom![
-                                                                  indexC]
-                                                              .kid
-                                                              .sexo ==
-                                                          'Hombre')
-                                                      ? Icons.face_rounded
-                                                      : Icons.face_2_rounded,
-                                                  color:
-                                                      ColorStyle.secondaryColor,
-                                                  size: 30,
+                                ref
+                                    .read(openTeacherProvider.notifier)
+                                    .update((state) => openList);
+                              }),
+                              child: AccordionWidget(
+                                title: "${data[index].nombre} ",
+                                subtitle:
+                                    "${data[index].apellidoPaterno} ${data[index].apellidoMaterno}",
+                                isOpen: openList[index],
+                                content: (data[index].classroom!.length != 0)
+                                    ? ListView.builder(
+                                        shrinkWrap: true,
+                                        padding: EdgeInsets.all(0),
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount:
+                                            data[index].classroom!.length,
+                                        itemBuilder:
+                                            (BuildContext context, int indexC) {
+                                          return InkWell(
+                                            onTap: () {
+                                              DataKid(
+                                                  context,
+                                                  ref,
+                                                  data[index]
+                                                      .classroom![indexC]);
+                                            },
+                                            child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                margin: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                        blurRadius: 10,
+                                                        spreadRadius: -9,
+                                                        offset: Offset(0, -1))
+                                                  ],
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 30,
-                                              ),
-                                              Expanded(
-                                                flex: 10,
-                                                child: Text(
-                                                  "${data[index].classroom![indexC].kid.nombre} ${data[index].classroom![indexC].kid.aPaterno} ${data[index].classroom![indexC].kid.aMaterno}",
-                                                  overflow: TextOverflow.fade,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                  flex: 2,
-                                                  child: Icon(Icons
-                                                      .arrow_forward_ios_rounded))
-                                            ],
-                                          )),
-                                    );
-                                  })
-                              : Text(
-                                  "No hay niños en su salón.",
-                                  style: TxtStyle.hintText,
-                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Icon(
+                                                        (data[index]
+                                                                    .classroom![
+                                                                        indexC]
+                                                                    .kid
+                                                                    .sexo ==
+                                                                'Hombre')
+                                                            ? Icons.face_rounded
+                                                            : Icons
+                                                                .face_2_rounded,
+                                                        color: ColorStyle
+                                                            .secondaryColor,
+                                                        size: 30,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 30,
+                                                    ),
+                                                    Expanded(
+                                                      flex: 10,
+                                                      child: Text(
+                                                        "${data[index].classroom![indexC].kid.nombre} ${data[index].classroom![indexC].kid.aPaterno} ${data[index].classroom![indexC].kid.aMaterno}",
+                                                        overflow:
+                                                            TextOverflow.fade,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 15,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                        flex: 2,
+                                                        child: Icon(Icons
+                                                            .arrow_forward_ios_rounded))
+                                                  ],
+                                                )),
+                                          );
+                                        })
+                                    : Text(
+                                        "No hay niños en su salón.",
+                                        style: TxtStyle.hintText,
+                                      ),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
-                  );
-                },
-                error: (_, __) => LoadingStandardWidget.loadingErrorWidget(),
-                loading: () => Center(
-                  child: LoadingStandardWidget.loadingWidget(),
-                ),
-              ),
-            )
-          ],
+                    error: (_, __) =>
+                        LoadingStandardWidget.loadingErrorWidget(),
+                    loading: () => Center(
+                      child: LoadingStandardWidget.loadingWidget(),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

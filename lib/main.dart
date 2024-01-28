@@ -60,6 +60,7 @@ class _myAppState extends ConsumerState<myApp> {
       NotificationUI.instance.notificationAlert(
           message.notification!.title!, message.notification!.body!);
     });
+
     super.initState();
   }
 

@@ -24,6 +24,7 @@ class TextFieldWidget extends StatelessWidget {
   final Widget? iconField;
   final FocusNode? focusNode;
   final Function? onEditingComplete;
+  final bool capitalize;
 
   TextFieldWidget(
       {super.key,
@@ -44,6 +45,7 @@ class TextFieldWidget extends StatelessWidget {
       this.iconField,
       this.focusNode,
       this.onEditingComplete,
+      this.capitalize = false,
       required this.isRequired,
       required this.textInputType});
 
@@ -93,7 +95,9 @@ class TextFieldWidget extends StatelessWidget {
               textInputAction: TextInputAction.done,
               textCapitalization: (textInputType == TextInputType.emailAddress)
                   ? TextCapitalization.none
-                  : TextCapitalization.words,
+                  : (capitalize)
+                      ? TextCapitalization.sentences
+                      : TextCapitalization.words,
               validator: (input) {
                 if (textInputType == TextInputType.emailAddress) {
                   String pattern =
