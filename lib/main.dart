@@ -8,6 +8,7 @@ import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/config/generated/l10n.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:sizer_pro/sizer.dart';
 import 'presentation/providers/notification_provider.dart';
 import 'presentation/providers/providers.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -67,21 +68,22 @@ class _myAppState extends ConsumerState<myApp> {
   @override
   Widget build(BuildContext context) {
     final appRouter = ref.watch(appRouterProvider);
-
-    return MaterialApp.router(
-      title: 'ICARM',
-      debugShowCheckedModeBanner: false,
-      scaffoldMessengerKey: NotificationService.messengerkey,
-      routerConfig: appRouter,
-      builder: BotToastInit(),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        S.delegate,
-        LocaleNamesLocalizationsDelegate(),
-      ],
-      supportedLocales: S.delegate.supportedLocales,
-    );
+    return Sizer(builder: (context, orientation, deviceType) {
+      return MaterialApp.router(
+        title: 'ICARM',
+        debugShowCheckedModeBanner: false,
+        scaffoldMessengerKey: NotificationService.messengerkey,
+        routerConfig: appRouter,
+        builder: BotToastInit(),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          S.delegate,
+          LocaleNamesLocalizationsDelegate(),
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+      );
+    });
   }
 }

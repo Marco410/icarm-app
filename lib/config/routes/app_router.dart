@@ -1,7 +1,10 @@
 import 'package:flutter/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icarm/presentation/models/EventoModel.dart';
 import 'package:icarm/presentation/models/kids/kidsModel.dart';
+import 'package:icarm/presentation/screens/admin/admin.dart';
+import 'package:icarm/presentation/screens/admin/eventos/add_evento.dart';
 import 'package:icarm/presentation/screens/drawer_menu/web_view.dart';
 
 import 'package:icarm/presentation/screens/home/main_home.dart';
@@ -11,8 +14,11 @@ import 'package:icarm/presentation/screens/perfil/kids/kids_add.dart';
 import 'package:icarm/presentation/screens/perfil/kids/kids_admin.dart';
 import 'package:icarm/presentation/screens/perfil/perfil.dart';
 
-import '../../presentation/components/drawer.dart';
+import '../../presentation/screens/admin/eventos/eventos.dart';
 import '../../presentation/screens/auth/forgot.dart';
+import '../../presentation/screens/home/event/event_invitado.dart';
+import '../../presentation/screens/home/event/event_invites.dart';
+import '../../presentation/screens/home/event/event_register.dart';
 import '../../presentation/screens/perfil/change_password.dart';
 import '../../presentation/screens/perfil/kids/admin/teachers.dart';
 import '../../presentation/screens/perfil/notifications/noti_preview.dart';
@@ -139,14 +145,50 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 }),
           ]),
       GoRoute(
-          path: 'event',
+          path: 'event:eventoID',
           name: 'event',
           builder: (context, state) {
-            Event event = state.extra as Event;
+            String? eventoID = state.pathParameters['eventoID'];
             return EventScreen(
-              event: event,
+              eventoID: eventoID!,
             );
-          }),
+          },
+          routes: [
+            GoRoute(
+                path: 'event-invites',
+                name: 'event.invites',
+                builder: (context, state) {
+                  String? eventoID = state.pathParameters['eventoID'];
+
+                  return EventInvitesScreen(
+                    eventoID: eventoID!,
+                  );
+                },
+                routes: [
+                  GoRoute(
+                      path: 'event-invitado:encontradoID',
+                      name: 'event.invitado',
+                      builder: (context, state) {
+                        String? encontradoID =
+                            state.pathParameters['encontradoID'];
+                        return EventInviteScreen(
+                          encontradoID: encontradoID!,
+                        );
+                      })
+                ]),
+            GoRoute(
+              path: 'event-register:type/:toRegister',
+              name: 'event.register',
+              builder: (context, state) {
+                String? eventoID = state.pathParameters['eventoID'];
+                String? type = state.pathParameters['type'];
+                String? toRegister = state.pathParameters['toRegister'];
+
+                return EventRegisterScreen(
+                    eventoID: eventoID!, type: type!, toRegister: toRegister!);
+              },
+            )
+          ]),
       GoRoute(
           name: 'drawer',
           path: 'drawer',
@@ -161,6 +203,35 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 return WebViewPage(url: url!);
               },
             )
+          ]),
+      GoRoute(
+          name: 'admin',
+          path: 'admin',
+          builder: (context, state) => AdminPage(),
+          routes: [
+            GoRoute(
+                name: "eventos",
+                path: "eventos",
+                builder: (context, state) => EventosAdminPage(),
+                routes: [
+                  GoRoute(
+                    name: "new.evento",
+                    path: 'new-evento:type',
+                    builder: (context, state) {
+                      String? ty = state.pathParameters['type'];
+                      Evento? evento = null;
+
+                      if (ty == 'edit') {
+                        evento = state.extra as Evento;
+                      }
+
+                      return AddEventosAdminPage(
+                        type: ty,
+                        evento: evento,
+                      );
+                    },
+                  )
+                ])
           ]),
     ]),
   ]);

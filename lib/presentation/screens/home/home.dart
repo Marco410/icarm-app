@@ -2,17 +2,22 @@
 
 import 'dart:async';
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
+import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/carousel_widget.dart';
 import 'package:icarm/presentation/components/components.dart';
 import 'package:icarm/presentation/components/content_ad_widget.dart';
 import 'package:icarm/presentation/components/custombutton.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/components/video_home_widget.dart';
+import 'package:icarm/presentation/providers/evento_provider.dart';
 import 'package:icarm/presentation/providers/youtube_provider.dart';
+import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:icarm/config/setting/style.dart';
@@ -31,6 +36,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
   Future delayedLoading = Future(() => null);
 
   late VideoPlayerController _controller;
+  late VideoPlayerController _controllerHomeVideo;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   _HomeState();
@@ -49,6 +55,17 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
         _controller.play();
       });
 
+    _controllerHomeVideo = VideoPlayerController.asset(
+      'assets/video/home.mp4',
+    )
+      ..setLooping(true)
+      ..initialize().then((_) {
+        _controllerHomeVideo.setVolume(0);
+        _controllerHomeVideo.play();
+      });
+
+    ref.refresh(getEventosProvider);
+
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -56,6 +73,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
   @override
   void dispose() {
     _controller.dispose();
+    _controllerHomeVideo.dispose();
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
@@ -73,6 +91,24 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
 
     List<Widget> textItems = [
       VideoHomeWidget(loading: loading, controller: _controller),
+      ContentAdWidget(
+        image: "assets/image/home/hombres-radio.jpeg",
+        title: "Hombres Valientes",
+        subTitle: "Martes 5:30pm",
+        actionButton: () {},
+      ),
+      ContentAdWidget(
+        image: "assets/image/home/hombres-radio.jpeg",
+        title: "Mujeres Entendidas",
+        subTitle: "Jueves 5:30pm",
+        actionButton: () {},
+      ),
+      ContentAdWidget(
+        image: "assets/image/home/jovenes-radio.jpeg",
+        title: "Jóvenes de Influencia",
+        subTitle: "Jueves 7:00pm",
+        actionButton: () {},
+      ),
       ContentAdWidget(
         image: "assets/image/home/refugio.png",
         title: "Centros de restauración",
@@ -106,7 +142,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
     ];
 
     final mediaHeight = MediaQuery.of(context).size.height;
-    final mediaWidth = MediaQuery.of(context).size.width;
+    final eventoFavorite = ref.watch(eventoFavoriteProvider);
     return FadedSlideAnimation(
       beginOffset: Offset(0, 0.3),
       endOffset: Offset(0, 0),
@@ -123,59 +159,75 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                 (lives.length != 0)
                     ? YoutubeLiveBannerWidget(lives: lives)
                     : SizedBox(),
-                /* Image.asset(
-                  "assets/image/home/aniversario.jpg",
-                ), */
-                Container(
-                  height: mediaHeight * 0.8,
-                  width: mediaWidth,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image:
-                              AssetImage("assets/image/home/fotoportada.jpg"),
-                          fit: BoxFit.cover)),
-                  child: Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 180, horizontal: 35),
-                      padding: EdgeInsets.all(25),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.black.withOpacity(0.7),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                (eventoFavorite != null)
+                    ? CachedNetworkImage(
+                        imageUrl:
+                            "${URL_MEDIA_EVENTO}/${eventoFavorite.id}/${eventoFavorite.imgVertical}",
+                        placeholder: (context, url) =>
+                            LoadingStandardWidget.loadingWidget(),
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.fill),
+                          ),
+                        ),
+                        height: 75.h,
+                      )
+                    : SizedBox(),
+                _controllerHomeVideo.value.isInitialized
+                    ? Stack(
+                        alignment: Alignment.center,
                         children: [
-                          Text(
-                            "${prefs.nombre} ¡bienvenido!",
-                            style: TxtStyle.headerStyle
-                                .copyWith(color: Colors.white),
-                            textAlign: TextAlign.center,
-                          ),
                           SizedBox(
-                            height: 15,
+                            height: 90.h,
+                            child: VideoPlayer(_controllerHomeVideo),
                           ),
-                          Text(
-                            "Somos una iglesia que busca hacer de cada persona un siervo líder, fiel, capaz y comprometido con Dios, que adquiera y reproduzca el carácter de Jesús en otras personas",
-                            style: TxtStyle.descriptionStyle,
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          CustomButton(
-                            text: "¡Escucha la radio en vivo!",
-                            loading: false,
-                            color: Colors.white,
-                            margin: EdgeInsets.all(0),
-                            onTap: () {
-                              ref
-                                  .read(currentIndexPage.notifier)
-                                  .update((state) => 3);
-                            },
-                          )
+                          Container(
+                              height: 50.h,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 50.sp, horizontal: 15.sp),
+                              padding: EdgeInsets.all(25),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.black.withOpacity(0.7),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${prefs.nombre} ¡bienvenido!",
+                                    style: TxtStyle.headerStyle.copyWith(
+                                        color: Colors.white, fontSize: 9.sp),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Somos una iglesia que busca hacer de cada persona un siervo líder, fiel, capaz y comprometido con Dios, que adquiera y reproduzca el carácter de Jesús en otras personas",
+                                    style: TxtStyle.descriptionStyle,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: 25,
+                                  ),
+                                  CustomButton(
+                                    text: "¡Escucha la radio en vivo!",
+                                    loading: false,
+                                    color: Colors.white,
+                                    margin: EdgeInsets.all(0),
+                                    onTap: () {
+                                      ref
+                                          .read(currentIndexPage.notifier)
+                                          .update((state) => 3);
+                                    },
+                                  )
+                                ],
+                              )),
                         ],
-                      )),
-                ),
+                      )
+                    : Container(),
                 Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -275,7 +327,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                           textItems: textItems,
                           controller: _controllerC,
                           current: _current,
-                          size: 0.22,
+                          size: 75.sp,
                           onPageChanged: (index, reason) {
                             setState(() {
                               _current = index;
@@ -381,6 +433,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
 
   Future<void> refreshHome(WidgetRef ref) async {
     ref.refresh(liveProvider);
+    ref.refresh(getEventosProvider);
   }
 }
 

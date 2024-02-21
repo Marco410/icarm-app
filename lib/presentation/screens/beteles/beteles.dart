@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
+import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -338,8 +339,8 @@ class _BetelesPageState extends State<BetelesPage> {
                     Text(
                       "${prefs.nombre} encuentra un betel",
                       overflow: TextOverflow.fade,
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 9.sp, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
@@ -348,7 +349,7 @@ class _BetelesPageState extends State<BetelesPage> {
                     Text(
                       "Un betel es un grupo pequeño donde cada semana compartimos un tiempo en familia y compartimos la palabra de Dios.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 5.sp),
                     ),
                   ],
                 ),
@@ -402,23 +403,19 @@ class _BetelWidgetState extends State<BetelWidget> {
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
-                child: /* Image.network(
-                  widget.betel.img,
-                  scale: 2,
-                ) */
-                    CachedNetworkImage(
+                child: CachedNetworkImage(
                   imageUrl: widget.betel.img,
                   placeholder: (context, url) =>
                       LoadingStandardWidget.loadingWidget(),
                   imageBuilder: (context, imageProvider) => Container(
-                    width: 150,
+                    width: 55.sp,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       image: DecorationImage(
                           image: imageProvider, fit: BoxFit.fitWidth),
                     ),
                   ),
-                  height: 150,
+                  height: 55.sp,
                 ),
               ),
             ),
@@ -438,7 +435,8 @@ class _BetelWidgetState extends State<BetelWidget> {
                             widget.betel.second_name
                         : widget.betel.first_name,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 6.sp),
                   ),
                 ),
                 Row(

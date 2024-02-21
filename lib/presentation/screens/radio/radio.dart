@@ -8,6 +8,7 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:icarm/config/setting/style.dart';
+import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/zcomponents.dart';
@@ -26,6 +27,24 @@ class _RadioPageState extends ConsumerState<RadioPage> {
   int _current = 0;
 
   List<Widget> textItems = [
+    ContentAdWidget(
+      image: "assets/image/home/hombres-radio.jpeg",
+      title: "Hombres Valientes",
+      subTitle: "Martes 5:30pm",
+      actionButton: () {},
+    ),
+    ContentAdWidget(
+      image: "assets/image/home/hombres-radio.jpeg",
+      title: "Mujeres Entendidas",
+      subTitle: "Jueves 5:30pm",
+      actionButton: () {},
+    ),
+    ContentAdWidget(
+      image: "assets/image/home/jovenes-radio.jpeg",
+      title: "Jóvenes de Influencia",
+      subTitle: "Jueves 7:00pm",
+      actionButton: () {},
+    ),
     ContentAdWidget(
       image: "assets/image/home/noches.png",
       title: "Noches de Restauración",
@@ -110,7 +129,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
               borderRadius: BorderRadius.circular(100)),
           child: Icon(
             radioIsPlaying ? Icons.pause : Icons.play_arrow,
-            size: 90,
+            size: 25.sp,
             color: ColorStyle.primaryColor,
           ),
         ),
@@ -127,23 +146,23 @@ class _RadioPageState extends ConsumerState<RadioPage> {
               Text(
                 "A&R Radio - En vivo",
                 style: TxtStyle.headerStyle
-                    .copyWith(color: ColorStyle.primaryColor, fontSize: 30),
+                    .copyWith(color: ColorStyle.primaryColor, fontSize: 9.sp),
               ),
               Text(
                 "${prefs.nombre}, pronto podrás comentar sobre lo que escuchas.",
                 style: TxtStyle.hintText
-                    .copyWith(color: ColorStyle.primaryColor, fontSize: 11),
+                    .copyWith(color: ColorStyle.primaryColor, fontSize: 4.sp),
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               Expanded(
-                flex: 8,
+                flex: 9,
                 child: CarouselWidget(
                     textItems: textItems,
                     controller: _controllerC,
                     current: _current,
-                    size: 0.28,
+                    size: 90.sp,
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
@@ -153,7 +172,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                     mainColor: ColorStyle.primaryColor),
               ),
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: Align(
                   alignment: Alignment.center,
                   child: Padding(
@@ -165,13 +184,14 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                           child: Text("Una palabra, puede cambiar tu vida.",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.normal)),
+                                  fontSize: 6.sp,
+                                  fontWeight: FontWeight.normal)),
                         ),
                         Text(
                           'Puede tardar algunos segundos en empezar.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 4.sp,
                               color: Colors.grey,
                               fontWeight: FontWeight.bold),
                         ),
@@ -195,7 +215,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                                     'Da clic en el botón de play para reproducir nuestra radio.',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 11,
+                                        fontSize: 5.sp,
                                         color: Colors.grey,
                                         fontWeight: FontWeight.bold),
                                   )

@@ -75,6 +75,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       hintText: 'Correo electrónico',
                       controller: emailController,
                       focusNode: emailFocus,
+                      autoFillHints: AutofillHints.username,
                     ),
                     SizedBox(
                       height: 10,
@@ -87,6 +88,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       hintText: 'Contraseña',
                       controller: passController,
                       focusNode: passFocus,
+                      autoFillHints: AutofillHints.password,
                     ),
                     SizedBox(
                       height: 10,

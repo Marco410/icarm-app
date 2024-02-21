@@ -25,6 +25,7 @@ class TextFieldWidget extends StatelessWidget {
   final FocusNode? focusNode;
   final Function? onEditingComplete;
   final bool capitalize;
+  final String? autoFillHints;
 
   TextFieldWidget(
       {super.key,
@@ -46,6 +47,7 @@ class TextFieldWidget extends StatelessWidget {
       this.focusNode,
       this.onEditingComplete,
       this.capitalize = false,
+      this.autoFillHints = "",
       required this.isRequired,
       required this.textInputType});
 
@@ -80,6 +82,7 @@ class TextFieldWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: TextFormField(
+              autofillHints: [autoFillHints ?? ""],
               readOnly: readOnly!,
               autofocus: false,
               controller: controller,
@@ -135,7 +138,7 @@ class TextFieldWidget extends StatelessWidget {
                     if (input!.isEmpty) {
                       return "Requerido";
                     }
-                    if (input.length != 10) {
+                    if (input.length != 10 && label != 'Edad') {
                       return "Debe de ser de 10 dígitos";
                     }
                   }

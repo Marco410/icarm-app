@@ -54,8 +54,11 @@ class _QRPageState extends ConsumerState<QRPage> {
                 version: QrVersions.auto,
                 size: 250,
                 backgroundColor: Colors.white,
-                embeddedImageStyle: QrEmbeddedImageStyle(color: Colors.white),
+                embeddedImageStyle: QrEmbeddedImageStyle(
+                    color: Colors.black, size: Size(60, 40)),
                 constrainErrorBounds: true,
+                // ignore: deprecated_member_use
+                foregroundColor: ColorStyle.primaryColor,
                 padding: EdgeInsets.all(20),
               ),
             ),

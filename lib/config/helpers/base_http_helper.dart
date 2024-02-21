@@ -11,9 +11,12 @@ Future<String?> httpBase(
     Object? body,
     Map<String, String>? headers,
     Map<String, String>? params,
+    Map<String, String>? bodyMultipart,
     bool log = false,
     bool successMessage = false,
     bool showNoti = true,
+    List<String>? keyFile,
+    List<String>? pathFile,
     bool authorization = false}) async {
   http.Response response = http.Response("", 500);
   /* try { */
@@ -50,6 +53,25 @@ Future<String?> httpBase(
       case "DELETE":
         response = await http.delete(url, body: body, headers: headers);
         data = response.body;
+        break;
+
+      case "MULTIPART":
+        final request = http.MultipartRequest('POST', url);
+        if (pathFile != null && pathFile.isNotEmpty) {
+          pathFile.asMap().forEach((index, elementPath) async {
+            request.files.add(await http.MultipartFile.fromPath(
+                keyFile![index], elementPath));
+          });
+        }
+
+        bodyMultipart!.forEach((key, value) {
+          request.fields[key] = value;
+        });
+
+        var resp = await request.send();
+        response = await http.Response.fromStream(resp);
+        data = response.body;
+
         break;
     }
 

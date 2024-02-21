@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:icarm/presentation/components/text_field.dart';
+import 'package:icarm/config/setting/const.dart';
+import 'package:icarm/presentation/providers/providers.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config/services/notification_ui_service.dart';
@@ -10,16 +11,10 @@ import '../../../config/setting/style.dart';
 import '../../models/kids/TeacherModel.dart';
 import '../../models/models.dart';
 import '../../providers/teacher_kids_provider.dart';
-import '../../providers/user_provider.dart';
 import '../zcomponents.dart';
 
 Future<void> DataKid(
     BuildContext context, WidgetRef ref, Classroom kidClass) async {
-  final TextEditingController msgController = TextEditingController();
-  FocusNode msgNode = FocusNode();
-
-  bool loadingNoti = false;
-
   return showModalBottomSheet<void>(
     isScrollControlled: true,
     context: context,
@@ -121,112 +116,31 @@ Future<void> DataKid(
                               child: CustomButton(
                             margin: EdgeInsets.all(5),
                             text: "Enviar notificación",
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                        title: const Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Icon(
-                                              Icons.notification_add,
-                                              size: 30,
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                              "Notificación",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                        content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextFieldWidget(
-                                              border: true,
-                                              isRequired: false,
-                                              textInputType: TextInputType.text,
-                                              label: "Mensaje",
-                                              hintText: 'Escribe aquí',
-                                              focusNode: msgNode,
-                                              controller: msgController,
-                                              lines: 4,
-                                              capitalize: true,
-                                            ),
-                                            SizedBox(
-                                              height: 15,
-                                            ),
-                                            CustomButton(
-                                              margin: EdgeInsets.all(5),
-                                              text: "Enviar",
-                                              onTap: () {
-                                                if (msgController.text != "") {
-                                                  print("ASDSDA");
-                                                  setState(() {
-                                                    loadingNoti = true;
-                                                  });
-                                                  ref.refresh(sendNotiUserProvider(
-                                                      NotiUserData(
-                                                          title:
-                                                              "Ministerio de niños",
-                                                          msg: msgController
-                                                              .text,
-                                                          userIDToSend: kidClass
-                                                              .kid.user.id
-                                                              .toString(),
-                                                          context: context)));
-
-                                                  final Uri toLaunch = Uri(
-                                                      scheme: 'https',
-                                                      host: 'wa.me',
-                                                      path:
-                                                          '${kidClass.kid.user.telefono}',
-                                                      queryParameters: {
-                                                        "text":
-                                                            msgController.text
-                                                      });
-
-                                                  Future.delayed(
-                                                      Duration(seconds: 1), () {
-                                                    launchUrl(toLaunch,
-                                                        mode: LaunchMode
-                                                            .externalApplication);
-                                                    msgController.text = "";
-                                                    setState(() {
-                                                      loadingNoti = false;
-                                                    });
-                                                  });
-                                                } else {
-                                                  NotificationUI.instance
-                                                      .notificationWarning(
-                                                          'Agrega un mensaje');
-                                                }
-                                              },
-                                              loading: loadingNoti,
-                                              textColor: Colors.white,
-                                              color: ColorStyle.primaryColor,
-                                            ),
-                                          ],
-                                        ),
-                                        backgroundColor: Colors.white);
-                                  },
-                                  barrierDismissible: true);
-                            },
+                            onTap: () =>
+                                NotificationService.showDialogNotification(
+                                    "Ministerios de niños",
+                                    kidClass.kid.user.id.toString(),
+                                    context,
+                                    ref,
+                                    kidClass.kid.user.telefono),
                             loading: false,
                             textColor: Colors.white,
                             color: ColorStyle.secondaryColor,
                           )),
                         ],
+                      ),
+                      CustomButton(
+                        margin: EdgeInsets.all(5),
+                        text: "Notificar a video",
+                        onTap: () => NotificationService.showDialogNotification(
+                            "Ministerios de niños",
+                            USER_ICARM_VIDEO,
+                            context,
+                            ref,
+                            null),
+                        loading: false,
+                        textColor: Colors.white,
+                        color: ColorStyle.secondaryColor,
                       ),
                       CustomButton(
                         margin: EdgeInsets.all(5),

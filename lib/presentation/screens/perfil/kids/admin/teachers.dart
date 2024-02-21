@@ -103,6 +103,7 @@ class _TeachersPageState extends ConsumerState<TeachersPage> {
                                     .update((state) => openList);
                               }),
                               child: AccordionWidget(
+                                onTap: () {},
                                 title: "${data[index].nombre} ",
                                 subtitle:
                                     "${data[index].apellidoPaterno} ${data[index].apellidoMaterno}",

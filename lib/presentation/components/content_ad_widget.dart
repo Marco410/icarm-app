@@ -18,12 +18,12 @@ class ContentAdWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           image: DecorationImage(
-              colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
-              fit: BoxFit.fill,
+              colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
+              fit: BoxFit.fitWidth,
               image: AssetImage(image))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

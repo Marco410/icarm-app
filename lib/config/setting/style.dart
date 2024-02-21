@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer_pro/sizer.dart';
 
 class ColorStyle {
   static final primaryColor = Color(0xFF2A2A2A); //#D90000
@@ -17,7 +18,7 @@ class ColorStyle {
 class TxtStyle {
   static final headerStyle = TextStyle(
       fontFamily: "Montserrat",
-      fontSize: 23.0,
+      fontSize: 8.sp,
       fontWeight: FontWeight.w800,
       color: ColorStyle.primaryColor,
       letterSpacing: 1.5);
@@ -31,19 +32,19 @@ class TxtStyle {
 
   static final descriptionStyle = TextStyle(
       fontFamily: "Montserrat",
-      fontSize: 13.0,
+      fontSize: 5.sp,
       color: Colors.white,
       fontWeight: FontWeight.w400);
 
   static final labelText = TextStyle(
       fontFamily: "Montserrat",
-      fontSize: 14,
+      fontSize: 5.sp,
       color: ColorStyle.primaryColor,
       fontWeight: FontWeight.bold);
 
   static final hintText = TextStyle(
       fontFamily: "Montserrat",
-      fontSize: 13.0,
+      fontSize: 4.5.sp,
       color: Colors.grey,
       fontWeight: FontWeight.w400);
 

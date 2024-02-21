@@ -60,13 +60,18 @@ class BaseHttpService {
   static Future<String> baseFile(
       {required String url,
       bool authorization = false,
-      required Map<String, dynamic> body}) async {
+      required List<String> keyFile,
+      required List<String> pathFile,
+      required Map<String, String> bodyMultipart}) async {
     String? response = await httpBase(
-        base_url: BASE_URL,
-        type: "MULTIPART",
-        path: url,
-        authorization: authorization,
-        body: body);
+      base_url: BASE_URL,
+      type: "MULTIPART",
+      path: url,
+      authorization: authorization,
+      keyFile: keyFile,
+      pathFile: pathFile,
+      bodyMultipart: bodyMultipart,
+    );
     return (response != null) ? response : "";
   }
 }

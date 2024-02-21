@@ -26,3 +26,16 @@ const String GET_USER_PASE_URL = "${CARPETA}app/pase-lista/get-user";
 const String ADD_USER_PASE_URL = "${CARPETA}app/pase-lista/add";
 
 const String SEND_NOTI_USER = "${CARPETA}app/users/send-noti";
+
+//ADMIN
+const String GET_IGLESIAS = "${CARPETA}app/iglesias";
+
+const String GET_EVENTOS = "${CARPETA}app/eventos";
+const String GET_EVENTO = "${CARPETA}app/evento";
+const String ADD_EVENTO = "${CARPETA}app/evento/create";
+const String IS_USER_INTERESTED = "${CARPETA}app/evento/get/interested";
+const String MAKE_INTERESTED = "${CARPETA}app/evento/interested";
+
+const String ENCONTRADO_REGISTER = "${CARPETA}app/encontrado/create";
+const String GET_INVITADOS = "${CARPETA}app/encontrado/invitados";
+const String GET_ENCONTRADO = "${CARPETA}app/encontrado/invitado";

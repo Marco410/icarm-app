@@ -61,7 +61,7 @@ class NotificationUI {
     BotToast.showNotification(
       duration: const Duration(seconds: 3),
       backgroundColor: ColorStyle.primaryColor,
-      borderRadius: 12,
+      borderRadius: 12.0,
       margin: const EdgeInsets.all(15),
       leading: (cancel) => Container(
         padding: EdgeInsets.all(13),
@@ -101,7 +101,7 @@ class NotificationUI {
     BotToast.showNotification(
       duration: const Duration(seconds: 3),
       backgroundColor: Colors.green[300],
-      borderRadius: 12,
+      borderRadius: 12.0,
       margin: const EdgeInsets.all(15),
       leading: (cancel) => Container(
           height: 40,
