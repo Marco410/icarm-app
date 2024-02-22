@@ -16,8 +16,10 @@ class EventoController {
       String? direccion,
       required bool isFavorite,
       required bool canRegister,
-      required String imgVertical,
-      required String imgHorizontal}) async {
+      String? imgVertical,
+      String? imgHorizontal,
+      String? eventoID,
+      required bool editing}) async {
     final bodyData = {
       "nombre": nombre,
       "iglesia_id": iglesiaID,
@@ -29,15 +31,19 @@ class EventoController {
       "can_register": (canRegister) ? "1" : "0",
     };
 
-    List<String> paths = [imgVertical, imgHorizontal];
+    if (editing) {
+      bodyData["evento_id"] = eventoID!;
+    }
+
+    List<String> paths = [imgVertical ?? "", imgHorizontal ?? ""];
 
     List<String> keysFiles = ["img_vertical", "img_horizontal"];
 
     String decodedResp = await BaseHttpService.baseFile(
-        url: ADD_EVENTO,
+        url: (editing) ? EDIT_EVENTO : ADD_EVENTO,
         authorization: true,
         bodyMultipart: bodyData,
-        pathFile: paths,
+        pathFile: (editing) ? null : paths,
         keyFile: keysFiles);
 
     if (decodedResp != "") {

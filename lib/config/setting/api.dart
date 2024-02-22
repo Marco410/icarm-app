@@ -33,6 +33,7 @@ const String GET_IGLESIAS = "${CARPETA}app/iglesias";
 const String GET_EVENTOS = "${CARPETA}app/eventos";
 const String GET_EVENTO = "${CARPETA}app/evento";
 const String ADD_EVENTO = "${CARPETA}app/evento/create";
+const String EDIT_EVENTO = "${CARPETA}app/evento/update";
 const String IS_USER_INTERESTED = "${CARPETA}app/evento/get/interested";
 const String MAKE_INTERESTED = "${CARPETA}app/evento/interested";
 

@@ -46,10 +46,44 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
             height: 10,
           ),
           AccordionWidget(
+            onTap: () {
+              context.pushNamed("web.view", pathParameters: {
+                "url": "https://www.amoryrestauracionmorelia.org/noticias-1"
+              });
+            },
+            title: "Noticias",
+            subtitle: "Accede a nuestros recursos en linea",
+            isOpen: links[0],
+            content: /*  ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(0),
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: onlines.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SubAccordionWidget(
+                    active: onlines[index].selected,
+                    onTap: () {
+                      setState(() {
+                        onlines[index].selected =
+                            !onlines[index].selected;
+                      });
+                    },
+                    title: onlines[index].title,
+                    text: onlines[index].text,
+                    image: onlines[index].image,
+                    onTapContent: () {},
+                  );
+                }) */
+                Text("En construcción"),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
               title: "Eventos",
               subtitle: "Conoce nuestros próximos eventos",
-              isOpen: links[0],
-              onTap: () => setState(() => links[0] = !links[0]),
+              isOpen: links[1],
+              onTap: () => setState(() => links[1] = !links[1]),
               content: listEventos.when(
                 data: (data) {
                   if (data.isEmpty) {
@@ -176,113 +210,95 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
           const SizedBox(
             height: 10,
           ),
-          GestureDetector(
+          AccordionWidget(
             onTap: () => context.pushNamed("web.view", pathParameters: {
               "url": "https://www.amoryrestauracionmorelia.org/online-1"
             }) /* setState(() => links[1] = !links[1]) */,
-            child: AccordionWidget(
-              onTap: () {},
-              title: "Online",
-              subtitle: "Accede a nuestros recursos en linea",
-              isOpen: links[1],
-              content: /*  ListView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.all(0),
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: onlines.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return SubAccordionWidget(
-                      active: onlines[index].selected,
-                      onTap: () {
-                        setState(() {
-                          onlines[index].selected =
-                              !onlines[index].selected;
-                        });
-                      },
-                      title: onlines[index].title,
-                      text: onlines[index].text,
-                      image: onlines[index].image,
-                      onTapContent: () {},
-                    );
-                  }) */
-                  Text("En construcción"),
-            ),
+            title: "Online",
+            subtitle: "Accede a nuestros recursos en linea",
+            isOpen: links[2],
+            content: /*  ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(0),
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: onlines.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SubAccordionWidget(
+                    active: onlines[index].selected,
+                    onTap: () {
+                      setState(() {
+                        onlines[index].selected =
+                            !onlines[index].selected;
+                      });
+                    },
+                    title: onlines[index].title,
+                    text: onlines[index].text,
+                    image: onlines[index].image,
+                    onTapContent: () {},
+                  );
+                }) */
+                Text("En construcción"),
           ),
           const SizedBox(
             height: 10,
           ),
-          GestureDetector(
+          AccordionWidget(
             onTap: () => context.pushNamed("web.view", pathParameters: {
               "url": "https://www.amoryrestauracionmorelia.org/refugios-1"
             }) /* setState(() => links[3] = !links[3]) */,
-            child: AccordionWidget(
-              onTap: () {},
-              title: "Refugios",
-              subtitle: "Conoce nuestros centros",
-              isOpen: links[3],
-              content: Text("En construcción"),
-            ),
+            title: "Refugios",
+            subtitle: "Conoce nuestros centros",
+            isOpen: links[3],
+            content: Text("En construcción"),
           ),
           const SizedBox(
             height: 10,
           ),
-          GestureDetector(
+          AccordionWidget(
             onTap: () => context.pushNamed("web.view", pathParameters: {
               "url": "https://www.amoryrestauracionmorelia.org/alimentos-1"
             }) /* setState(() => links[4] = !links[4]) */,
-            child: AccordionWidget(
-              onTap: () {},
-              title: "Banco de alimentos",
-              subtitle: "Participa en el próximo",
-              isOpen: links[4],
-              content: Text("En construcción"),
-            ),
+            title: "Banco de alimentos",
+            subtitle: "Participa en el próximo",
+            isOpen: links[4],
+            content: Text("En construcción"),
           ),
           const SizedBox(
             height: 10,
           ),
-          GestureDetector(
+          AccordionWidget(
             onTap: () => context.pushNamed("web.view", pathParameters: {
               "url": "https://www.amoryrestauracionmorelia.org/iglesias-1"
             }) /* setState(() => links[5] = !links[5]) */,
-            child: AccordionWidget(
-              onTap: () {},
-              title: "Más iglesias",
-              subtitle: "Consulta más ubicaciones en México",
-              isOpen: links[5],
-              content: Text("En construcción"),
-            ),
+            title: "Más iglesias",
+            subtitle: "Consulta más ubicaciones en México",
+            isOpen: links[5],
+            content: Text("En construcción"),
           ),
           const SizedBox(
             height: 10,
           ),
-          GestureDetector(
+          AccordionWidget(
             onTap: () => context.pushNamed("web.view", pathParameters: {
               "url": "https://www.amoryrestauracionmorelia.org/biblia-1"
             }) /* setState(() => links[6] = !links[6]) */,
-            child: AccordionWidget(
-              onTap: () {},
-              title: "Biblia",
-              subtitle: "Accede a nuestros planes de lectura",
-              isOpen: links[6],
-              content: Text("En construcción"),
-            ),
+            title: "Biblia",
+            subtitle: "Accede a nuestros planes de lectura",
+            isOpen: links[6],
+            content: Text("En construcción"),
           ),
-          const SizedBox(
+          /*    const SizedBox(
             height: 10,
           ),
-          GestureDetector(
+          AccordionWidget(
             onTap: () => context.pushNamed("web.view", pathParameters: {
               "url": "https://www.amoryrestauracionmorelia.org/donacionapp"
             }) /* setState(() => links[6] = !links[6]) */,
-            child: AccordionWidget(
-              onTap: () {},
-              title: "Donaciones",
-              subtitle: "Gracias por tu generosidad.",
-              isOpen: links[7],
-              content: Text("En construcción"),
-            ),
-          ),
+            title: "Donaciones",
+            subtitle: "Gracias por tu generosidad.",
+            isOpen: links[7],
+            content: Text("En construcción"),
+          ), */
           const SizedBox(
             height: 100,
           ),

@@ -61,7 +61,7 @@ class BaseHttpService {
       {required String url,
       bool authorization = false,
       required List<String> keyFile,
-      required List<String> pathFile,
+      List<String>? pathFile,
       required Map<String, String> bodyMultipart}) async {
     String? response = await httpBase(
       base_url: BASE_URL,

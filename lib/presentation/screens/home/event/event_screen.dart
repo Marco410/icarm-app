@@ -55,57 +55,20 @@ class _EventScreenState extends ConsumerState<EventScreen> {
             return Column(
               children: [
                 (data.imgHorizontal != null)
-                    ? Stack(
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                "${URL_MEDIA_EVENTO}/${data.id}/${data.imgHorizontal}",
-                            placeholder: (context, url) =>
-                                LoadingStandardWidget.loadingWidget(),
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(1),
-                                image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.fill),
-                              ),
-                            ),
-                            height: 30.h,
-                            width: double.infinity,
+                    ? CachedNetworkImage(
+                        imageUrl:
+                            "${URL_MEDIA_EVENTO}/${data.id}/${data.imgHorizontal}",
+                        placeholder: (context, url) =>
+                            LoadingStandardWidget.loadingWidget(),
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(1),
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.fill),
                           ),
-                          Positioned(
-                            top: 20,
-                            right: 20,
-                            child: Container(
-                              padding: EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                  color: ColorStyle.secondaryColor,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    DateFormat('dd').format(data.fechaInicio),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    DateFormat('MMM')
-                                        .format(data.fechaInicio)
-                                        .toUpperCase(),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 7.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
+                        height: 30.h,
+                        width: double.infinity,
                       )
                     : Image.asset("assets/image/no-image.png",
                         height: 30.h, width: double.infinity, scale: 4.5),

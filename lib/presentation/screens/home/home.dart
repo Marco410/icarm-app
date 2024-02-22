@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
@@ -98,7 +99,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
         actionButton: () {},
       ),
       ContentAdWidget(
-        image: "assets/image/home/hombres-radio.jpeg",
+        image: "assets/image/home/mujeres-radio.jpeg",
         title: "Mujeres Entendidas",
         subTitle: "Jueves 5:30pm",
         actionButton: () {},
@@ -160,19 +161,25 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                     ? YoutubeLiveBannerWidget(lives: lives)
                     : SizedBox(),
                 (eventoFavorite != null)
-                    ? CachedNetworkImage(
-                        imageUrl:
-                            "${URL_MEDIA_EVENTO}/${eventoFavorite.id}/${eventoFavorite.imgVertical}",
-                        placeholder: (context, url) =>
-                            LoadingStandardWidget.loadingWidget(),
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.fill),
+                    ? GestureDetector(
+                        onTap: () => context.pushNamed('event',
+                            pathParameters: {
+                              "eventoID": eventoFavorite.id.toString()
+                            }),
+                        child: CachedNetworkImage(
+                          imageUrl:
+                              "${URL_MEDIA_EVENTO}/${eventoFavorite.id}/${eventoFavorite.imgVertical}",
+                          placeholder: (context, url) =>
+                              LoadingStandardWidget.loadingWidget(),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.fill),
+                            ),
                           ),
+                          height: 78.h,
                         ),
-                        height: 75.h,
                       )
                     : SizedBox(),
                 _controllerHomeVideo.value.isInitialized

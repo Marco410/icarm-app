@@ -33,6 +33,8 @@ final getEventosProvider =
         if (evento.isFavorite == 1) {
           ref.read(eventoFavoriteProvider.notifier).update((state) => evento);
           break;
+        } else {
+          ref.read(eventoFavoriteProvider.notifier).update((state) => null);
         }
       }
       return listEventos.data.eventos;
@@ -89,9 +91,11 @@ final isUSerInterestedProvider = StateProvider.autoDispose<bool>((ref) {
 });
 
 final getInvitadosProvider = FutureProvider.autoDispose
-    .family<List<Invitado>, String>((ref, userID) async {
+    .family<List<Invitado>, String>((ref, eventoID) async {
   String decodedResp = await BaseHttpService.baseGet(
-      url: GET_INVITADOS, authorization: true, params: {"user_id": userID});
+      url: GET_INVITADOS,
+      authorization: true,
+      params: {"user_id": prefs.usuarioID, 'evento_id': eventoID});
 
   if (decodedResp != "") {
     final Map<String, dynamic> resp = json.decode(decodedResp);

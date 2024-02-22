@@ -124,7 +124,9 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
               SizedBox(
                 height: 15,
               ),
-              (prefs.usuarioRol.contains('1') || prefs.usuarioRol.contains('7'))
+              (prefs.usuarioRol.contains('1') ||
+                      prefs.usuarioRol.contains('7') ||
+                      prefs.usuarioRol.contains('6'))
                   ? MenuItemWidget(
                       icon: 'noti.svg',
                       title: 'NOTIFICAR A VIDEO',
@@ -158,7 +160,8 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                   });
                 },
                 loading: false,
-                textColor: Colors.white,
+                color: Colors.white,
+                textColor: Colors.black,
               ),
               SizedBox(
                 height: 15,
@@ -173,10 +176,13 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                     ref.refresh(deleteAccountProvider(context));
                   });
                 },
-                color: Colors.white,
+                color: ColorStyle.thirdColor,
                 loading: false,
                 size: 'sm',
                 textColor: Colors.black,
+              ),
+              SizedBox(
+                height: 60,
               )
             ],
           ),

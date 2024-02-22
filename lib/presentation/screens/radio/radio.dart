@@ -34,7 +34,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
       actionButton: () {},
     ),
     ContentAdWidget(
-      image: "assets/image/home/hombres-radio.jpeg",
+      image: "assets/image/home/mujeres-radio.jpeg",
       title: "Mujeres Entendidas",
       subTitle: "Jueves 5:30pm",
       actionButton: () {},
