@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../services/notification_ui_service.dart';
+
+const storage = FlutterSecureStorage();
 
 Future<String?> httpBase(
     {required String base_url,
@@ -19,85 +22,87 @@ Future<String?> httpBase(
     List<String>? pathFile,
     bool authorization = false}) async {
   http.Response response = http.Response("", 500);
-  /* try { */
-  if (await InternetConnectionChecker().hasConnection) {
-    var url = Uri.https(base_url, path, params);
+  try {
+    if (await InternetConnectionChecker().hasConnection) {
+      var url = Uri.https(base_url, path, params);
 
-    headers ??= {};
-    headers["Content-type"] = "application/json";
-    headers["Accept"] = "*/*";
+      headers ??= {};
+      headers["Content-type"] = "application/json";
+      headers["Accept"] = "*/*";
 
-    /*  if (authorization) {
-      String? token = (await storage.read(key: "tokenAuth"));
-      headers["Authorization"] = 'Bearer $token';
-    } */
+      /*     if (authorization) {
+        String? token = (await storage.read(key: "tokenAuth"));
+        headers["Authorization"] = 'Bearer $token';
+      } */
 
-    if (type != "MULTIPART") {
-      body = json.encode(body);
-    }
+      if (type != "MULTIPART") {
+        body = json.encode(body);
+      }
 
-    late String data;
-    switch (type) {
-      case "POST":
-        response = await http.post(url, body: body, headers: headers);
-        data = response.body;
-        break;
-      case "PUT":
-        response = await http.put(url, body: body, headers: headers);
-        data = response.body;
-        break;
-      case "GET":
-        response = await http.get(url, headers: headers);
-        data = response.body;
-        break;
-      case "DELETE":
-        response = await http.delete(url, body: body, headers: headers);
-        data = response.body;
-        break;
+      late String data;
+      switch (type) {
+        case "POST":
+          response = await http.post(url, body: body, headers: headers);
+          data = response.body;
+          break;
+        case "PUT":
+          response = await http.put(url, body: body, headers: headers);
+          data = response.body;
+          break;
+        case "GET":
+          response = await http.get(url, headers: headers);
+          data = response.body;
+          break;
+        case "DELETE":
+          response = await http.delete(url, body: body, headers: headers);
+          data = response.body;
+          break;
 
-      case "MULTIPART":
-        final request = http.MultipartRequest('POST', url);
-        if (pathFile != null && pathFile.isNotEmpty) {
-          pathFile.asMap().forEach((index, elementPath) async {
-            request.files.add(await http.MultipartFile.fromPath(
-                keyFile![index], elementPath));
+        case "MULTIPART":
+          final request = http.MultipartRequest('POST', url);
+          if (pathFile != null && pathFile.isNotEmpty) {
+            pathFile.asMap().forEach((index, elementPath) async {
+              request.files.add(await http.MultipartFile.fromPath(
+                  keyFile![index], elementPath));
+            });
+          }
+
+          bodyMultipart!.forEach((key, value) {
+            request.fields[key] = value;
           });
+
+          var resp = await request.send();
+          response = await http.Response.fromStream(resp);
+          data = response.body;
+
+          break;
+      }
+
+      if (response.statusCode == 200) {
+        return data;
+      } else {
+        print("data");
+        print(data);
+        final Map<String, dynamic> resp = json.decode(data);
+
+        if (resp["status"] == 'Success') {
+          if (showNoti) {
+            NotificationUI.instance.notificationAlert('${resp['message']}', "");
+          }
+          return data;
         }
-
-        bodyMultipart!.forEach((key, value) {
-          request.fields[key] = value;
-        });
-
-        var resp = await request.send();
-        response = await http.Response.fromStream(resp);
-        data = response.body;
-
-        break;
-    }
-
-    if (response.statusCode == 200) {
-      return data;
-    } else {
-      final Map<String, dynamic> resp = json.decode(data);
-
-      if (resp["status"] == 'Success') {
         if (showNoti) {
-          NotificationUI.instance.notificationAlert('${resp['message']}', "");
+          NotificationUI.instance.notificationError("Ocurrió un error");
         }
         return data;
       }
-      if (showNoti) {
-        NotificationUI.instance.notificationError("Ocurrió un error");
-      }
-      return data;
+    } else {
+      NotificationUI.instance.notificationNoInternet();
+      return null;
     }
-  } else {
-    NotificationUI.instance.notificationNoInternet();
+  } catch (e) {
+    /*  NotificationUI.instance.notificationError(
+        "Ocurrió un error en el servidor. Intenta más tarde"); */
     return null;
   }
-  /* } catch (e) {
-    NotificationUI.instance.notificationError(
-        "Ocurrió un error en el servidor. Intenta más tarde");
-    return null;
-  } */
 }

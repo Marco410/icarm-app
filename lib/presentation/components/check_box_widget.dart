@@ -26,7 +26,12 @@ class CheckBoxWidget extends StatelessWidget {
           onChanged: (value) => (readOnly) ? () {} : onChange(value),
         ),
         Expanded(
-          child: Text(text),
+          child: Text(
+            text,
+            style: TxtStyle.labelText.copyWith(
+                color: (readOnly) ? Colors.grey : Colors.black,
+                fontWeight: FontWeight.normal),
+          ),
         )
       ],
     );

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/routes/app_router.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:sizer_pro/sizer.dart';
 
 class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final bool backButton;
@@ -48,7 +49,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
         title: ImageIcon(
           AssetImage("assets/image/logo.png"),
           color: Colors.black,
-          size: 50,
+          size: 20.sp,
         ),
         actions: <Widget>[
           (widget.rightButtons)

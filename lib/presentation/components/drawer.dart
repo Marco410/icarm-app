@@ -307,8 +307,13 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
             children: [
               InkWell(
                 onTap: () {
-                  launch(
-                      "https://www.facebook.com/AmoryrestauracionmoreliaOficial");
+                  final Uri toLaunch = Uri(
+                      scheme: 'https',
+                      host: 'facebook.com',
+                      path: 'AmoryrestauracionmoreliaOficial',
+                      queryParameters: {});
+
+                  launchUrl(toLaunch, mode: LaunchMode.externalApplication);
                 },
                 child: Icon(
                   Icons.facebook_rounded,
@@ -317,7 +322,13 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
               ),
               InkWell(
                 onTap: () {
-                  launch("https://www.amoryrestauracionmorelia.org/whatsapp-1");
+                  final Uri toLaunch = Uri(
+                      scheme: 'https',
+                      host: 'amoryrestauracionmorelia.org',
+                      path: 'whatsapp-1',
+                      queryParameters: {});
+
+                  launchUrl(toLaunch, mode: LaunchMode.externalApplication);
                 },
                 child: Image.network(
                   "https://static.wixstatic.com/media/3d0692_2abf6ec42ad54a56aa2258e118b24306~mv2.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/3d0692_2abf6ec42ad54a56aa2258e118b24306~mv2.png",
@@ -326,8 +337,13 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
               ),
               InkWell(
                 onTap: () {
-                  launch(
-                      "https://www.youtube.com/channel/UCWiKT0FHEO4wIVJhHJMECWA");
+                  final Uri toLaunch = Uri(
+                      scheme: 'https',
+                      host: 'youtube.com',
+                      path: 'channel/UCWiKT0FHEO4wIVJhHJMECWA',
+                      queryParameters: {});
+
+                  launchUrl(toLaunch, mode: LaunchMode.externalApplication);
                 },
                 child: Image.network(
                   "https://static.wixstatic.com/media/78aa2057f0cb42fbbaffcbc36280a64a.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/78aa2057f0cb42fbbaffcbc36280a64a.png",
@@ -336,8 +352,13 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
               ),
               InkWell(
                 onTap: () {
-                  launch(
-                      "https://www.instagram.com/amoryrestauracion_morelia/");
+                  final Uri toLaunch = Uri(
+                      scheme: 'https',
+                      host: 'instagram.com',
+                      path: 'amoryrestauracion_morelia',
+                      queryParameters: {});
+
+                  launchUrl(toLaunch, mode: LaunchMode.externalApplication);
                 },
                 child: Image.network(
                   "https://static.wixstatic.com/media/01c3aff52f2a4dffa526d7a9843d46ea.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/01c3aff52f2a4dffa526d7a9843d46ea.png",

@@ -70,5 +70,7 @@
 	<string>Necesitamos acceder a tu galería para una mejor experiencia.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Necesitamos acceso al micro</string>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 </dict>
 </plist>

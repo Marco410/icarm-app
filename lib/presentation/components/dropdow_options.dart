@@ -129,7 +129,6 @@ class SearchableListWidget extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       child: SearchableList<Option>(
         initialList: options,
-        autoFocusOnSearch: false,
         loadingWidget: Center(
           child: CircularProgressIndicator(
             color: ColorStyle.primaryColor,

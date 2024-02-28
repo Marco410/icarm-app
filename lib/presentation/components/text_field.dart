@@ -83,16 +83,11 @@ class TextFieldWidget extends StatelessWidget {
             ),
             child: TextFormField(
               autofillHints: [autoFillHints ?? ""],
-              readOnly: readOnly!,
+              readOnly: readOnly! || TextInputType.datetime == textInputType,
               autofocus: false,
               controller: controller,
               keyboardType: textInputType,
-              style: TextStyle(
-                  color: (readOnly!)
-                      ? (textInputType == TextInputType.datetime)
-                          ? Colors.black
-                          : Colors.grey
-                      : Colors.black),
+              style: TextStyle(color: (readOnly!) ? Colors.grey : Colors.black),
               onTap: onTap as void Function()?,
               maxLines: lines ?? 1,
               textInputAction: TextInputAction.done,

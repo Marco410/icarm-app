@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_rte/flutter_rte.dart';
 import 'package:flutter_svg/svg.dart';
@@ -41,6 +42,7 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController direccionController = TextEditingController();
+  final HtmlEditorController controllerHtml = HtmlEditorController();
   FocusNode nombreFocus = FocusNode();
   FocusNode direccionFocus = FocusNode();
 
@@ -54,11 +56,16 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
   bool direccion = false;
   bool isEditing = false;
   bool loadingEvent = false;
-  final HtmlEditorController controllerHtml = HtmlEditorController();
 
   @override
   void initState() {
     isEditing = (widget.type == 'edit');
+
+    if (widget.evento != null) {
+      controllerHtml.setInitialText(widget.evento!.descripcion);
+    } else {
+      controllerHtml.setInitialText("");
+    }
     if (widget.type == 'edit') {
       nombreController.text = widget.evento!.nombre;
       iglesia = Option(
@@ -69,7 +76,6 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
       fechaFinalController.text =
           DateFormat('yyyy-MM-dd HH:mm').format(widget.evento!.fechaFin);
 
-      controllerHtml.setInitialText(widget.evento!.descripcion);
       direccion = (widget.evento!.direccion == null) ? true : false;
 
       isFavorite = (widget.evento!.isFavorite == 1) ? true : false;
@@ -166,7 +172,7 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                         ),
                         onPressed: () => selectDate(true),
                       ),
-                      readOnly: true,
+                      readOnly: isEditing,
                       textInputType: TextInputType.datetime,
                       isRequired: true,
                     ),
@@ -188,7 +194,7 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                         ),
                         onPressed: () => selectDate(false),
                       ),
-                      readOnly: true,
+                      readOnly: isEditing,
                       textInputType: TextInputType.datetime,
                       isRequired: true,
                     ),
@@ -207,16 +213,18 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                                 width: 0.5, color: ColorStyle.hintColor),
                           ),
-                          child: HtmlEditor(
-                            height: 400,
-                            enableDictation: false,
-                            isReadOnly: isEditing,
-                            hint: "Escriba aquí los detalles del evento",
-                            controller: controllerHtml,
-                          ),
+                          child: (!isEditing)
+                              ? HtmlEditor(
+                                  height: 400,
+                                  enableDictation: false,
+                                  hint: "Escriba aquí los detalles del evento.",
+                                  controller: controllerHtml,
+                                )
+                              : Html(data: widget.evento!.descripcion),
                         )
                       ],
                     ),
@@ -232,7 +240,7 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                           direccion = value!;
                         });
                       },
-                      readOnly: false,
+                      readOnly: isEditing,
                     ),
                     (!direccion)
                         ? TextFieldWidget(
@@ -490,7 +498,7 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                           isFavorite = value!;
                         });
                       },
-                      readOnly: false,
+                      readOnly: isEditing,
                     ),
                     CheckBoxWidget(
                       text: "Mostrar registro",
@@ -502,117 +510,131 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                           canRegister = value!;
                         });
                       },
-                      readOnly: false,
+                      readOnly: isEditing,
                     ),
-                    CustomButton(
-                      margin: EdgeInsets.only(
-                          bottom: 60, left: 60, right: 60, top: 20),
-                      loading: loadingEvent,
-                      text: (widget.type == 'edit') ? "Actualizar" : "Guardar",
-                      textColor: Colors.white,
-                      color: ColorStyle.secondaryColor,
-                      onTap: () async {
-                        if (fechaInicialController.text == "" ||
-                            fechaFinalController.text == "") {
-                          NotificationUI.instance.notificationWarning(
-                              "Agrega la fecha del evento");
+                    (!isEditing)
+                        ? CustomButton(
+                            margin: EdgeInsets.only(
+                                bottom: 60, left: 60, right: 60, top: 20),
+                            loading: loadingEvent,
+                            text: (widget.type == 'edit')
+                                ? "Actualizar"
+                                : "Guardar",
+                            textColor: Colors.white,
+                            color: ColorStyle.secondaryColor,
+                            onTap: () async {
+                              if (fechaInicialController.text == "" ||
+                                  fechaFinalController.text == "") {
+                                NotificationUI.instance.notificationWarning(
+                                    "Agrega la fecha del evento");
 
-                          return;
-                        }
+                                return;
+                              }
 
-                        if (_formKey.currentState!.validate()) {
-                          var dateIni =
-                              DateTime.parse(fechaInicialController.text);
-                          var dateFin =
-                              DateTime.parse(fechaFinalController.text);
-                          if (dateIni.isAfter(dateFin) ||
-                              dateIni.isAtSameMomentAs(dateFin)) {
-                            NotificationUI.instance.notificationWarning(
-                                "La fecha final debe de ser después de la fecha inicial.");
+                              if (_formKey.currentState!.validate()) {
+                                var dateIni =
+                                    DateTime.parse(fechaInicialController.text);
+                                var dateFin =
+                                    DateTime.parse(fechaFinalController.text);
+                                if (dateIni.isAfter(dateFin) ||
+                                    dateIni.isAtSameMomentAs(dateFin)) {
+                                  NotificationUI.instance.notificationWarning(
+                                      "La fecha final debe de ser después de la fecha inicial.");
 
-                            return;
-                          }
+                                  return;
+                                }
 
-                          if (controllerHtml.contentIsEmpty) {
-                            NotificationUI.instance.notificationWarning(
-                                "Agrega una descripción al evento");
+                                if (controllerHtml.contentIsEmpty) {
+                                  NotificationUI.instance.notificationWarning(
+                                      "Agrega una descripción al evento");
 
-                            return;
-                          }
+                                  return;
+                                }
 
-                          if (controllerHtml.contentIsEmpty) {
-                            NotificationUI.instance.notificationWarning(
-                                "Agrega una descripción al evento");
-                            return;
-                          }
+                                if (controllerHtml.contentIsEmpty) {
+                                  NotificationUI.instance.notificationWarning(
+                                      "Agrega una descripción al evento");
+                                  return;
+                                }
 
-                          if (widget.type != 'edit') {
-                            if (imgVertical == null || imgHorizontal == null) {
-                              NotificationUI.instance.notificationWarning(
-                                  "Agrega alguna imagen al evento");
-                              return;
-                            }
-                          }
+                                if (widget.type != 'edit') {
+                                  if (imgVertical == null ||
+                                      imgHorizontal == null) {
+                                    NotificationUI.instance.notificationWarning(
+                                        "Agrega alguna imagen al evento");
+                                    return;
+                                  }
+                                }
 
-                          setState(() => loadingEvent = true);
+                                setState(() => loadingEvent = true);
 
-                          await EventoController.createEvent(
-                                  nombre: nombreController.text,
-                                  iglesiaID: iglesia.id.toString(),
-                                  fechaInicio: fechaInicialController.text,
-                                  fechaFin: fechaFinalController.text,
-                                  descripcion: controllerHtml.content,
-                                  direccion: direccionController.text,
-                                  isFavorite: isFavorite,
-                                  canRegister: canRegister,
-                                  imgVertical: (widget.type != 'edit')
-                                      ? imgVertical!.path
-                                      : null,
-                                  imgHorizontal: (widget.type != 'edit')
-                                      ? imgHorizontal!.path
-                                      : null,
-                                  eventoID: (widget.type == 'edit')
-                                      ? widget.evento!.id.toString()
-                                      : null,
-                                  editing: widget.type == 'edit')
-                              .then((value) {
-                            if (value) {
-                              ref.refresh(getEventosProvider);
-                              context.pop();
-                              NotificationUI.instance.notificationSuccess(
-                                  (widget.type != 'edit')
-                                      ? "Evento agregado con éxito"
-                                      : "Evento actualizado con éxito");
-                              setState(() => loadingEvent = false);
-                            }
-                          });
-                        } else {
-                          NotificationUI.instance.notificationWarning(
-                              "Revisa los datos que ingresaste");
-                        }
-                      },
-                    ),
+                                await EventoController.createEvent(
+                                        nombre: nombreController.text,
+                                        iglesiaID: iglesia.id.toString(),
+                                        fechaInicio:
+                                            fechaInicialController.text,
+                                        fechaFin: fechaFinalController.text,
+                                        descripcion: controllerHtml.content,
+                                        direccion: direccionController.text,
+                                        isFavorite: isFavorite,
+                                        canRegister: canRegister,
+                                        imgVertical: (widget.type != 'edit')
+                                            ? imgVertical!.path
+                                            : null,
+                                        imgHorizontal: (widget.type != 'edit')
+                                            ? imgHorizontal!.path
+                                            : null,
+                                        eventoID: (widget.type == 'edit')
+                                            ? widget.evento!.id.toString()
+                                            : null,
+                                        editing: widget.type == 'edit')
+                                    .then((value) {
+                                  if (value) {
+                                    ref.refresh(getEventosProvider);
+                                    context.pop();
+                                    NotificationUI.instance.notificationSuccess(
+                                        (widget.type != 'edit')
+                                            ? "Evento agregado con éxito"
+                                            : "Evento actualizado con éxito");
+                                    setState(() => loadingEvent = false);
+                                  }
+                                });
+                              } else {
+                                NotificationUI.instance.notificationWarning(
+                                    "Revisa los datos que ingresaste");
+                              }
+                            },
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),
             ),
-            Positioned(
-                top: 0,
-                right: 10,
-                child: InkWell(
-                  onTap: () => setState(() => isEditing = !isEditing),
-                  child: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                        color: ColorStyle.secondaryColor,
-                        borderRadius: BorderRadius.circular(100)),
-                    child: Icon(
-                      Icons.edit_rounded,
-                      color: Colors.white,
-                    ),
-                  ),
-                ))
+            (widget.type == 'edit')
+                ? Positioned(
+                    top: 0,
+                    right: 10,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() => isEditing = !isEditing);
+                        controllerHtml
+                            .setInitialText(widget.evento!.descripcion);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                            color: (isEditing)
+                                ? ColorStyle.primaryColor
+                                : ColorStyle.secondaryColor,
+                            borderRadius: BorderRadius.circular(100)),
+                        child: Icon(
+                          Icons.edit_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ))
+                : SizedBox()
           ],
         ),
       ),
@@ -620,6 +642,10 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
   }
 
   selectDate(bool inicial) async {
+    if (isEditing) {
+      return;
+    }
+
     showCupertinoModalPopup(
       context: context,
       builder: (context) {

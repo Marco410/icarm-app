@@ -18,6 +18,7 @@ import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/components/video_home_widget.dart';
 import 'package:icarm/presentation/providers/evento_provider.dart';
 import 'package:icarm/presentation/providers/youtube_provider.dart';
+import 'package:icarm/presentation/screens/home/skeleton_home.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
@@ -47,6 +48,12 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    super.initState();
+
+    setState(() {
+      loading = true;
+    });
+
     _controller = VideoPlayerController.asset(
       'assets/video/inicio.mp4',
     )
@@ -66,6 +73,12 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
       });
 
     ref.refresh(getEventosProvider);
+
+    Future.microtask(() {
+      setState(() {
+        loading = false;
+      });
+    });
 
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -234,7 +247,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                               )),
                         ],
                       )
-                    : Container(),
+                    : SkeletonHome(),
                 Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
