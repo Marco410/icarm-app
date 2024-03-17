@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,7 @@ import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/controllers/evento_controller.dart';
 import 'package:icarm/presentation/providers/evento_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,12 +26,23 @@ class EventScreen extends ConsumerStatefulWidget {
 }
 
 class _EventScreenState extends ConsumerState<EventScreen> {
+  List<Calendar> _calendars = [];
+  List<Calendar> get _writableCalendars =>
+      _calendars.where((c) => c.isReadOnly == false).toList();
+
+  List<Calendar> get _readOnlyCalendars =>
+      _calendars.where((c) => c.isReadOnly == true).toList();
+
   @override
   void initState() {
     super.initState();
   }
 
   bool loadingInterested = false;
+  late DeviceCalendarPlugin _deviceCalendarPlugin =
+      _deviceCalendarPlugin = DeviceCalendarPlugin();
+  String _localAccountName = prefs.nombre;
+  String _calendarName = 'Amor y Restauración Morelia';
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +208,55 @@ class _EventScreenState extends ConsumerState<EventScreen> {
                           ),
                         ],
                       ),
+                      /* SizedBox(
+                        height: 15,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          /*    var createEventResult = await _deviceCalendarPlugin
+                              .createOrUpdateEvent(_event);
+                          if (createEventResult?.isSuccess == true) {
+                            Navigator.pop(context, true);
+                          } else {
+                            print(createEventResult?.errors
+                                .map((err) =>
+                                    '[${err.errorCode}] ${err.errorMessage}')
+                                .join(' | ') as String);
+                          } */
+                          var result =
+                              await _deviceCalendarPlugin.createCalendar(
+                            _calendarName,
+                            calendarColor: ColorStyle.secondaryColor,
+                            localAccountName: _localAccountName,
+                          );
+
+                          if (result.isSuccess) {
+                            Navigator.pop(context, true);
+                          } else {
+                            if (await Permission.contacts.request().isDenied) {
+                              await Permission.contacts.request();
+                              await Permission.calendarFullAccess.request();
+                              // Either the permission was already granted before or the user just granted it.
+                            }
+                            print(result.errors
+                                .map((err) =>
+                                    '[${err.errorCode}] ${err.errorMessage}')
+                                .join(' | '));
+                          }
+                        },
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+                          decoration: BoxDecoration(
+                              color: ColorStyle.primaryColor,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            "Añadir al calendario",
+                            style: TxtStyle.labelText.copyWith(
+                                color: Colors.white, fontSize: 4.5.sp),
+                          ),
+                        ),
+                      ), */
                       SizedBox(
                         height: 10,
                       ),
@@ -239,8 +301,40 @@ class _EventScreenState extends ConsumerState<EventScreen> {
                                   )
                                 : Text(
                                     data.direccion,
+                                    textAlign: TextAlign.center,
                                     style: TxtStyle.labelText,
-                                  )
+                                  ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                String searchString = (data.direccion == null)
+                                    ? "${data.iglesia.calle} #${data.iglesia.numero} ${data.iglesia.colonia}, ${data.iglesia.ciudad}, ${data.iglesia.estado}, ${data.iglesia.pais}."
+                                    : data.direccion;
+
+                                final Uri toLaunch = Uri(
+                                  scheme: 'https',
+                                  host: 'google.com',
+                                  path: 'maps/search/$searchString',
+                                );
+
+                                launchUrl(toLaunch,
+                                    mode: LaunchMode.externalApplication);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 25),
+                                decoration: BoxDecoration(
+                                    color: ColorStyle.primaryColor,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Text(
+                                  "Abrir mapa",
+                                  style: TxtStyle.labelText.copyWith(
+                                      color: Colors.white, fontSize: 4.5.sp),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),

@@ -40,3 +40,9 @@ const String MAKE_INTERESTED = "${CARPETA}app/evento/interested";
 const String ENCONTRADO_REGISTER = "${CARPETA}app/encontrado/create";
 const String GET_INVITADOS = "${CARPETA}app/encontrado/invitados";
 const String GET_ENCONTRADO = "${CARPETA}app/encontrado/invitado";
+
+const String GET_ALL_USERS = "${CARPETA}app/users/all";
+const String GET_USER = "${CARPETA}app/users/detail";
+const String UPDATE_USER = "${CARPETA}app/users/update";
+
+const String GET_ALL_ROLES = "${CARPETA}app/users/roles";

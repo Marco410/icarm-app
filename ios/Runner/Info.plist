@@ -72,5 +72,10 @@
 	<string>Necesitamos acceso al micro</string>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Necesitamos acceso a tu calendario para añadir eventos.</string>
+
+	<key>NSContactsUsageDescription</key>
+	<string>Necesitamos acceso a tus contactos para tus eventos.</string>
 </dict>
 </plist>

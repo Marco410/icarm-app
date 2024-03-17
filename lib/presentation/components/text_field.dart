@@ -3,6 +3,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:sizer_pro/sizer.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final String? hintText;
@@ -26,6 +27,7 @@ class TextFieldWidget extends StatelessWidget {
   final Function? onEditingComplete;
   final bool capitalize;
   final String? autoFillHints;
+  final Function? onTyping;
 
   TextFieldWidget(
       {super.key,
@@ -48,6 +50,7 @@ class TextFieldWidget extends StatelessWidget {
       this.onEditingComplete,
       this.capitalize = false,
       this.autoFillHints = "",
+      this.onTyping,
       required this.isRequired,
       required this.textInputType});
 
@@ -68,6 +71,7 @@ class TextFieldWidget extends StatelessWidget {
                     '$label ${(isRequired) ? "*" : ""}',
                     style: TextStyle(
                         color: labelColor ?? Colors.black87,
+                        fontSize: 4.5.sp,
                         fontWeight: FontWeight.bold),
                   ),
                 )
@@ -79,7 +83,7 @@ class TextFieldWidget extends StatelessWidget {
               border: border
                   ? Border.all(color: ColorStyle.hintColor)
                   : Border.all(color: Colors.transparent),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(15),
             ),
             child: TextFormField(
               autofillHints: [autoFillHints ?? ""],
@@ -87,7 +91,11 @@ class TextFieldWidget extends StatelessWidget {
               autofocus: false,
               controller: controller,
               keyboardType: textInputType,
-              style: TextStyle(color: (readOnly!) ? Colors.grey : Colors.black),
+              style: TextStyle(
+                  color: (readOnly! && TextInputType.datetime != textInputType)
+                      ? Colors.grey
+                      : Colors.black,
+                  fontSize: 5.sp),
               onTap: onTap as void Function()?,
               maxLines: lines ?? 1,
               textInputAction: TextInputAction.done,
@@ -142,6 +150,7 @@ class TextFieldWidget extends StatelessWidget {
               },
               obscureText: !isVisible,
               focusNode: focusNode,
+              onChanged: onTyping as void Function(String)?,
               onEditingComplete: (onEditingComplete != null)
                   ? onEditingComplete as void Function()
                   : () {},

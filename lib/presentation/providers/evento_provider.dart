@@ -37,6 +37,11 @@ final getEventosProvider =
           ref.read(eventoFavoriteProvider.notifier).update((state) => null);
         }
       }
+
+      ref
+          .read(listEventosProvider.notifier)
+          .update((state) => listEventos.data.eventos);
+
       return listEventos.data.eventos;
     } else {
       NotificationUI.instance.notificationWarning(
@@ -44,6 +49,10 @@ final getEventosProvider =
       return [];
     }
   }
+  return [];
+});
+
+final listEventosProvider = StateProvider.autoDispose<List<Evento>>((ref) {
   return [];
 });
 

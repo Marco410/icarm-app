@@ -15,6 +15,8 @@ import 'package:icarm/presentation/screens/perfil/kids/kids_admin.dart';
 import 'package:icarm/presentation/screens/perfil/perfil.dart';
 
 import '../../presentation/screens/admin/eventos/eventos.dart';
+import '../../presentation/screens/admin/usuarios/usuario-detail.dart';
+import '../../presentation/screens/admin/usuarios/usuarios.dart';
 import '../../presentation/screens/auth/forgot.dart';
 import '../../presentation/screens/home/event/event_invitado.dart';
 import '../../presentation/screens/home/event/event_invites.dart';
@@ -231,7 +233,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       );
                     },
                   )
-                ])
+                ]),
+            GoRoute(
+                name: "usuarios",
+                path: "usuarios",
+                builder: (context, state) => UsuariosAdminPage(),
+                routes: [
+                  GoRoute(
+                    name: "usuario.detail",
+                    path: 'usuario-detail:usuarioID',
+                    builder: (context, state) {
+                      final String user = state.pathParameters['usuarioID']!;
+
+                      return UsuarioDetailAdminPage(
+                        usuarioID: user,
+                      );
+                    },
+                  )
+                ]),
           ]),
     ]),
   ]);

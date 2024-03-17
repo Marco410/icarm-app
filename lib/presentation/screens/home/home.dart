@@ -19,6 +19,7 @@ import 'package:icarm/presentation/components/video_home_widget.dart';
 import 'package:icarm/presentation/providers/evento_provider.dart';
 import 'package:icarm/presentation/providers/youtube_provider.dart';
 import 'package:icarm/presentation/screens/home/skeleton_home.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
@@ -54,8 +55,8 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
       loading = true;
     });
 
-    _controller = VideoPlayerController.asset(
-      'assets/video/inicio.mp4',
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse('${URL_MEDIA_VIDEOS}inicio.mp4'),
     )
       ..setLooping(true)
       ..initialize().then((_) {
@@ -63,8 +64,8 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
         _controller.play();
       });
 
-    _controllerHomeVideo = VideoPlayerController.asset(
-      'assets/video/home.mp4',
+    _controllerHomeVideo = VideoPlayerController.networkUrl(
+      Uri.parse('${URL_MEDIA_VIDEOS}home.mp4'),
     )
       ..setLooping(true)
       ..initialize().then((_) {
@@ -102,6 +103,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
 
   Widget build(BuildContext context) {
     final lives = ref.watch(isLiveProvider);
+    final listEventos = ref.watch(listEventosProvider);
 
     List<Widget> textItems = [
       VideoHomeWidget(loading: loading, controller: _controller),
@@ -248,6 +250,200 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                         ],
                       )
                     : SkeletonHome(),
+                listEventos.length != 0
+                    ? Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.5),
+                                  blurRadius: 4,
+                                  spreadRadius: -3,
+                                  offset: Offset(0, -1))
+                            ],
+                            borderRadius: BorderRadius.circular(15)),
+                        margin: EdgeInsets.all(20),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Próximos Eventos",
+                              style: TxtStyle.headerStyle
+                                  .copyWith(color: ColorStyle.primaryColor),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            SizedBox(
+                              height: 25.h,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: listEventos.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  return FadedScaleAnimation(
+                                    child: InkWell(
+                                      onTap: () => context.pushNamed('event',
+                                          pathParameters: {
+                                            "eventoID":
+                                                listEventos[index].id.toString()
+                                          }),
+                                      child: Container(
+                                          width: 60.w,
+                                          margin: EdgeInsets.only(
+                                              right: 20, bottom: 50, top: 10),
+                                          padding: EdgeInsets.all(11),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                  blurRadius: 10,
+                                                  spreadRadius: -12,
+                                                  offset: Offset(0, 0))
+                                            ],
+                                          ),
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            clipBehavior: Clip.none,
+                                            fit: StackFit.expand,
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      "${URL_MEDIA_EVENTO}/${listEventos[index].id}/${listEventos[index].imgHorizontal}",
+                                                  placeholder: (context, url) =>
+                                                      LoadingStandardWidget
+                                                          .loadingWidget(),
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    width: 20.sp,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.fill),
+                                                    ),
+                                                  ),
+                                                  height: 20.sp,
+                                                ),
+                                              ),
+                                              Positioned(
+                                                  bottom: -30,
+                                                  child: Container(
+                                                    height: 5.h,
+                                                    width: 40.w,
+                                                    padding: EdgeInsets.only(
+                                                        left: 8, right: 8),
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.5),
+                                                            blurRadius: 9,
+                                                            spreadRadius: -2,
+                                                            offset:
+                                                                Offset(0, 0))
+                                                      ],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      color: ColorStyle
+                                                          .secondaryColor,
+                                                    ),
+                                                    child: Text(
+                                                      listEventos[index].nombre,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TxtStyle.labelText
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 4.3.sp),
+                                                    ),
+                                                  )),
+                                              Positioned(
+                                                  top: -10,
+                                                  right: -10,
+                                                  child: Container(
+                                                    height: 14.sp,
+                                                    width: 19.sp,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.5),
+                                                            blurRadius: 9,
+                                                            spreadRadius: -2,
+                                                            offset:
+                                                                Offset(0, 0))
+                                                      ],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      color: ColorStyle
+                                                          .secondaryColor,
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          DateFormat('dd')
+                                                              .format(listEventos[
+                                                                      index]
+                                                                  .fechaInicio)
+                                                              .toUpperCase(),
+                                                          style: TxtStyle
+                                                              .labelText
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      4.sp,
+                                                                  color: Colors
+                                                                      .white),
+                                                        ),
+                                                        Text(
+                                                          DateFormat('MMM')
+                                                              .format(listEventos[
+                                                                      index]
+                                                                  .fechaInicio)
+                                                              .toUpperCase(),
+                                                          style: TxtStyle
+                                                              .labelText
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      3.5.sp,
+                                                                  color: Colors
+                                                                      .white),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )),
+                                            ],
+                                          )),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
                 Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -259,7 +455,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                             offset: Offset(0, -1))
                       ],
                       borderRadius: BorderRadius.circular(15)),
-                  margin: EdgeInsets.all(20),
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   padding: EdgeInsets.symmetric(vertical: 40, horizontal: 15),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -62,6 +62,7 @@ final registerProvider = FutureProvider.family<void, RegisterUserData>(
     "sexo":
         (registerUserData.sexo != "Seleccione") ? registerUserData.sexo : '',
     "pais_id": registerUserData.pais_id,
+    "sexo_id": registerUserData.sexo_id,
   };
 
   String decodedResp = "";

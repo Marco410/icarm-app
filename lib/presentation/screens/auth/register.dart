@@ -285,6 +285,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                               password: passController.text,
                               telefono: telefonoController.text,
                               sexo: sexo.name,
+                              sexo_id: sexo.id.toString(),
                               pais_id: pais.id,
                               user_id: user_id,
                               fecha_nacimiento: nacimientoController.text)));

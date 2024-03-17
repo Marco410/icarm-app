@@ -3,6 +3,11 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/setting/api.dart';
+import 'package:icarm/presentation/components/dropdow_options.dart';
+import 'package:icarm/presentation/models/DefaultsModel.dart';
+import 'package:icarm/presentation/models/RoleModel.dart';
+import 'package:icarm/presentation/models/UserModel.dart';
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../config/services/http_general_service.dart';
@@ -40,3 +45,100 @@ final sendNotiUserProvider =
     }
   }
 });
+
+final getUsersAllProvider = FutureProvider<List<User>>((ref) async {
+  final filters = ref.watch(filterUsersProvider);
+  final body = {"nombre": filters.nombre, "role": filters.role};
+
+  String decodedResp = await BaseHttpService.baseGet(
+      url: GET_ALL_USERS, authorization: true, params: body);
+
+  if (decodedResp != "") {
+    final Map<String, dynamic> resp = json.decode(decodedResp);
+    if (resp["status"] == 'Success') {
+      UsuarioModel listUsers = usuarioModelFromJson(decodedResp);
+      List<Option> users = [];
+      for (User user in listUsers.users) {
+        users.add(Option(
+            id: user.id,
+            name:
+                "${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}",
+            description: "Roles: " +
+                user.roles.map((e) => e.name.toString()).join(" | ")));
+      }
+
+      ref.read(getUserListProvider.notifier).update((state) => users);
+
+      return listUsers.users;
+    } else {
+      NotificationUI.instance.notificationWarning(
+          'No pudimos completar la operación, inténtelo más tarde.');
+      return [];
+    }
+  }
+  return [];
+});
+
+final filterUsersProvider = StateProvider<FilterUser>((ref) {
+  FilterUser filters = FilterUser(nombre: "", role: "");
+  return filters;
+});
+
+final getUserListProvider = StateProvider<List<Option>>((ref) => []);
+
+final getUserProvider =
+    FutureProvider.family.autoDispose<User?, String>((ref, userID) async {
+  final body = {"userID": userID};
+
+  String decodedResp = await BaseHttpService.baseGet(
+      url: GET_USER, authorization: true, params: body);
+
+  if (decodedResp != "") {
+    final Map<String, dynamic> resp = json.decode(decodedResp);
+    if (resp["status"] == 'Success') {
+      UserModel user = userModelFromJson(decodedResp);
+
+      return user.user;
+    } else {
+      NotificationUI.instance.notificationWarning(
+          'No pudimos completar la operación, inténtelo más tarde.');
+      return null;
+    }
+  }
+  return null;
+});
+
+final getRolesProvider = FutureProvider.autoDispose<List<Role>>((ref) async {
+  String decodedResp = await BaseHttpService.baseGet(
+      url: GET_ALL_ROLES, authorization: true, params: {});
+
+  if (decodedResp != "") {
+    final Map<String, dynamic> resp = json.decode(decodedResp);
+    if (resp["status"] == 'Success') {
+      RoleModel listRoles = roleModelFromJson(decodedResp);
+
+      ref.read(rolesListProvider.notifier).update((state) => listRoles.roles);
+
+      List<Option> rolesOptions = [];
+
+      for (var role in listRoles.roles) {
+        rolesOptions.add(Option(id: role.id, name: role.name));
+      }
+
+      ref
+          .read(rolesOptionsListProvider.notifier)
+          .update((state) => rolesOptions);
+
+      return listRoles.roles;
+    } else {
+      NotificationUI.instance.notificationWarning(
+          'No pudimos completar la operación, inténtelo más tarde.');
+      return [];
+    }
+  }
+  return [];
+});
+
+final rolesListProvider = StateProvider<List<Role>>((ref) => []);
+final rolesOptionsListProvider = StateProvider<List<Option>>((ref) => []);
+final editingUserProvider = StateProvider<bool>((ref) => false);

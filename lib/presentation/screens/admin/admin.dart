@@ -1,17 +1,19 @@
 import 'package:flutter/Material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sizer_pro/sizer.dart';
 
 import '../../../config/setting/style.dart';
 import '../../components/zcomponents.dart';
 
-class AdminPage extends StatefulWidget {
+class AdminPage extends ConsumerStatefulWidget {
   const AdminPage({super.key});
 
   @override
-  State<AdminPage> createState() => _AdminPageState();
+  ConsumerState<AdminPage> createState() => _AdminPageState();
 }
 
-class _AdminPageState extends State<AdminPage> {
+class _AdminPageState extends ConsumerState<AdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +38,11 @@ class _AdminPageState extends State<AdminPage> {
             title: "Eventos",
             icon: Icons.calendar_month_rounded,
             onTap: () => context.pushNamed("eventos"),
+          ),
+          BigButtonWidget(
+            title: "Usuarios",
+            icon: Icons.people_rounded,
+            onTap: () => context.pushNamed("usuarios"),
           ),
         ],
       ),
@@ -71,7 +78,7 @@ class BigButtonWidget extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  size: 30,
+                  size: 9.sp,
                   color: ColorStyle.whiteBacground,
                 ),
                 SizedBox(
@@ -79,8 +86,8 @@ class BigButtonWidget extends StatelessWidget {
                 ),
                 Text(
                   title,
-                  style: TxtStyle.headerWhiteStyle
-                      .copyWith(color: ColorStyle.whiteBacground, fontSize: 21),
+                  style: TxtStyle.headerWhiteStyle.copyWith(
+                      color: ColorStyle.whiteBacground, fontSize: 8.sp),
                 )
               ],
             ),
