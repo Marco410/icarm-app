@@ -70,18 +70,20 @@ final getEventoProvider =
     if (resp["status"] == 'Success') {
       Evento evento = Evento.fromJson(resp["data"]['evento'][0]);
 
-      String decodedResp = await BaseHttpService.baseGet(
-          url: IS_USER_INTERESTED,
-          authorization: true,
-          params: {"eventoID": eventoID, 'userID': prefs.usuarioID});
+      if (prefs.usuarioID != "") {
+        String decodedResp = await BaseHttpService.baseGet(
+            url: IS_USER_INTERESTED,
+            authorization: true,
+            params: {"eventoID": eventoID, 'userID': prefs.usuarioID});
 
-      if (decodedResp != "") {
-        final Map<String, dynamic> resp = json.decode(decodedResp);
+        if (decodedResp != "") {
+          final Map<String, dynamic> resp = json.decode(decodedResp);
 
-        if (resp['status'] == 'Success') {
-          ref
-              .read(isUSerInterestedProvider.notifier)
-              .update((state) => resp["data"]['interested']);
+          if (resp['status'] == 'Success') {
+            ref
+                .read(isUSerInterestedProvider.notifier)
+                .update((state) => resp["data"]['interested']);
+          }
         }
       }
 

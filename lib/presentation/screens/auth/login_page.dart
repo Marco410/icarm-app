@@ -136,9 +136,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                CustomButton(
+                    text: "Continuar sin iniciar sesión",
+                    onTap: () => context.goNamed('home'),
+                    color: Colors.white,
+                    textColor: ColorStyle.primaryColor,
+                    margin: EdgeInsets.all(0),
+                    loading: false),
+                Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -160,7 +165,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ],
                 ),
-                Spacer()
               ],
             ),
           ),

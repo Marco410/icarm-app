@@ -52,6 +52,7 @@ class User {
   Iglesia? iglesia;
   Pais? pais;
   List<Role> roles;
+  String? fotoPerfil;
 
   User({
     required this.id,
@@ -74,6 +75,7 @@ class User {
     required this.iglesia,
     required this.roles,
     required this.pais,
+    required this.fotoPerfil,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -100,6 +102,7 @@ class User {
             json["iglesia"] == null ? null : Iglesia.fromJson(json["iglesia"]),
         pais: json["pais"] == null ? null : Pais.fromJson(json["pais"]),
         roles: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
+        fotoPerfil: json["foto_perfil"] ?? null,
       );
 
   Map<String, dynamic> toJson() => {

@@ -4,3 +4,4 @@ export 'carousel_widget.dart';
 export 'content_ad_widget.dart';
 export 'custombutton.dart';
 export 'line_widget.dart';
+export 'user_image_profile_widget.dart';

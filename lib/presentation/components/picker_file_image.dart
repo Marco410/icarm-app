@@ -102,7 +102,7 @@ Future<void> PickerFileImage(BuildContext context, WidgetRef ref,
                                                 height: 5,
                                               ),
                                               Text(
-                                                "Seleccionar archivo",
+                                                "Archivo",
                                                 style: TxtStyle.labelText
                                                     .copyWith(
                                                         fontSize: 6.sp,
@@ -124,7 +124,8 @@ Future<void> PickerFileImage(BuildContext context, WidgetRef ref,
                                         onTap: () async {
                                           final image = await ImagePicker()
                                               .pickImage(
-                                                  source: ImageSource.gallery);
+                                                  source: ImageSource.gallery,
+                                                  imageQuality: 30);
 
                                           if (image == null) {
                                             ref
@@ -187,7 +188,7 @@ Future<void> PickerFileImage(BuildContext context, WidgetRef ref,
                                               ),
                                               (imgHorizontal)
                                                   ? Text(
-                                                      "Seleccionar imagen horizontal",
+                                                      "Imagen horizontal",
                                                       style: TxtStyle.labelText
                                                           .copyWith(
                                                               fontSize: 5.sp,
@@ -196,7 +197,7 @@ Future<void> PickerFileImage(BuildContext context, WidgetRef ref,
                                                     )
                                                   : (imgVertical)
                                                       ? Text(
-                                                          "Seleccionar imagen vertical",
+                                                          "Imagen vertical",
                                                           style: TxtStyle
                                                               .labelText
                                                               .copyWith(
@@ -206,7 +207,7 @@ Future<void> PickerFileImage(BuildContext context, WidgetRef ref,
                                                                       .white),
                                                         )
                                                       : Text(
-                                                          "Seleccionar imagen",
+                                                          "Imagen",
                                                           style: TxtStyle
                                                               .labelText
                                                               .copyWith(

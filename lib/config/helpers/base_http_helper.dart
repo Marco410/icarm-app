@@ -77,12 +77,12 @@ Future<String?> httpBase(
 
           break;
       }
+      print("data");
+      print(data);
 
       if (response.statusCode == 200) {
         return data;
       } else {
-        print("data");
-        print(data);
         final Map<String, dynamic> resp = json.decode(data);
 
         if (resp["status"] == 'Success') {

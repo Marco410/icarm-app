@@ -122,9 +122,6 @@ class EventoController {
       "ref_telefono": refTelefono,
     };
 
-    print("bodyData");
-    print(bodyData);
-
     String decodedResp = await BaseHttpService.basePost(
         url: ENCONTRADO_REGISTER,
         authorization: true,

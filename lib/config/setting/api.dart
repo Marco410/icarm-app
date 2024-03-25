@@ -44,5 +44,7 @@ const String GET_ENCONTRADO = "${CARPETA}app/encontrado/invitado";
 const String GET_ALL_USERS = "${CARPETA}app/users/all";
 const String GET_USER = "${CARPETA}app/users/detail";
 const String UPDATE_USER = "${CARPETA}app/users/update";
+const String UPDATE_FOTO_PERFIL = "${CARPETA}app/users/update-foto-perfil";
+const String DELETE_FOTO_PERFIL = "${CARPETA}app/users/delete-foto-perfil";
 
 const String GET_ALL_ROLES = "${CARPETA}app/users/roles";

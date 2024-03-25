@@ -287,18 +287,26 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
             isOpen: links[6],
             content: Text("En construcción"),
           ),
-          /*    const SizedBox(
+          const SizedBox(
             height: 10,
           ),
           AccordionWidget(
-            onTap: () => context.pushNamed("web.view", pathParameters: {
+            onTap: () {
+              final Uri toLaunch = Uri(
+                  scheme: 'https',
+                  host: 'amoryrestauracionmorelia.org',
+                  path: 'donacionapp',
+                  queryParameters: {});
+
+              launchUrl(toLaunch, mode: LaunchMode.externalApplication);
+            } /* context.pushNamed("web.view", pathParameters: {
               "url": "https://www.amoryrestauracionmorelia.org/donacionapp"
-            }) /* setState(() => links[6] = !links[6]) */,
+            })  */ /* setState(() => links[6] = !links[6]) */,
             title: "Donaciones",
             subtitle: "Gracias por tu generosidad.",
             isOpen: links[7],
             content: Text("En construcción"),
-          ), */
+          ),
           const SizedBox(
             height: 100,
           ),

@@ -4,8 +4,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/app_bar_widget.dart';
+import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/drawer.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -47,44 +49,45 @@ class _QRPageState extends ConsumerState<QRPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: QrImageView(
-                data: qrData,
-                version: QrVersions.auto,
-                size: 250,
-                backgroundColor: Colors.white,
-                embeddedImageStyle: QrEmbeddedImageStyle(
-                    color: Colors.black, size: Size(60, 40)),
-                constrainErrorBounds: true,
-                // ignore: deprecated_member_use
-                foregroundColor: ColorStyle.primaryColor,
-                padding: EdgeInsets.all(20),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${prefs.nombre}',
-                  style: TxtStyle.headerStyle,
-                ),
-                Text(
-                  "${prefs.aPaterno} ${prefs.aMaterno}",
-                  style: TxtStyle.headerStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  qrData,
-                  style: TxtStyle.hintText,
-                )
-              ],
-            ),
+            (prefs.usuarioID != "")
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: QrImageView(
+                      data: qrData,
+                      version: QrVersions.auto,
+                      size: 250,
+                      backgroundColor: Colors.white,
+                      embeddedImageStyle: QrEmbeddedImageStyle(
+                          color: Colors.black, size: Size(60, 40)),
+                      constrainErrorBounds: true,
+                      // ignore: deprecated_member_use
+                      foregroundColor: ColorStyle.primaryColor,
+                      padding: EdgeInsets.all(20),
+                    ),
+                  )
+                : NoLoginWidget(),
+            (prefs.usuarioID != "")
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${prefs.nombre}',
+                        style: TxtStyle.headerStyle,
+                      ),
+                      Text(
+                        "${prefs.aPaterno} ${prefs.aMaterno}",
+                        style: TxtStyle.headerStyle,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        qrData,
+                        style: TxtStyle.hintText,
+                      )
+                    ],
+                  )
+                : SizedBox(),
             Container(
               width: double.infinity,
               margin: EdgeInsets.all(10),
@@ -117,6 +120,55 @@ class _QRPageState extends ConsumerState<QRPage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class NoLoginWidget extends StatelessWidget {
+  const NoLoginWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 20,
+        ),
+        SvgPicture.asset("assets/icon/user-icon.svg", height: 100),
+        SizedBox(
+          height: 15,
+        ),
+        CustomButton(
+            text: "Iniciar sesión",
+            onTap: () => context.goNamed('login'),
+            textColor: Colors.white,
+            color: ColorStyle.primaryColor,
+            margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+            loading: false),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("¿No tienes una cuenta?"),
+                SizedBox(
+                  width: 5,
+                ),
+                InkWell(
+                  onTap: () => context.pushNamed('register'),
+                  child: Text(
+                    "Regístrate",
+                    style: TxtStyle.labelText,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

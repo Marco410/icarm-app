@@ -10,7 +10,6 @@ import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/controllers/evento_controller.dart';
 import 'package:icarm/presentation/providers/evento_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -39,10 +38,6 @@ class _EventScreenState extends ConsumerState<EventScreen> {
   }
 
   bool loadingInterested = false;
-  late DeviceCalendarPlugin _deviceCalendarPlugin =
-      _deviceCalendarPlugin = DeviceCalendarPlugin();
-  String _localAccountName = prefs.nombre;
-  String _calendarName = 'Amor y Restauración Morelia';
 
   @override
   Widget build(BuildContext context) {
@@ -101,52 +96,57 @@ class _EventScreenState extends ConsumerState<EventScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      (loadingInterested)
-                          ? LoadingStandardWidget.loadingWidget()
-                          : InkWell(
-                              onTap: () async {
-                                setState(() => loadingInterested = true);
-                                await EventoController.createInterest(
-                                        eventoID: widget.eventoID,
-                                        usuarioID: prefs.usuarioID)
-                                    .then((value) {
-                                  // ignore: unused_result
-                                  ref.refresh(
-                                      getEventoProvider(widget.eventoID));
+                      (prefs.usuarioID != "")
+                          ? (loadingInterested)
+                              ? LoadingStandardWidget.loadingWidget()
+                              : InkWell(
+                                  onTap: () async {
+                                    setState(() => loadingInterested = true);
+                                    await EventoController.createInterest(
+                                            eventoID: widget.eventoID,
+                                            usuarioID: prefs.usuarioID)
+                                        .then((value) {
+                                      // ignore: unused_result
+                                      ref.refresh(
+                                          getEventoProvider(widget.eventoID));
 
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    setState(() => loadingInterested = false);
-                                  });
-                                });
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 5),
-                                decoration: BoxDecoration(
-                                    color: (isUserInterested)
-                                        ? ColorStyle.secondaryColor
-                                        : Colors.grey,
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        (isUserInterested)
-                                            ? Icons.star
-                                            : Icons.star_outline,
-                                        color: ColorStyle.whiteBacground,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        "Interesado",
-                                        style: TxtStyle.labelText.copyWith(
-                                            color: ColorStyle.whiteBacground),
-                                      ),
-                                    ]),
-                              ),
-                            ),
+                                      Future.delayed(Duration(seconds: 1), () {
+                                        setState(
+                                            () => loadingInterested = false);
+                                      });
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 5),
+                                    decoration: BoxDecoration(
+                                        color: (isUserInterested)
+                                            ? ColorStyle.secondaryColor
+                                            : Colors.grey,
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            (isUserInterested)
+                                                ? Icons.star
+                                                : Icons.star_outline,
+                                            color: ColorStyle.whiteBacground,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "Interesado",
+                                            style: TxtStyle.labelText.copyWith(
+                                                color:
+                                                    ColorStyle.whiteBacground),
+                                          ),
+                                        ]),
+                                  ),
+                                )
+                          : SizedBox(),
                       SizedBox(
                         height: 5,
                       ),
@@ -356,7 +356,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
                       Html(
                         data: data.descripcion,
                       ),
-                      (data.canRegister == 1)
+                      (data.canRegister == 1 && prefs.usuarioID != "")
                           ? Column(
                               children: [
                                 LineWidget(),

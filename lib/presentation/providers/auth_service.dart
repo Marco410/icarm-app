@@ -156,6 +156,7 @@ class AuthService {
     prefs.sexo = resp['data']['user']['sexo'].toString();
     prefs.pais = resp['data']['user']['pais_id'].toString();
     prefs.pass_update = resp['data']['user']['pass_update'].toString();
+    prefs.foto_perfil = resp['data']['user']['foto_perfil'].toString();
 
     List<String> roles = [];
     for (final rol in resp['data']['user']['roles']) {
@@ -177,5 +178,6 @@ class AuthService {
     prefs.sexo = "";
     prefs.pais = "";
     prefs.usuarioRol = [];
+    prefs.foto_perfil = "";
   }
 }

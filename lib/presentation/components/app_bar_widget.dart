@@ -1,9 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/routes/app_router.dart';
+import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:sizer_pro/sizer.dart';
+
+import '../../config/share_prefs/prefs_usuario.dart';
 
 class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final bool backButton;
@@ -26,6 +31,8 @@ class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
 class _AppBarWidgetState extends State<AppBarWidget> {
   @override
   Widget build(BuildContext context) {
+    final prefs = PreferenciasUsuario();
+
     return AppBar(
         backgroundColor: ColorStyle.whiteBacground,
         elevation: 0,
@@ -74,8 +81,31 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                             onTap: () {
                               NavigationRoutes.goPerfil(context);
                             },
-                            child:
-                                SvgPicture.asset("assets/icon/user-icon.svg")),
+                            child: (prefs.foto_perfil != "")
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "${URL_MEDIA_FOTO_PERFIL}/${prefs.usuarioID}/${prefs.foto_perfil}",
+                                      placeholder: (context, url) =>
+                                          LoadingStandardWidget.loadingWidget(),
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        width: 12.sp,
+                                        height: 13.sp,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.fitWidth),
+                                        ),
+                                      ),
+                                      height: 13.sp,
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    "assets/icon/user-icon.svg")),
                       ],
                     ),
                   ),

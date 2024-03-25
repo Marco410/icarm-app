@@ -148,11 +148,13 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                 style: TxtStyle.headerStyle
                     .copyWith(color: ColorStyle.primaryColor, fontSize: 9.sp),
               ),
-              Text(
-                "${prefs.nombre}, pronto podrás comentar sobre lo que escuchas.",
-                style: TxtStyle.hintText
-                    .copyWith(color: ColorStyle.primaryColor, fontSize: 4.sp),
-              ),
+              (prefs.usuarioID != "")
+                  ? Text(
+                      "${prefs.nombre}, pronto podrás comentar sobre lo que escuchas.",
+                      style: TxtStyle.hintText.copyWith(
+                          color: ColorStyle.primaryColor, fontSize: 4.sp),
+                    )
+                  : SizedBox(),
               SizedBox(
                 height: 10,
               ),

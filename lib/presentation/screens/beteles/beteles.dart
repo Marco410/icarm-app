@@ -337,7 +337,9 @@ class _BetelesPageState extends State<BetelesPage> {
                 child: Column(
                   children: [
                     Text(
-                      "${prefs.nombre} encuentra un betel",
+                      (prefs.usuarioID != "")
+                          ? "${prefs.nombre} encuentra un betel"
+                          : "Encuentra un betel",
                       overflow: TextOverflow.fade,
                       style: TextStyle(
                           fontSize: 9.sp, fontWeight: FontWeight.bold),

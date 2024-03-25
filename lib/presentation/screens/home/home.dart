@@ -218,7 +218,9 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "${prefs.nombre} ¡bienvenido!",
+                                    (prefs.usuarioID != "")
+                                        ? "${prefs.nombre} ¡bienvenido!"
+                                        : '¡Bienvenido!',
                                     style: TxtStyle.headerStyle.copyWith(
                                         color: Colors.white, fontSize: 9.sp),
                                     textAlign: TextAlign.center,

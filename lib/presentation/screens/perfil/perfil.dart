@@ -7,11 +7,11 @@ import 'package:go_router/go_router.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
-import 'package:icarm/presentation/components/app_bar_widget.dart';
-import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/drawer.dart';
+import 'package:icarm/presentation/components/zcomponents.dart';
 import 'package:icarm/presentation/providers/auth_service.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/presentation/screens/screens.dart';
 
 import '../../providers/notification_provider.dart';
 import '../../providers/providers.dart';
@@ -57,27 +57,36 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
               SizedBox(
                 height: 20,
               ),
-              SvgPicture.asset("assets/icon/user-icon.svg", height: 100),
+              (prefs.usuarioID != "")
+                  ? UserImageProfileWidget(
+                      goToPerfil: true,
+                      fotoPerfil:
+                          (prefs.foto_perfil != "") ? prefs.foto_perfil : null,
+                    )
+                  : NoLoginWidget(),
               SizedBox(
                 height: 15,
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${prefs.nombre}',
-                    style: TxtStyle.headerStyle,
-                  ),
-                  Text(
-                    "${prefs.aPaterno} ${prefs.aMaterno}",
-                    style: TxtStyle.headerStyle,
-                  )
-                ],
+              GestureDetector(
+                onTap: () => context.pushNamed('perfil.detail'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${prefs.nombre}',
+                      style: TxtStyle.headerStyle,
+                    ),
+                    Text(
+                      "${prefs.aPaterno} ${prefs.aMaterno}",
+                      style: TxtStyle.headerStyle,
+                    )
+                  ],
+                ),
               ),
               SizedBox(
                 height: 20,
               ),
-              (prefs.pass_update == "1")
+              (prefs.pass_update == "1" && prefs.usuarioID != "")
                   ? CustomButton(
                       margin: EdgeInsets.all(0),
                       text: "Da clic aquí para cambiar tu contraseña.",
@@ -99,14 +108,16 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
               SizedBox(
                 height: 15,
               ),
-              MenuItemWidget(
-                icon: 'kids.svg',
-                title: 'A&R KIDS',
-                subtitle: 'Registra a tus hijos en nuestras clases.',
-                onTap: () {
-                  context.pushNamed('kids');
-                },
-              ),
+              (prefs.usuarioID != "")
+                  ? MenuItemWidget(
+                      icon: 'kids.svg',
+                      title: 'A&R KIDS',
+                      subtitle: 'Registra a tus hijos en nuestras clases.',
+                      onTap: () {
+                        context.pushNamed('kids');
+                      },
+                    )
+                  : SizedBox(),
               SizedBox(
                 height: 15,
               ),
@@ -149,38 +160,43 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
               SizedBox(
                 height: 15,
               ),
-              CustomButton(
-                text: "Cerrar Sesión",
-                margin: EdgeInsets.only(top: 10, right: 30, left: 30),
-                onTap: () {
-                  NotificationUI.instance.notificationToAcceptAction(context,
-                      "Tu sesión se cerrará. \n\n Tendrás que volver a agregar tu usuario y contraseña.",
-                      () {
-                    ref.refresh(logoutProvider(context));
-                  });
-                },
-                loading: false,
-                color: Colors.white,
-                textColor: Colors.black,
-              ),
+              (prefs.usuarioID != "")
+                  ? CustomButton(
+                      text: "Cerrar Sesión",
+                      margin: EdgeInsets.only(top: 10, right: 30, left: 30),
+                      onTap: () {
+                        NotificationUI.instance.notificationToAcceptAction(
+                            context,
+                            "Tu sesión se cerrará. \n\n Tendrás que volver a agregar tu usuario y contraseña.",
+                            () {
+                          ref.refresh(logoutProvider(context));
+                        });
+                      },
+                      loading: false,
+                      color: Colors.white,
+                      textColor: Colors.black,
+                    )
+                  : SizedBox(),
               SizedBox(
                 height: 15,
               ),
-              CustomButton(
-                text: "Eliminar mi cuenta",
-                margin: EdgeInsets.only(right: 30, left: 30),
-                onTap: () {
-                  NotificationUI.instance.notificationToAcceptAction(context,
-                      "¿Estás seguro de eliminar tu cuenta? Se perderán todos tus datos.",
-                      () {
-                    ref.refresh(deleteAccountProvider(context));
-                  });
-                },
-                color: ColorStyle.thirdColor,
-                loading: false,
-                size: 'sm',
-                textColor: Colors.black,
-              ),
+              (prefs.usuarioID != "")
+                  ? InkWell(
+                      onTap: () {
+                        NotificationUI.instance.notificationToAcceptAction(
+                            context,
+                            "¿Estás seguro de eliminar tu cuenta? Se perderán todos tus datos.",
+                            () {
+                          ref.refresh(deleteAccountProvider(context));
+                        });
+                      },
+                      child: Text(
+                        "Eliminar mi cuenta",
+                        style: TxtStyle.labelText
+                            .copyWith(decoration: TextDecoration.underline),
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(
                 height: 60,
               )

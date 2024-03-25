@@ -111,4 +111,12 @@ class PreferenciasUsuario with ChangeNotifier {
   set ds_token_notificaciones(String value) {
     _prefs.setString("ds_token_notificaciones", value);
   }
+
+  String get foto_perfil {
+    return _prefs.getString("foto_perfil") ?? "";
+  }
+
+  set foto_perfil(String value) {
+    _prefs.setString("foto_perfil", value);
+  }
 }
