@@ -53,6 +53,7 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
 
   bool isFavorite = false;
   bool canRegister = false;
+  bool isPublic = false;
   bool direccion = false;
   bool isEditing = false;
   bool loadingEvent = false;
@@ -80,6 +81,7 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
 
       isFavorite = (widget.evento!.isFavorite == 1) ? true : false;
       canRegister = (widget.evento!.canRegister == 1) ? true : false;
+      isPublic = (widget.evento!.isPublic == 1) ? true : false;
     }
 
     Future.microtask(() => ref.watch(getIglesiasProvider));
@@ -134,8 +136,17 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                       focusNode: nombreFocus,
                       readOnly: isEditing,
                     ),
-                    SizedBox(
-                      height: 10,
+                    CheckBoxWidget(
+                      text: "¿Es público?",
+                      value: isPublic,
+                      onChange: (value) {
+                        if (isEditing) return;
+
+                        setState(() {
+                          isPublic = value!;
+                        });
+                      },
+                      readOnly: isEditing,
                     ),
                     DropdownWidget(
                         title: "Iglesia",
@@ -196,7 +207,7 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                       ),
                       readOnly: isEditing,
                       textInputType: TextInputType.datetime,
-                      isRequired: true,
+                      isRequired: false,
                     ),
                     SizedBox(
                       height: 15,
@@ -269,48 +280,64 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          "${URL_MEDIA_EVENTO}/${widget.evento!.id}/${widget.evento!.imgHorizontal}",
-                                      placeholder: (context, url) =>
-                                          LoadingStandardWidget.loadingWidget(),
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                        width: 40.sp,
-                                        decoration: BoxDecoration(
+                                  (widget.evento!.imgHorizontal != null)
+                                      ? ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(15),
-                                          image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.fill),
+                                              BorderRadius.circular(8),
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "${URL_MEDIA_EVENTO}${widget.evento!.id}/${widget.evento!.imgHorizontal}",
+                                            placeholder: (context, url) =>
+                                                LoadingStandardWidget
+                                                    .loadingWidget(),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              width: 40.sp,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.fill),
+                                              ),
+                                            ),
+                                            height: 28.sp,
+                                          ),
+                                        )
+                                      : Icon(
+                                          Icons.image_not_supported_rounded,
+                                          color: ColorStyle.secondaryColor,
                                         ),
-                                      ),
-                                      height: 28.sp,
-                                    ),
-                                  ),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          "${URL_MEDIA_EVENTO}/${widget.evento!.id}/${widget.evento!.imgVertical}",
-                                      placeholder: (context, url) =>
-                                          LoadingStandardWidget.loadingWidget(),
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                        width: 28.sp,
-                                        decoration: BoxDecoration(
+                                  (widget.evento!.imgVertical != null)
+                                      ? ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(15),
-                                          image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.fill),
-                                        ),
-                                      ),
-                                      height: 40.sp,
-                                    ),
-                                  )
+                                              BorderRadius.circular(8),
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "${URL_MEDIA_EVENTO}${widget.evento!.id}/${widget.evento!.imgVertical}",
+                                            placeholder: (context, url) =>
+                                                LoadingStandardWidget
+                                                    .loadingWidget(),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              width: 28.sp,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.fill),
+                                              ),
+                                            ),
+                                            height: 40.sp,
+                                          ),
+                                        )
+                                      : Icon(
+                                          Icons.image_not_supported_rounded,
+                                          color: ColorStyle.secondaryColor,
+                                        )
                                 ],
                               ),
                             ],
@@ -523,46 +550,58 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                             textColor: Colors.white,
                             color: ColorStyle.secondaryColor,
                             onTap: () async {
-                              if (fechaInicialController.text == "" ||
-                                  fechaFinalController.text == "") {
+                              if (fechaInicialController.text == "") {
                                 NotificationUI.instance.notificationWarning(
                                     "Agrega la fecha del evento");
-
                                 return;
                               }
 
                               if (_formKey.currentState!.validate()) {
-                                var dateIni =
-                                    DateTime.parse(fechaInicialController.text);
-                                var dateFin =
-                                    DateTime.parse(fechaFinalController.text);
-                                if (dateIni.isAfter(dateFin) ||
-                                    dateIni.isAtSameMomentAs(dateFin)) {
-                                  NotificationUI.instance.notificationWarning(
-                                      "La fecha final debe de ser después de la fecha inicial.");
+                                if (fechaFinalController.text != "") {
+                                  var dateIni = DateTime.parse(
+                                      fechaInicialController.text);
+                                  var dateFin =
+                                      DateTime.parse(fechaFinalController.text);
+                                  if (dateIni.isAfter(dateFin) ||
+                                      dateIni.isAtSameMomentAs(dateFin)) {
+                                    NotificationUI.instance.notificationWarning(
+                                        "La fecha final debe de ser después de la fecha inicial.");
 
-                                  return;
+                                    return;
+                                  }
                                 }
 
-                                if (controllerHtml.contentIsEmpty) {
-                                  NotificationUI.instance.notificationWarning(
-                                      "Agrega una descripción al evento");
+                                if (isPublic) {
+                                  if (controllerHtml.contentIsEmpty) {
+                                    NotificationUI.instance.notificationWarning(
+                                        "Agrega una descripción al evento");
 
-                                  return;
-                                }
+                                    return;
+                                  }
 
-                                if (controllerHtml.contentIsEmpty) {
-                                  NotificationUI.instance.notificationWarning(
-                                      "Agrega una descripción al evento");
-                                  return;
+                                  if (controllerHtml.contentIsEmpty) {
+                                    NotificationUI.instance.notificationWarning(
+                                        "Agrega una descripción al evento");
+                                    return;
+                                  }
                                 }
 
                                 if (widget.type != 'edit') {
-                                  if (imgVertical == null ||
-                                      imgHorizontal == null) {
-                                    NotificationUI.instance.notificationWarning(
-                                        "Agrega alguna imagen al evento");
-                                    return;
+                                  if (isPublic) {
+                                    if (imgHorizontal == null) {
+                                      NotificationUI.instance
+                                          .notificationWarning(
+                                              "Agrega la imagen del evento.");
+                                      return;
+                                    }
+                                  }
+
+                                  if (isFavorite) {
+                                    if (imgVertical == null) {
+                                      NotificationUI.instance.notificationWarning(
+                                          "Agregar la imagen vertical para que se muestre en inicio.");
+                                      return;
+                                    }
                                   }
                                 }
 
@@ -573,24 +612,28 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                                         iglesiaID: iglesia.id.toString(),
                                         fechaInicio:
                                             fechaInicialController.text,
-                                        fechaFin: fechaFinalController.text,
+                                        fechaFin:
+                                            (fechaFinalController.text != "")
+                                                ? fechaFinalController.text
+                                                : fechaInicialController.text,
                                         descripcion: controllerHtml.content,
                                         direccion: direccionController.text,
                                         isFavorite: isFavorite,
                                         canRegister: canRegister,
                                         imgVertical: (widget.type != 'edit')
-                                            ? imgVertical!.path
+                                            ? imgVertical?.path ?? null
                                             : null,
                                         imgHorizontal: (widget.type != 'edit')
-                                            ? imgHorizontal!.path
+                                            ? imgHorizontal?.path ?? null
                                             : null,
                                         eventoID: (widget.type == 'edit')
                                             ? widget.evento!.id.toString()
                                             : null,
+                                        isPublic: isPublic,
                                         editing: widget.type == 'edit')
                                     .then((value) {
                                   if (value) {
-                                    ref.refresh(getEventosProvider);
+                                    ref.refresh(getEventosProvider("admin"));
                                     context.pop();
                                     NotificationUI.instance.notificationSuccess(
                                         (widget.type != 'edit')

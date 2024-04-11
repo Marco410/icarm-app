@@ -24,6 +24,7 @@ const String EXIT_CLASS_URL = "${CARPETA}app/classroom/exit-class";
 
 const String GET_USER_PASE_URL = "${CARPETA}app/pase-lista/get-user";
 const String ADD_USER_PASE_URL = "${CARPETA}app/pase-lista/add";
+const String UPDATE_USER_PASE_URL = "${CARPETA}app/pase-lista/update-user";
 
 const String SEND_NOTI_USER = "${CARPETA}app/users/send-noti";
 

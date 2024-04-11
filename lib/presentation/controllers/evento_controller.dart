@@ -19,6 +19,7 @@ class EventoController {
       String? imgVertical,
       String? imgHorizontal,
       String? eventoID,
+      required bool isPublic,
       required bool editing}) async {
     final bodyData = {
       "nombre": nombre,
@@ -29,6 +30,7 @@ class EventoController {
       "direccion": (direccion != null) ? direccion : "",
       "is_favorite": (isFavorite) ? "1" : "0",
       "can_register": (canRegister) ? "1" : "0",
+      "is_public": (isPublic) ? "1" : "0",
     };
 
     if (editing) {

@@ -163,9 +163,6 @@ class _QRScannerState extends ConsumerState<QRScanner> {
         resultCode = result!.code!.substring(5);
       });
 
-      print("result!.code!.substring(0, 3)");
-      print(result!.code!.substring(0, 3));
-
       if (result!.code!.substring(0, 3) == 'AYR') {
         controller.dispose();
 
@@ -177,7 +174,6 @@ class _QRScannerState extends ConsumerState<QRScanner> {
           ref.refresh(getKidsProvider(resultCode));
           context.pushReplacementNamed('confirm.kids',
               pathParameters: {"userID": resultCode});
-          print("No esta en pase de lista");
         }
       } else if (result!.code!.substring(0, 3) == 'KID') {
         controller.dispose();

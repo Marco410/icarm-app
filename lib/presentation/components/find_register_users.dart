@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/style.dart';
-import 'package:icarm/presentation/models/models.dart';
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 
 Future<dynamic> showUsersRegister(
     BuildContext context, List<User> options) async {

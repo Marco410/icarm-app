@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
+import 'package:icarm/presentation/components/dropdow_options.dart';
 import 'package:icarm/presentation/models/EventoModel.dart';
 import 'package:icarm/presentation/models/InvitadoModel.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,10 +21,10 @@ final imgVerticalProvider = StateProvider.autoDispose<XFile?>((ref) {
   return null;
 });
 
-final getEventosProvider =
-    FutureProvider.autoDispose<List<Evento>>((ref) async {
+final getEventosProvider = FutureProvider.autoDispose
+    .family<List<Evento>, String>((ref, isAdmin) async {
   String decodedResp = await BaseHttpService.baseGet(
-      url: GET_EVENTOS, authorization: true, params: {});
+      url: GET_EVENTOS, authorization: true, params: {"isAdmin": isAdmin});
 
   if (decodedResp != "") {
     final Map<String, dynamic> resp = json.decode(decodedResp);
@@ -42,6 +43,16 @@ final getEventosProvider =
           .read(listEventosProvider.notifier)
           .update((state) => listEventos.data.eventos);
 
+      List<Option> eventoOption = [];
+
+      for (var iglesia in listEventos.data.eventos) {
+        eventoOption.add(Option(id: iglesia.id, name: iglesia.nombre));
+      }
+
+      ref
+          .read(eventosOptionsListProvider.notifier)
+          .update((state) => eventoOption);
+
       return listEventos.data.eventos;
     } else {
       NotificationUI.instance.notificationWarning(
@@ -56,8 +67,14 @@ final listEventosProvider = StateProvider.autoDispose<List<Evento>>((ref) {
   return [];
 });
 
+final eventosOptionsListProvider = StateProvider<List<Option>>((ref) => []);
+
 final eventoFavoriteProvider = StateProvider.autoDispose<Evento?>((ref) {
   return null;
+});
+
+final eventoSelectedToPaseLista = StateProvider<Option>((ref) {
+  return Option(id: 0, name: 'Seleccione:');
 });
 
 final getEventoProvider =

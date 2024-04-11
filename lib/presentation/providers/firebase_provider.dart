@@ -76,7 +76,6 @@ class PushNotificationService {
 
   static Future _backgroudHandler(RemoteMessage message) async {
     //cuando la aplicacion esta terminada
-    print('on backgroud Handler ${message.messageId}');
     _messageStream.add(message);
     return Future<void>.value();
   }

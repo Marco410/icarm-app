@@ -62,8 +62,10 @@ Future<String?> httpBase(
           final request = http.MultipartRequest('POST', url);
           if (pathFile != null && pathFile.isNotEmpty) {
             pathFile.asMap().forEach((index, elementPath) async {
-              request.files.add(await http.MultipartFile.fromPath(
-                  keyFile![index], elementPath));
+              if (elementPath != "") {
+                request.files.add(await http.MultipartFile.fromPath(
+                    keyFile![index], elementPath));
+              }
             });
           }
 
@@ -77,8 +79,6 @@ Future<String?> httpBase(
 
           break;
       }
-      print("data");
-      print(data);
 
       if (response.statusCode == 200) {
         return data;

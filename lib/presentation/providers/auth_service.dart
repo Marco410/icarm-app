@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:icarm/config/setting/api.dart';
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 import '../../config/routes/app_router.dart';
 import '../../config/services/http_general_service.dart';
 import '../../config/services/notification_ui_service.dart';

@@ -12,6 +12,7 @@ import 'package:icarm/presentation/screens/perfil/kids/admin/qr_confirm_kids.dar
 import 'package:icarm/presentation/screens/perfil/kids/kids.dart';
 import 'package:icarm/presentation/screens/perfil/kids/kids_add.dart';
 import 'package:icarm/presentation/screens/perfil/kids/kids_admin.dart';
+import 'package:icarm/presentation/screens/perfil/pase_lista/pase_lista.dart';
 import 'package:icarm/presentation/screens/perfil/perfil-detail.dart';
 import 'package:icarm/presentation/screens/perfil/perfil.dart';
 
@@ -68,6 +69,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                   path: 'change-password',
                   name: 'change.password',
                   builder: (context, state) => ChangePasswordPage(),
+                ),
+                GoRoute(
+                  path: 'pase-lista',
+                  name: 'pase.lista',
+                  builder: (context, state) => PaseListaPage(),
                 ),
                 GoRoute(
                     path: 'notifications',

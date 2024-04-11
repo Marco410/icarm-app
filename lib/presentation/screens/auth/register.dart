@@ -11,6 +11,7 @@ import 'package:icarm/presentation/components/dropdow_options.dart';
 import 'package:icarm/presentation/components/dropdown_widget.dart';
 import 'package:icarm/presentation/components/find_register_users.dart';
 import 'package:icarm/presentation/components/text_field.dart';
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 import 'package:icarm/presentation/providers/auth_service.dart';
 import 'package:intl/intl.dart';
 
@@ -332,7 +333,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     if (res != null) {
       final userFinded = res[0] as User;
 
-      print(userFinded.email);
       if (userFinded.email.isNotEmpty) {
         NotificationUI.instance.notificationWarning(
             "${userFinded.nombre} ya tenemos tu registro, intenta iniciar sesión con tu correo y contraseña.");
@@ -351,9 +351,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         aPaternoController.text =
             "${userFinded.apellidoPaterno[0].toUpperCase()}${userFinded.apellidoPaterno.substring(1).toLowerCase()}";
         aMaternoController.text =
-            "${userFinded.apellidoMaterno[0].toUpperCase()}${userFinded.apellidoMaterno.substring(1).toLowerCase()}";
-        telefonoController.text = userFinded.telefono;
-        nacimientoController.text = userFinded.fechaNacimiento;
+            "${userFinded.apellidoMaterno![0].toUpperCase()}${userFinded.apellidoMaterno!.substring(1).toLowerCase()}";
+        telefonoController.text = userFinded.telefono ?? "";
+        nacimientoController.text = DateFormat('yyyy-MM-dd')
+            .format(userFinded.fechaNacimiento ?? DateTime.now());
         user_id = userFinded.id;
       });
     }

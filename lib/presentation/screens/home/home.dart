@@ -73,7 +73,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
         _controllerHomeVideo.play();
       });
 
-    ref.refresh(getEventosProvider);
+    ref.refresh(getEventosProvider("user"));
 
     Future.microtask(() {
       setState(() {
@@ -183,7 +183,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                             }),
                         child: CachedNetworkImage(
                           imageUrl:
-                              "${URL_MEDIA_EVENTO}/${eventoFavorite.id}/${eventoFavorite.imgVertical}",
+                              "${URL_MEDIA_EVENTO}${eventoFavorite.id}/${eventoFavorite.imgVertical}",
                           placeholder: (context, url) =>
                               LoadingStandardWidget.loadingWidget(),
                           imageBuilder: (context, imageProvider) => Container(
@@ -285,160 +285,190 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                                 itemCount: listEventos.length,
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
-                                  return FadedScaleAnimation(
-                                    child: InkWell(
-                                      onTap: () => context.pushNamed('event',
-                                          pathParameters: {
-                                            "eventoID":
-                                                listEventos[index].id.toString()
-                                          }),
-                                      child: Container(
-                                          width: 60.w,
-                                          margin: EdgeInsets.only(
-                                              right: 20, bottom: 50, top: 10),
-                                          padding: EdgeInsets.all(11),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                  blurRadius: 10,
-                                                  spreadRadius: -12,
-                                                  offset: Offset(0, 0))
-                                            ],
-                                          ),
-                                          child: Stack(
-                                            alignment: Alignment.center,
-                                            clipBehavior: Clip.none,
-                                            fit: StackFit.expand,
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      "${URL_MEDIA_EVENTO}/${listEventos[index].id}/${listEventos[index].imgHorizontal}",
-                                                  placeholder: (context, url) =>
-                                                      LoadingStandardWidget
-                                                          .loadingWidget(),
-                                                  imageBuilder: (context,
-                                                          imageProvider) =>
-                                                      Container(
-                                                    width: 20.sp,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      image: DecorationImage(
-                                                          image: imageProvider,
-                                                          fit: BoxFit.fill),
-                                                    ),
-                                                  ),
-                                                  height: 20.sp,
+                                  return (listEventos[index].isPublic == 1)
+                                      ? FadedScaleAnimation(
+                                          child: InkWell(
+                                            onTap: () => context.pushNamed(
+                                                'event',
+                                                pathParameters: {
+                                                  "eventoID": listEventos[index]
+                                                      .id
+                                                      .toString()
+                                                }),
+                                            child: Container(
+                                                width: 60.w,
+                                                margin: EdgeInsets.only(
+                                                    right: 20,
+                                                    bottom: 50,
+                                                    top: 10),
+                                                padding: EdgeInsets.all(11),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                        blurRadius: 10,
+                                                        spreadRadius: -12,
+                                                        offset: Offset(0, 0))
+                                                  ],
                                                 ),
-                                              ),
-                                              Positioned(
-                                                  bottom: -30,
-                                                  child: Container(
-                                                    height: 5.h,
-                                                    width: 40.w,
-                                                    padding: EdgeInsets.only(
-                                                        left: 8, right: 8),
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.5),
-                                                            blurRadius: 9,
-                                                            spreadRadius: -2,
-                                                            offset:
-                                                                Offset(0, 0))
-                                                      ],
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  clipBehavior: Clip.none,
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              8),
-                                                      color: ColorStyle
-                                                          .secondaryColor,
-                                                    ),
-                                                    child: Text(
-                                                      listEventos[index].nombre,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TxtStyle.labelText
-                                                          .copyWith(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 4.3.sp),
-                                                    ),
-                                                  )),
-                                              Positioned(
-                                                  top: -10,
-                                                  right: -10,
-                                                  child: Container(
-                                                    height: 14.sp,
-                                                    width: 19.sp,
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.5),
-                                                            blurRadius: 9,
-                                                            spreadRadius: -2,
-                                                            offset:
-                                                                Offset(0, 0))
-                                                      ],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      color: ColorStyle
-                                                          .secondaryColor,
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          DateFormat('dd')
-                                                              .format(listEventos[
-                                                                      index]
-                                                                  .fechaInicio)
-                                                              .toUpperCase(),
-                                                          style: TxtStyle
-                                                              .labelText
-                                                              .copyWith(
-                                                                  fontSize:
-                                                                      4.sp,
-                                                                  color: Colors
-                                                                      .white),
+                                                              20),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            "${URL_MEDIA_EVENTO}${listEventos[index].id}/${listEventos[index].imgHorizontal}",
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            LoadingStandardWidget
+                                                                .loadingWidget(),
+                                                        imageBuilder: (context,
+                                                                imageProvider) =>
+                                                            Container(
+                                                          width: 20.sp,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            image: DecorationImage(
+                                                                image:
+                                                                    imageProvider,
+                                                                fit: BoxFit
+                                                                    .fill),
+                                                          ),
                                                         ),
-                                                        Text(
-                                                          DateFormat('MMM')
-                                                              .format(listEventos[
-                                                                      index]
-                                                                  .fechaInicio)
-                                                              .toUpperCase(),
-                                                          style: TxtStyle
-                                                              .labelText
-                                                              .copyWith(
-                                                                  fontSize:
-                                                                      3.5.sp,
-                                                                  color: Colors
-                                                                      .white),
-                                                        ),
-                                                      ],
+                                                        height: 20.sp,
+                                                      ),
                                                     ),
-                                                  )),
-                                            ],
-                                          )),
-                                    ),
-                                  );
+                                                    Positioned(
+                                                        bottom: -30,
+                                                        child: Container(
+                                                          height: 5.h,
+                                                          width: 40.w,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 8,
+                                                                  right: 8),
+                                                          alignment:
+                                                              Alignment.center,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                                  blurRadius: 9,
+                                                                  spreadRadius:
+                                                                      -2,
+                                                                  offset:
+                                                                      Offset(
+                                                                          0, 0))
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            color: ColorStyle
+                                                                .secondaryColor,
+                                                          ),
+                                                          child: Text(
+                                                            listEventos[index]
+                                                                .nombre,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TxtStyle
+                                                                .labelText
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        4.3.sp),
+                                                          ),
+                                                        )),
+                                                    Positioned(
+                                                        top: -10,
+                                                        right: -10,
+                                                        child: Container(
+                                                          height: 14.sp,
+                                                          width: 19.sp,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                                  blurRadius: 9,
+                                                                  spreadRadius:
+                                                                      -2,
+                                                                  offset:
+                                                                      Offset(
+                                                                          0, 0))
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            color: ColorStyle
+                                                                .secondaryColor,
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                DateFormat('dd')
+                                                                    .format(listEventos[
+                                                                            index]
+                                                                        .fechaInicio)
+                                                                    .toUpperCase(),
+                                                                style: TxtStyle
+                                                                    .labelText
+                                                                    .copyWith(
+                                                                        fontSize: 4
+                                                                            .sp,
+                                                                        color: Colors
+                                                                            .white),
+                                                              ),
+                                                              Text(
+                                                                DateFormat(
+                                                                        'MMM')
+                                                                    .format(listEventos[
+                                                                            index]
+                                                                        .fechaInicio)
+                                                                    .toUpperCase(),
+                                                                style: TxtStyle
+                                                                    .labelText
+                                                                    .copyWith(
+                                                                        fontSize: 3.5
+                                                                            .sp,
+                                                                        color: Colors
+                                                                            .white),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )),
+                                                  ],
+                                                )),
+                                          ),
+                                        )
+                                      : SizedBox();
                                 },
                               ),
                             ),
@@ -651,7 +681,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
 
   Future<void> refreshHome(WidgetRef ref) async {
     ref.refresh(liveProvider);
-    ref.refresh(getEventosProvider);
+    ref.refresh(getEventosProvider("user"));
   }
 }
 

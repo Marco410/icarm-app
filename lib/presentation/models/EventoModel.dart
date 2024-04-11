@@ -61,6 +61,7 @@ class Evento {
   int isFavorite;
   int canRegister;
   int interestedCount;
+  int isPublic;
   DateTime createdAt;
   DateTime updatedAt;
   Iglesia iglesia;
@@ -77,6 +78,7 @@ class Evento {
     required this.imgHorizontal,
     required this.isFavorite,
     required this.canRegister,
+    required this.isPublic,
     required this.interestedCount,
     required this.createdAt,
     required this.updatedAt,
@@ -88,14 +90,15 @@ class Evento {
         nombre: json["nombre"],
         iglesiaId: json["iglesia_id"],
         fechaInicio: DateTime.parse(json["fecha_inicio"]),
-        fechaFin: DateTime.parse(json["fecha_fin"]),
-        descripcion: json["descripcion"],
-        direccion: json["direccion"],
+        fechaFin: DateTime.parse(json["fecha_fin"] ?? json["fecha_inicio"]),
+        descripcion: json["descripcion"] ?? "",
+        direccion: json["direccion"] ?? "",
         imgVertical: json["img_vertical"],
         imgHorizontal: json["img_horizontal"],
         isFavorite: json["is_favorite"],
         canRegister: json["can_register"],
-        interestedCount: json["interested_count"],
+        isPublic: json["is_public"],
+        interestedCount: json["interested_count"] ?? 0,
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         iglesia: Iglesia.fromJson(json["iglesia"]),

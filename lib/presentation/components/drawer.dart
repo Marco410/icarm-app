@@ -25,7 +25,7 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final listEventos = ref.watch(getEventosProvider);
+    final listEventos = ref.watch(getEventosProvider("user"));
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.85,
       child: SingleChildScrollView(
@@ -116,7 +116,7 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
                                 (data[index].imgHorizontal != null)
                                     ? CachedNetworkImage(
                                         imageUrl:
-                                            "${URL_MEDIA_EVENTO}/${data[index].id}/${data[index].imgHorizontal}",
+                                            "${URL_MEDIA_EVENTO}${data[index].id}/${data[index].imgHorizontal}",
                                         placeholder: (context, url) =>
                                             LoadingStandardWidget
                                                 .loadingWidget(),
@@ -292,10 +292,11 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
           ),
           AccordionWidget(
             onTap: () {
+              //https://donar.amoryrestauracionmorelia.org/b/9AQ8zW4Fg9xl55CdQQ
               final Uri toLaunch = Uri(
                   scheme: 'https',
-                  host: 'amoryrestauracionmorelia.org',
-                  path: 'donacionapp',
+                  host: 'donar.amoryrestauracionmorelia.org',
+                  path: 'b/9AQ8zW4Fg9xl55CdQQ',
                   queryParameters: {});
 
               launchUrl(toLaunch, mode: LaunchMode.externalApplication);

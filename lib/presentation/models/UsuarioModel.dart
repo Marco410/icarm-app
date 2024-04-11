@@ -53,6 +53,7 @@ class User {
   Pais? pais;
   List<Role> roles;
   String? fotoPerfil;
+  MaestroVision? maestroVision;
 
   User({
     required this.id,
@@ -76,6 +77,7 @@ class User {
     required this.roles,
     required this.pais,
     required this.fotoPerfil,
+    this.maestroVision,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -101,8 +103,13 @@ class User {
         iglesia:
             json["iglesia"] == null ? null : Iglesia.fromJson(json["iglesia"]),
         pais: json["pais"] == null ? null : Pais.fromJson(json["pais"]),
-        roles: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
+        roles: (json["roles"] == null)
+            ? []
+            : List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
         fotoPerfil: json["foto_perfil"] ?? null,
+        maestroVision: json["maestro_vision"] == null
+            ? null
+            : MaestroVision.fromJson(json["maestro_vision"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -245,4 +252,32 @@ class EnumValues<T> {
     reverseMap = map.map((k, v) => MapEntry(v, k));
     return reverseMap;
   }
+}
+
+class MaestroVision {
+  int id;
+  int userId;
+  int maestroId;
+  User maestroUser;
+
+  MaestroVision({
+    required this.id,
+    required this.userId,
+    required this.maestroId,
+    required this.maestroUser,
+  });
+
+  factory MaestroVision.fromJson(Map<String, dynamic> json) => MaestroVision(
+        id: json["id"],
+        userId: json["user_id"],
+        maestroId: json["maestro_id"],
+        maestroUser: User.fromJson(json["maestro_user"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "user_id": userId,
+        "maestro_id": maestroId,
+        "maestro_user": maestroUser.toJson(),
+      };
 }

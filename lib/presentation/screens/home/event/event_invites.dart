@@ -53,7 +53,7 @@ class _EventScreenState extends ConsumerState<EventInvitesScreen> {
                 (data.imgHorizontal != null)
                     ? CachedNetworkImage(
                         imageUrl:
-                            "${URL_MEDIA_EVENTO}/${data.id}/${data.imgHorizontal}",
+                            "${URL_MEDIA_EVENTO}${data.id}/${data.imgHorizontal}",
                         placeholder: (context, url) =>
                             LoadingStandardWidget.loadingWidget(),
                         imageBuilder: (context, imageProvider) => Container(

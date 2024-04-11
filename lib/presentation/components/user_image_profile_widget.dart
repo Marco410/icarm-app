@@ -34,9 +34,6 @@ class _UserImageProfileWidgetState
     final prefs = PreferenciasUsuario();
     final image = ref.watch(imageSelectedProvider);
 
-    print("widget.fotoPerfil");
-    print(widget.fotoPerfil);
-
     if (prefs.foto_perfil == "") {
       if (widget.fotoPerfil != null) {
         setState(() {
@@ -157,8 +154,6 @@ class _UserImageProfileWidgetState
                           }
                         });
                       }
-
-                      print("Saving image");
                     },
                     child: Container(
                         padding: EdgeInsets.all(8),

@@ -71,8 +71,6 @@ final getUsersAllProvider = FutureProvider<List<User>>((ref) async {
 
       return listUsers.users;
     } else {
-      NotificationUI.instance.notificationWarning(
-          'No pudimos completar la operación, inténtelo más tarde.');
       return [];
     }
   }
@@ -85,6 +83,37 @@ final filterUsersProvider = StateProvider<FilterUser>((ref) {
 });
 
 final getUserListProvider = StateProvider<List<Option>>((ref) => []);
+
+final getMaestrosListProvider = FutureProvider<List<User>>((ref) async {
+  final body = {"role": "Maestro"};
+
+  String decodedResp = await BaseHttpService.baseGet(
+      url: GET_ALL_USERS, authorization: true, params: body);
+
+  if (decodedResp != "") {
+    final Map<String, dynamic> resp = json.decode(decodedResp);
+    if (resp["status"] == 'Success') {
+      UsuarioModel listMaestros = usuarioModelFromJson(decodedResp);
+      List<Option> users = [];
+      for (User maestro in listMaestros.users) {
+        users.add(Option(
+          id: maestro.id,
+          name:
+              "${maestro.nombre} ${maestro.apellidoPaterno} ${maestro.apellidoMaterno}",
+        ));
+      }
+
+      ref.read(maestrosListOptionProvider.notifier).update((state) => users);
+
+      return listMaestros.users;
+    } else {
+      return [];
+    }
+  }
+  return [];
+});
+
+final maestrosListOptionProvider = StateProvider<List<Option>>((ref) => []);
 
 final getUserProvider =
     FutureProvider.family.autoDispose<User?, String>((ref, userID) async {

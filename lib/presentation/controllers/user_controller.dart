@@ -43,9 +43,6 @@ class UserController {
       "roles": rolesString,
     };
 
-    print("bodyData");
-    print(bodyData);
-
     String decodedResp = await BaseHttpService.basePut(
         url: UPDATE_USER, authorization: true, body: bodyData);
 

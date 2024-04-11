@@ -127,8 +127,7 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                       title: 'PASE LISTA',
                       subtitle: 'Pasa la lista a los alumnos',
                       onTap: () {
-                        context.pushNamed('scanner',
-                            pathParameters: {"type": "pase_lista"});
+                        context.pushNamed('pase.lista');
                       },
                     )
                   : SizedBox(),

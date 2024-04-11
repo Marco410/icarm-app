@@ -640,31 +640,34 @@ class _UserDataWidgetState extends State<UserDataWidget> {
 class ShowDataWidget extends StatelessWidget {
   final String title;
   final String data;
+  final Color color;
 
-  const ShowDataWidget({
-    super.key,
-    required this.title,
-    required this.data,
-  });
+  const ShowDataWidget(
+      {super.key,
+      required this.title,
+      required this.data,
+      this.color = Colors.black});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          title,
-          style: TxtStyle.labelText.copyWith(fontSize: 4.5.sp),
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          data,
-          textAlign: TextAlign.center,
-          style: TxtStyle.labelText
-              .copyWith(fontWeight: FontWeight.normal, fontSize: 4.5.sp),
-        )
-      ],
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TxtStyle.labelText.copyWith(fontSize: 4.5.sp, color: color),
+            textAlign: TextAlign.left,
+          ),
+          Text(
+            data,
+            textAlign: TextAlign.left,
+            style: TxtStyle.labelText
+                .copyWith(fontWeight: FontWeight.normal, fontSize: 4.5.sp),
+          )
+        ],
+      ),
     );
   }
 }

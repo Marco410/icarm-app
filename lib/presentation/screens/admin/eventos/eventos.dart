@@ -24,7 +24,7 @@ class EventosAdminPage extends ConsumerStatefulWidget {
 class _EventosAdminPageState extends ConsumerState<EventosAdminPage> {
   @override
   Widget build(BuildContext context) {
-    final listEventos = ref.watch(getEventosProvider);
+    final listEventos = ref.watch(getEventosProvider("admin"));
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       floatingActionButton: InkWell(
@@ -103,7 +103,7 @@ class _EventosAdminPageState extends ConsumerState<EventosAdminPage> {
                                                 BorderRadius.circular(8),
                                             child: CachedNetworkImage(
                                               imageUrl:
-                                                  "${URL_MEDIA_EVENTO}/${data[index].id}/${data[index].imgHorizontal}",
+                                                  "${URL_MEDIA_EVENTO}${data[index].id}/${data[index].imgHorizontal}",
                                               placeholder: (context, url) =>
                                                   LoadingStandardWidget
                                                       .loadingWidget(),
@@ -185,6 +185,6 @@ class _EventosAdminPageState extends ConsumerState<EventosAdminPage> {
   }
 
   Future<void> refreshEventos(WidgetRef ref) async {
-    ref.refresh(getEventosProvider);
+    ref.refresh(getEventosProvider("admin"));
   }
 }

@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 import 'package:icarm/presentation/models/kids/TeacherModel.dart';
 
 KidsInClassModel kidsInClassModelFromJson(String str) =>
@@ -88,82 +89,5 @@ class KidWithUser {
         "active": active,
         "created_at": createdAt.toIso8601String(),
         "user": user.toJson(),
-      };
-}
-
-class User {
-  int id;
-  String nombre;
-  String apellidoPaterno;
-  String apellidoMaterno;
-  String email;
-  String telefono;
-  DateTime fechaNacimiento;
-  String sexo;
-  int? edad;
-  String? maestro;
-  String? asignacion;
-  int paisId;
-  int active;
-  DateTime updateinf;
-  DateTime createdAt;
-  DateTime updatedAt;
-
-  User({
-    required this.id,
-    required this.nombre,
-    required this.apellidoPaterno,
-    required this.apellidoMaterno,
-    required this.email,
-    required this.telefono,
-    required this.fechaNacimiento,
-    required this.sexo,
-    required this.edad,
-    required this.maestro,
-    required this.asignacion,
-    required this.paisId,
-    required this.active,
-    required this.updateinf,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["id"],
-        nombre: json["nombre"],
-        apellidoPaterno: json["apellido_paterno"],
-        apellidoMaterno: json["apellido_materno"],
-        email: json["email"],
-        telefono: json["telefono"],
-        fechaNacimiento: DateTime.parse(json["fecha_nacimiento"]),
-        sexo: json["sexo"],
-        edad: json["edad"],
-        maestro: json["maestro"],
-        asignacion: json["asignacion"],
-        paisId: json["pais_id"],
-        active: json["active"],
-        updateinf: DateTime.parse(json["updateinf"]),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "nombre": nombre,
-        "apellido_paterno": apellidoPaterno,
-        "apellido_materno": apellidoMaterno,
-        "email": email,
-        "telefono": telefono,
-        "fecha_nacimiento":
-            "${fechaNacimiento.year.toString().padLeft(4, '0')}-${fechaNacimiento.month.toString().padLeft(2, '0')}-${fechaNacimiento.day.toString().padLeft(2, '0')}",
-        "sexo": sexo,
-        "edad": edad,
-        "maestro": maestro,
-        "asignacion": asignacion,
-        "pais_id": paisId,
-        "active": active,
-        "updateinf": updateinf.toIso8601String(),
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
       };
 }
