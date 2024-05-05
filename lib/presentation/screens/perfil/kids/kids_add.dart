@@ -10,10 +10,12 @@ import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/components/dropdow_options.dart';
 import 'package:icarm/presentation/components/text_field.dart';
 import 'package:icarm/presentation/components/zcomponents.dart';
+import 'package:icarm/presentation/controllers/kids_controller.dart';
 import 'package:icarm/presentation/models/models.dart';
 import 'package:icarm/presentation/providers/kids_service.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:sizer_pro/sizer.dart';
 
 import '../../../components/dropdown_widget.dart';
 import '../../../models/kids/kidsModel.dart';
@@ -394,7 +396,112 @@ class _KidViewWidgetState extends State<KidViewWidget> {
             loading: false,
             color: ColorStyle.secondaryColor,
             textColor: Colors.white,
-          )
+            margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          ),
+          (widget.kid.imtutor != null && !widget.kid.imtutor!)
+              ? CustomButton(
+                  text: "Mostrar código a tutor",
+                  onTap: () {
+                    showModalBottomSheet(
+                        context: context,
+                        isDismissible: false,
+                        builder: (context) {
+                          String code =
+                              "${random.nextInt(80) + 10}${random.nextInt(80) + 10}";
+
+                          KidsController.generateCode(
+                              code: code,
+                              kid_id: widget.kid.id.toString(),
+                              usuarioID: prefs.usuarioID);
+
+                          return StatefulBuilder(builder: (ctx, setState) {
+                            return Container(
+                              padding: const EdgeInsets.all(20),
+                              height: 90.h,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Código",
+                                        style: TxtStyle.headerStyle
+                                            .copyWith(fontSize: 25),
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {
+                                            KidsController.invalidarCode(
+                                                    kid_id: widget.kid.id
+                                                        .toString())
+                                                .then((value) => context.pop());
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    ColorStyle.secondaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(100)),
+                                            child: Icon(
+                                              Icons.close_rounded,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+                                          )),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                    height: 20.h,
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: ColorStyle.hintLightColor,
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: Text(code,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                  SizedBox(height: 15),
+                                  Spacer(),
+                                  Text(
+                                    "Mantén esta ventana abierta para que el código sea válido.",
+                                    style: TxtStyle.hintText.copyWith(
+                                        color: ColorStyle.secondaryColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    "Por favor, comparte este código con el tutor que desees añadir, así él también podrá llevar al niño a la escuela.",
+                                    style: TxtStyle.hintText
+                                        .copyWith(fontSize: 15),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: 60,
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                        },
+                        enableDrag: false);
+                  },
+                  loading: false,
+                  color: ColorStyle.primaryColor,
+                  textColor: Colors.white,
+                  margin: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                )
+              : SizedBox()
         ],
       ),
     );

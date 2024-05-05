@@ -22,6 +22,10 @@ final imageSelectedProvider = StateProvider.autoDispose<XFile?>((ref) {
   return null;
 });
 
+final photoProfileSelectedProvider = StateProvider.autoDispose<XFile?>((ref) {
+  return null;
+});
+
 final sendNotiUserProvider =
     FutureProvider.family<void, NotiUserData>((ref, notiData) async {
   final Map<String, dynamic> notiBody = {

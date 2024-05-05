@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/api.dart';
+import 'package:icarm/presentation/models/TutorsModel.dart';
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 import '../../config/services/http_general_service.dart';
 import '../../config/services/notification_ui_service.dart';
 import '../../config/share_prefs/prefs_usuario.dart';
@@ -133,5 +135,39 @@ final getTeacherListProvider =
 });
 
 final openTeacherProvider = StateProvider<List<bool>>((ref) {
+  return [];
+});
+
+final getTutorsByKidsProvider =
+    FutureProvider.autoDispose.family<List<Datum>, String>((ref, kidID) async {
+  final Map<String, String> getKids = {"kid_id": kidID};
+
+  String decodedResp = await BaseHttpService.baseGet(
+      url: GET_TUTORS, authorization: true, params: getKids);
+
+  if (decodedResp != "") {
+    final Map<String, dynamic> resp = json.decode(decodedResp);
+    if (resp["status"] == 'Success') {
+      TutorsModel listKids = tutorsModelFromJson(decodedResp);
+
+      List<User> listTutors = [];
+
+      for (var tutor in listKids.data) {
+        listTutors.add(tutor.user);
+      }
+
+      ref.read(tutorsListProvider.notifier).update((state) => listTutors);
+
+      return listKids.data;
+    } else {
+      NotificationUI.instance.notificationWarning(
+          'No pudimos completar la operación, inténtelo más tarde.');
+      return [];
+    }
+  }
+  return [];
+});
+
+final tutorsListProvider = StateProvider<List<User>>((ref) {
   return [];
 });

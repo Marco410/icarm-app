@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/components/zcomponents.dart';
+import 'package:sizer_pro/sizer.dart';
 
 import '../../../../../config/share_prefs/prefs_usuario.dart';
 import '../../../../components/views/data_kid.dart';
@@ -78,7 +79,7 @@ class _TeachersPageState extends ConsumerState<TeachersPage> {
                   height: 20,
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height,
+                  height: 65.h,
                   child: teachers.when(
                     data: (data) {
                       if (data.isEmpty) {
@@ -94,16 +95,23 @@ class _TeachersPageState extends ConsumerState<TeachersPage> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: (() {
-                                setState(() {
+                                /*   setState(() {
                                   openList[index] = !openList[index];
                                 });
 
                                 ref
                                     .read(openTeacherProvider.notifier)
-                                    .update((state) => openList);
+                                    .update((state) => openList); */
                               }),
                               child: AccordionWidget(
-                                onTap: () {},
+                                onTap: () {
+                                  setState(() {
+                                    openList[index] = !openList[index];
+                                  });
+                                  ref
+                                      .read(openTeacherProvider.notifier)
+                                      .update((state) => openList);
+                                },
                                 title: "${data[index].nombre} ",
                                 subtitle:
                                     "${data[index].apellidoPaterno} ${data[index].apellidoMaterno}",
@@ -119,11 +127,27 @@ class _TeachersPageState extends ConsumerState<TeachersPage> {
                                             (BuildContext context, int indexC) {
                                           return InkWell(
                                             onTap: () {
+                                              ref.watch(getTutorsByKidsProvider(
+                                                  data[index]
+                                                      .classroom![indexC]
+                                                      .id
+                                                      .toString()));
+
                                               DataKid(
                                                   context,
                                                   ref,
                                                   data[index]
-                                                      .classroom![indexC]);
+                                                      .classroom![indexC], () {
+                                                setState(() {
+                                                  openList[index] =
+                                                      !openList[index];
+                                                });
+                                                // ignore: unused_result
+                                                ref.refresh(
+                                                    getTeacherListProvider);
+
+                                                return null;
+                                              });
                                             },
                                             child: Container(
                                                 padding: EdgeInsets.all(10),

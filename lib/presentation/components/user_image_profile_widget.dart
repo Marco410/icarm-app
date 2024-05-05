@@ -51,14 +51,18 @@ class _UserImageProfileWidgetState
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          (image != null || prefs.foto_perfil != "")
+          (image != null ||
+                  (prefs.foto_perfil != "" && widget.fotoPerfil != ""))
               ? Container(
                   height: 130,
                   width: 130,
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: (image != null)
-                          ? Image.file(File(image.path))
+                          ? Image.file(
+                              File(image.path),
+                              fit: BoxFit.fitWidth,
+                            )
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(100),
                               child: CachedNetworkImage(
@@ -120,6 +124,7 @@ class _UserImageProfileWidgetState
 
                           setState(() {
                             prefs.foto_perfil = "";
+                            widget.fotoPerfil = "";
                           });
                         });
                       }
@@ -147,10 +152,13 @@ class _UserImageProfileWidgetState
                         UserController.updateFotoPerfil(foto_perfil: image.path)
                             .then((value) {
                           {
-                            setState(() => editingImage = false);
-                            /*      ref
+                            setState(() {
+                              editingImage = false;
+                              prefs.foto_perfil = image.name;
+                            });
+                            ref
                                 .read(imageSelectedProvider.notifier)
-                                .update((state) => null); */
+                                .update((state) => null);
                           }
                         });
                       }

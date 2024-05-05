@@ -117,7 +117,7 @@ class Teacher {
         fechaNacimiento: DateTime.parse(json["fecha_nacimiento"]),
         sexo: json["sexo"],
         edad: json["edad"],
-        maestro: json["maestro"],
+        maestro: json["maestro"] ?? "",
         asignacion: json["asignacion"],
         paisId: json["pais_id"],
         active: json["active"],

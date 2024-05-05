@@ -165,6 +165,9 @@ class _EventosAdminPageState extends ConsumerState<PaseListaPage> {
 
                           ref.refresh(getUserPaseListaProvider(
                               usuarioSelected.id.toString()));
+                          ref
+                              .read(editUserPaseListProvider.notifier)
+                              .update((state) => false);
 
                           Future.delayed(
                               Duration(seconds: 1),

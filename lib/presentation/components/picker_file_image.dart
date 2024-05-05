@@ -125,6 +125,7 @@ Future<void> PickerFileImage(BuildContext context, WidgetRef ref,
                                           final image = await ImagePicker()
                                               .pickImage(
                                                   source: ImageSource.gallery,
+                                                  requestFullMetadata: false,
                                                   imageQuality: 30);
 
                                           if (image == null) {
@@ -216,6 +217,126 @@ Future<void> PickerFileImage(BuildContext context, WidgetRef ref,
                                                                   color: Colors
                                                                       .white),
                                                         ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                            ],
+                          ),
+                        ),
+                        CustomButton(
+                          margin: EdgeInsets.only(
+                              bottom: 0, left: 60, right: 60, top: 20),
+                          loading: false,
+                          text: "Cancelar",
+                          textColor: Colors.white,
+                          color: ColorStyle.hintColor,
+                          onTap: () {
+                            ctx.pop();
+                          },
+                        ),
+                        SizedBox(
+                          height: 50,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              )));
+    },
+  );
+}
+
+Future<void> PickerPhotoPerfil(BuildContext context, WidgetRef ref,
+    bool showImage, bool showFile, bool imgHorizontal, bool imgVertical) async {
+  // ignore: use_build_context_synchronously
+  FocusNode myFocusNodeResena = FocusNode();
+
+  return showModalBottomSheet<void>(
+    isScrollControlled: true,
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+          builder: ((ctx, setState) => GestureDetector(
+                onTap: () {
+                  myFocusNodeResena.unfocus();
+                },
+                child: Container(
+                  height: 55.h,
+                  color: const Color(0xFF737373),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    height: 90.h,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(40)),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            "Selecciona un archivo",
+                            style: TxtStyle.headerStyle.copyWith(
+                                color: Colors.black87, fontSize: 7.sp),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Row(
+                            children: [
+                              (showImage)
+                                  ? Expanded(
+                                      flex: 2,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          final image = await ImagePicker()
+                                              .pickImage(
+                                                  source: ImageSource.gallery,
+                                                  requestFullMetadata: false,
+                                                  imageQuality: 30);
+
+                                          if (!imgVertical && !imgHorizontal) {
+                                            ref
+                                                .read(
+                                                    photoProfileSelectedProvider
+                                                        .notifier)
+                                                .update((state) => image);
+                                          }
+
+                                          context.pop();
+
+                                          /*  final imageTemporary = File(image.path); */
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color: ColorStyle.secondaryColor),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.image_search_rounded,
+                                                size: 35,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                "Imagen",
+                                                style: TxtStyle.labelText
+                                                    .copyWith(
+                                                        fontSize: 5.sp,
+                                                        color: Colors.white),
+                                              ),
                                             ],
                                           ),
                                         ),

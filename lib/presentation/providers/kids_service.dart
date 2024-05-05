@@ -126,3 +126,13 @@ final delete_kid =
     }
   }
 });
+
+final generateCodigoKidProvider =
+    FutureProvider.family<void, String>((ref, kidId) async {
+  final Map<String, String> codeKid = {"kid_id": kidId};
+
+  String decodedResp = await BaseHttpService.baseGet(
+      url: GENERATE_CODE_KID, authorization: true, params: codeKid);
+
+  return;
+});

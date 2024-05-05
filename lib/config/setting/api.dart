@@ -15,9 +15,13 @@ const String UPDATE_PASSWORD = "${CARPETA}auth/update-password";
 const String REGISTER_KID_URL = "${CARPETA}app/kids/add";
 const String UPDATE_KID_URL = "${CARPETA}app/kids/update";
 const String DELETE_KID_URL = "${CARPETA}app/kids/delete";
+const String GENERATE_CODE_KID = "${CARPETA}app/kids/generate-code";
+const String INVALIDAR_CODE_KID = "${CARPETA}app/kids/invalidar-code";
+const String VALIDAR_CODE_KID = "${CARPETA}app/kids/validar-code";
 const String GET_KIDS_URL = "${CARPETA}app/kids/get";
 const String GET_KIDS_IN_CLASS_URL = "${CARPETA}app/classroom/get-kids-teacher";
 const String GET_TEACHERS = "${CARPETA}app/classroom/teachers";
+const String GET_TUTORS = "${CARPETA}app/kids/get-tutors";
 
 const String REGISTER_TEACHER_KID_URL = "${CARPETA}app/classroom/add";
 const String EXIT_CLASS_URL = "${CARPETA}app/classroom/exit-class";

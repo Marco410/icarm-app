@@ -340,7 +340,7 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
                               ),
                               TextFieldWidget(
                                 border: true,
-                                isRequired: true,
+                                isRequired: false,
                                 textInputType: TextInputType.text,
                                 label: "Asignación",
                                 hintText: 'Escribe aquí',
@@ -531,7 +531,7 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
 
       if (user.maestroVision != null) {
         maestroSelected = Option(
-            id: user.maestroVision!.id,
+            id: user.maestroVision!.maestroId,
             name:
                 "${user.maestroVision!.maestroUser.nombre} ${user.maestroVision!.maestroUser.apellidoPaterno} ${user.maestroVision!.maestroUser.apellidoMaterno}");
       }

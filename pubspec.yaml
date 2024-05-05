@@ -3,7 +3,7 @@ description: icarm App
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 2.1.8
+version: 2.2.1
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
@@ -54,6 +54,7 @@ dependencies:
   shimmer: ^3.0.0
   device_calendar: ^4.3.2
   permission_handler: ^11.3.0
+  crop_your_image: ^1.0.2
 
 dev_dependencies:
   flutter_test:

@@ -104,7 +104,12 @@ class _KidsAdminPageState extends ConsumerState<KidsAdminPage> {
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
-                              DataKid(context, ref, data[index]);
+                              ref.watch(getTutorsByKidsProvider(
+                                  data[index].kid.id.toString()));
+
+                              DataKid(context, ref, data[index], () {
+                                return null;
+                              });
                             },
                             child: Container(
                                 padding: EdgeInsets.all(10),
