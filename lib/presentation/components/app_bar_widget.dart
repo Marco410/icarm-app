@@ -86,7 +86,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                     borderRadius: BorderRadius.circular(100),
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          "${URL_MEDIA_FOTO_PERFIL}/${prefs.usuarioID}/${prefs.foto_perfil}",
+                                          "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
                                       placeholder: (context, url) =>
                                           LoadingStandardWidget.loadingWidget(),
                                       imageBuilder: (context, imageProvider) =>
@@ -98,7 +98,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                               BorderRadius.circular(100),
                                           image: DecorationImage(
                                             image: imageProvider,
-                                            fit: BoxFit.fitWidth,
+                                            fit: BoxFit.fill,
                                           ),
                                         ),
                                       ),

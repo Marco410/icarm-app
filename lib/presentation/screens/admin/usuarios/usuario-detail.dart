@@ -2,10 +2,12 @@
 
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
+import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/controllers/user_controller.dart';
 import 'package:icarm/presentation/models/UsuarioModel.dart';
@@ -82,8 +84,29 @@ class _UsuarioDetailAdminPageState
                         SizedBox(
                           height: 10,
                         ),
-                        SvgPicture.asset("assets/icon/user-icon.svg",
-                            height: 100),
+                        (data.fotoPerfil != null)
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      "${URL_MEDIA_FOTO_PERFIL}${data.id}/${data.fotoPerfil}",
+                                  placeholder: (context, url) =>
+                                      LoadingStandardWidget.loadingWidget(),
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    width: 55.sp,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.fitWidth),
+                                    ),
+                                  ),
+                                  height: 55.sp,
+                                ),
+                              )
+                            : SvgPicture.asset("assets/icon/user-icon.svg",
+                                height: 100),
                         SizedBox(
                           height: 15,
                         ),

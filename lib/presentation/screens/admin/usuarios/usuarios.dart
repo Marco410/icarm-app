@@ -162,7 +162,7 @@ class _UsuariosAdminPageState extends ConsumerState<UsuariosAdminPage> {
                                 color: (selected)
                                     ? ColorStyle.secondaryColor
                                     : ColorStyle.hintDarkColor,
-                                borderRadius: BorderRadius.circular(100)),
+                                borderRadius: BorderRadius.circular(8)),
                             child: Text(
                               roles[index].name,
                               style: TxtStyle.labelText.copyWith(

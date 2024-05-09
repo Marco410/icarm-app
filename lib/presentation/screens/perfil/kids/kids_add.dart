@@ -205,31 +205,42 @@ class _KidsAddPageState extends ConsumerState<KidsAddPage> {
                               loading = true;
                             });
                             if (widget.type == 'create') {
-                              ref.refresh(registerKid(KidRegisterData(
-                                  nombre: nombreController.text,
-                                  a_paterno: aPaternoController.text,
-                                  a_materno: aMaternoController.text,
-                                  fecha_nacimiento: nacimientoController.text,
-                                  sexo: sexo.name,
-                                  enfermedad: enfermedadController.text,
-                                  context: context)));
-                            } else {
-                              ref.refresh(update_kid(KidRegisterData(
-                                  kid_id: widget.kid.id,
-                                  nombre: nombreController.text,
-                                  a_paterno: aPaternoController.text,
-                                  a_materno: aMaternoController.text,
-                                  fecha_nacimiento: nacimientoController.text,
-                                  sexo: sexo.name,
-                                  enfermedad: enfermedadController.text,
-                                  context: context)));
-                            }
-
-                            Future.delayed(Duration(seconds: 1), () {
-                              setState(() {
-                                loading = false;
+                              KidsController.registerKid(
+                                      nombre: nombreController.text,
+                                      a_paterno: aPaternoController.text,
+                                      a_materno: aMaternoController.text,
+                                      fecha_nacimiento:
+                                          nacimientoController.text,
+                                      sexo: sexo.name,
+                                      enfermedad: enfermedadController.text)
+                                  .then((value) {
+                                if (value) {
+                                  context.pop();
+                                  ref.refresh(getKidsProvider(prefs.usuarioID));
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                }
                               });
-                            });
+                            } else {
+                              KidsController.updateKid(
+                                kid_id: widget.kid.id.toString(),
+                                nombre: nombreController.text,
+                                a_paterno: aPaternoController.text,
+                                a_materno: aMaternoController.text,
+                                fecha_nacimiento: nacimientoController.text,
+                                sexo: sexo.name,
+                                enfermedad: enfermedadController.text,
+                              ).then((value) {
+                                if (value) {
+                                  context.pop();
+                                  ref.refresh(getKidsProvider(prefs.usuarioID));
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                }
+                              });
+                            }
                           } else {
                             NotificationUI.instance.notificationWarning(
                                 "Revisa los datos que ingresaste");
@@ -250,7 +261,7 @@ class _KidsAddPageState extends ConsumerState<KidsAddPage> {
                               },
                               textColor: Colors.white,
                               color: ColorStyle.hintDarkColor,
-                              loading: loading)
+                              loading: false)
                           : SizedBox(),
                       (widget.type == 'edit')
                           ? CustomButton(

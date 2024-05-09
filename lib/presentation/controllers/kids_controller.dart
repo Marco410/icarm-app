@@ -82,4 +82,80 @@ class KidsController {
 
     return true;
   }
+
+  static Future<bool> registerKid(
+      {required String nombre,
+      required String a_paterno,
+      required String a_materno,
+      required String fecha_nacimiento,
+      required String sexo,
+      required String enfermedad}) async {
+    final Map<String, dynamic> registerKid = {
+      "user_id": prefs.usuarioID,
+      "nombre": nombre,
+      "a_paterno": a_paterno,
+      "a_materno": a_materno,
+      "fecha_nacimiento": fecha_nacimiento,
+      "sexo": sexo,
+      "enfermedad": enfermedad,
+    };
+
+    String decodedResp = "";
+
+    decodedResp = await BaseHttpService.basePost(
+        url: REGISTER_KID_URL, authorization: true, body: registerKid);
+
+    if (decodedResp != "") {
+      final Map<String, dynamic> resp = json.decode(decodedResp);
+      if (resp["status"] == 'Success') {
+        NotificationUI.instance.notificationSuccess(
+            '${sexo == 'Hombre' ? 'Tu hijo ha sido registrado' : 'Tu hija ha sido registrada'} con éxito.');
+
+        return true;
+      } else {
+        NotificationUI.instance.notificationWarning(
+            'No pudimos completar la operación, inténtelo más tarde.');
+        return false;
+      }
+    }
+    return false;
+  }
+
+  static Future<bool> updateKid(
+      {required String nombre,
+      required String kid_id,
+      required String a_paterno,
+      required String a_materno,
+      required String fecha_nacimiento,
+      required String sexo,
+      required String enfermedad}) async {
+    final Map<String, dynamic> registerKid = {
+      "kid_id": kid_id,
+      "nombre": nombre,
+      "a_paterno": a_paterno,
+      "a_materno": a_materno,
+      "fecha_nacimiento": fecha_nacimiento,
+      "sexo": sexo,
+      "enfermedad": enfermedad,
+    };
+
+    String decodedResp = "";
+
+    decodedResp = await BaseHttpService.basePut(
+        url: UPDATE_KID_URL, authorization: true, body: registerKid);
+
+    if (decodedResp != "") {
+      final Map<String, dynamic> resp = json.decode(decodedResp);
+      if (resp["status"] == 'Success') {
+        NotificationUI.instance.notificationSuccess(
+            '${sexo == 'Hombre' ? 'Tu hijo ha sido actualizado' : 'Tu hija ha sido actualizada'} con éxito.');
+        return true;
+      } else {
+        NotificationUI.instance.notificationWarning(
+            'No pudimos completar la operación, inténtelo más tarde.');
+        return false;
+      }
+    }
+    return false;
+  }
 }

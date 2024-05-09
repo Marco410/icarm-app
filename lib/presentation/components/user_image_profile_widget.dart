@@ -52,7 +52,7 @@ class _UserImageProfileWidgetState
         clipBehavior: Clip.none,
         children: [
           (image != null ||
-                  (prefs.foto_perfil != "" && widget.fotoPerfil != ""))
+                  (widget.fotoPerfil != "" || widget.fotoPerfil != null))
               ? Container(
                   height: 130,
                   width: 130,
@@ -67,7 +67,7 @@ class _UserImageProfileWidgetState
                               borderRadius: BorderRadius.circular(100),
                               child: CachedNetworkImage(
                                 imageUrl:
-                                    "${URL_MEDIA_FOTO_PERFIL}/${prefs.usuarioID}/${widget.fotoPerfil}",
+                                    "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
                                 placeholder: (context, url) =>
                                     LoadingStandardWidget.loadingWidget(),
                                 imageBuilder: (context, imageProvider) =>
@@ -76,8 +76,7 @@ class _UserImageProfileWidgetState
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
                                     image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.fitWidth),
+                                        image: imageProvider, fit: BoxFit.fill),
                                   ),
                                 ),
                                 height: 55.sp,
@@ -90,7 +89,23 @@ class _UserImageProfileWidgetState
             child: GestureDetector(
               onTap: () {
                 if (!widget.goToPerfil) {
-                  PickerFileImage(context, ref, true, false, false, false);
+                  PickerFileImage(context, ref, true, false, false, false)
+                      .then((value) {
+                    if (image != null) {
+                      UserController.updateFotoPerfil(foto_perfil: image.path)
+                          .then((value) {
+                        {
+                          setState(() {
+                            editingImage = false;
+                            prefs.foto_perfil = image.name;
+                          });
+                          ref
+                              .read(imageSelectedProvider.notifier)
+                              .update((state) => null);
+                        }
+                      });
+                    }
+                  });
                   setState(() {
                     editingImage = true;
                   });
@@ -142,7 +157,7 @@ class _UserImageProfileWidgetState
                   ),
                 )
               : SizedBox(),
-          (image != null && !widget.goToPerfil && editingImage)
+          /*        (image != null && !widget.goToPerfil && editingImage)
               ? Positioned(
                   bottom: -5,
                   left: -5,
@@ -175,7 +190,7 @@ class _UserImageProfileWidgetState
                         )),
                   ),
                 )
-              : SizedBox()
+              : SizedBox() */
         ],
       ),
     );
