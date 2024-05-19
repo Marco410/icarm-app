@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:icarm/presentation/models/IglesiaModel.dart';
+import 'package:icarm/presentation/models/MinisterioModel.dart';
 
 UsuarioModel usuarioModelFromJson(String str) =>
     UsuarioModel.fromJson(json.decode(str));
@@ -54,6 +55,7 @@ class User {
   List<Role> roles;
   String? fotoPerfil;
   MaestroVision? maestroVision;
+  List<MinisteriosDatum> ministeriosData;
 
   User({
     required this.id,
@@ -77,6 +79,7 @@ class User {
     required this.roles,
     required this.pais,
     required this.fotoPerfil,
+    required this.ministeriosData,
     this.maestroVision,
   });
 
@@ -110,6 +113,10 @@ class User {
         maestroVision: json["maestro_vision"] == null
             ? null
             : MaestroVision.fromJson(json["maestro_vision"]),
+        ministeriosData: json["ministerios"] != null
+            ? List<MinisteriosDatum>.from(
+                json["ministerios"].map((x) => MinisteriosDatum.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -134,6 +141,31 @@ class User {
         "pais": pais?.toJson(),
         "sexo": sexo?.toJson(),
         "roles": List<dynamic>.from(roles.map((x) => x.toJson())),
+      };
+}
+
+class MinisteriosDatum {
+  int userId;
+  int ministerioId;
+  Ministerio ministerio;
+
+  MinisteriosDatum({
+    required this.userId,
+    required this.ministerioId,
+    required this.ministerio,
+  });
+
+  factory MinisteriosDatum.fromJson(Map<String, dynamic> json) =>
+      MinisteriosDatum(
+        userId: json["user_id"],
+        ministerioId: json["ministerio_id"],
+        ministerio: Ministerio.fromJson(json["ministerio"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "user_id": userId,
+        "ministerio_id": ministerioId,
+        "ministerio": ministerio.toJson(),
       };
 }
 

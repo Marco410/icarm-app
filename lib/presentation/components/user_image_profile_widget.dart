@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,10 +7,10 @@ import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
-import 'package:icarm/presentation/components/picker_file_image.dart';
 import 'package:icarm/presentation/controllers/user_controller.dart';
 import 'package:icarm/presentation/providers/user_provider.dart';
 import 'package:sizer_pro/sizer.dart';
+import '../services/image_picker_service.dart';
 
 // ignore: must_be_immutable
 class UserImageProfileWidget extends ConsumerStatefulWidget {
@@ -32,14 +30,13 @@ class _UserImageProfileWidgetState
   @override
   Widget build(BuildContext context) {
     final prefs = PreferenciasUsuario();
-    final image = ref.watch(imageSelectedProvider);
 
-    if (prefs.foto_perfil == "") {
-      if (widget.fotoPerfil != null) {
-        setState(() {
-          prefs.foto_perfil = widget.fotoPerfil!;
-        });
-      }
+    final namePhoto = ref.watch(namePhotoProfileProvider);
+
+    if (namePhoto != "") {
+      setState(() {
+        prefs.foto_perfil = namePhoto;
+      });
     }
 
     return GestureDetector(
@@ -51,37 +48,35 @@ class _UserImageProfileWidgetState
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          (image != null ||
-                  (widget.fotoPerfil != "" || widget.fotoPerfil != null))
+          ((prefs.foto_perfil != ""))
               ? Container(
                   height: 130,
                   width: 130,
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: (image != null)
-                          ? Image.file(
-                              File(image.path),
-                              fit: BoxFit.fitWidth,
-                            )
-                          : ClipRRect(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          errorWidget: (context, url, error) => Image.asset(
+                              "assets/image/no-image.png",
+                              height: 28.sp,
+                              width: 40.sp,
+                              scale: 4.5),
+                          imageUrl:
+                              "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
+                          placeholder: (context, url) =>
+                              LoadingStandardWidget.loadingWidget(),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 55.sp,
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
-                                placeholder: (context, url) =>
-                                    LoadingStandardWidget.loadingWidget(),
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  width: 55.sp,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    image: DecorationImage(
-                                        image: imageProvider, fit: BoxFit.fill),
-                                  ),
-                                ),
-                                height: 55.sp,
-                              ),
-                            )))
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.fill),
+                            ),
+                          ),
+                          height: 55.sp,
+                        ),
+                      )))
               : SvgPicture.asset("assets/icon/user-icon.svg", height: 110),
           Positioned(
             bottom: -5,
@@ -89,26 +84,14 @@ class _UserImageProfileWidgetState
             child: GestureDetector(
               onTap: () {
                 if (!widget.goToPerfil) {
-                  PickerFileImage(context, ref, true, false, false, false)
-                      .then((value) {
-                    if (image != null) {
-                      UserController.updateFotoPerfil(foto_perfil: image.path)
-                          .then((value) {
-                        {
-                          setState(() {
-                            editingImage = false;
-                            prefs.foto_perfil = image.name;
-                          });
-                          ref
-                              .read(imageSelectedProvider.notifier)
-                              .update((state) => null);
-                        }
-                      });
-                    }
-                  });
-                  setState(() {
-                    editingImage = true;
-                  });
+                  CustomImagePicker.pickImage(
+                      context: context,
+                      mounted: mounted,
+                      ref: ref,
+                      showDelete: true);
+                  ref
+                      .read(namePhotoProfileProvider.notifier)
+                      .update((state) => "");
                 } else {
                   context.pushNamed('perfil.detail');
                 }
@@ -125,7 +108,7 @@ class _UserImageProfileWidgetState
                   )),
             ),
           ),
-          ((image != null || prefs.foto_perfil != "") && !widget.goToPerfil)
+          ((prefs.foto_perfil != "") && !widget.goToPerfil)
               ? Positioned(
                   top: -5,
                   left: -5,
@@ -141,6 +124,9 @@ class _UserImageProfileWidgetState
                             prefs.foto_perfil = "";
                             widget.fotoPerfil = "";
                           });
+                          ref
+                              .read(namePhotoProfileProvider.notifier)
+                              .update((state) => "");
                         });
                       }
                     },
@@ -157,40 +143,6 @@ class _UserImageProfileWidgetState
                   ),
                 )
               : SizedBox(),
-          /*        (image != null && !widget.goToPerfil && editingImage)
-              ? Positioned(
-                  bottom: -5,
-                  left: -5,
-                  child: GestureDetector(
-                    onTap: () {
-                      if (!widget.goToPerfil) {
-                        UserController.updateFotoPerfil(foto_perfil: image.path)
-                            .then((value) {
-                          {
-                            setState(() {
-                              editingImage = false;
-                              prefs.foto_perfil = image.name;
-                            });
-                            ref
-                                .read(imageSelectedProvider.notifier)
-                                .update((state) => null);
-                          }
-                        });
-                      }
-                    },
-                    child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: ColorStyle.primaryColor,
-                            borderRadius: BorderRadius.circular(100)),
-                        child: Icon(
-                          Icons.save_rounded,
-                          size: 20,
-                          color: Colors.white,
-                        )),
-                  ),
-                )
-              : SizedBox() */
         ],
       ),
     );

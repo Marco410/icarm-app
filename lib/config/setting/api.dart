@@ -53,3 +53,4 @@ const String UPDATE_FOTO_PERFIL = "${CARPETA}app/users/update-foto-perfil";
 const String DELETE_FOTO_PERFIL = "${CARPETA}app/users/delete-foto-perfil";
 
 const String GET_ALL_ROLES = "${CARPETA}app/users/roles";
+const String GET_ALL_MINISTERIOS = "${CARPETA}app/users/ministerios";

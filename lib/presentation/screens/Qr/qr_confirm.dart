@@ -276,11 +276,14 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
                                           "",
                                 ),
                                 ShowDataWidget(
-                                  title: "Asignación",
+                                  title: "Ministerios",
                                   color: (widget.userScanned?.asignacion != "")
                                       ? Colors.black
                                       : Colors.red,
-                                  data: widget.userScanned?.asignacion ?? "-",
+                                  data: widget.userScanned?.ministeriosData
+                                          .map((e) => e.ministerio.name)
+                                          .join(' | ') ??
+                                      "-",
                                 ),
                               ],
                             ),

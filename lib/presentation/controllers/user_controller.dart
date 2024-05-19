@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/models/UsuarioModel.dart';
@@ -22,11 +23,17 @@ class UserController {
     required String pais_id,
     required String iglesia_id,
     required List<Role> roles,
+    required List<MinisteriosDatum> ministerios,
   }) async {
     List<String> rolesString = [];
+    List<int> ministeriosInt = [];
 
     for (var rol in roles) {
       rolesString.add(rol.name);
+    }
+
+    for (var ministerio in ministerios) {
+      ministeriosInt.add(ministerio.ministerio.id);
     }
 
     final bodyData = {
@@ -41,6 +48,7 @@ class UserController {
       "pais_id": pais_id,
       "iglesia_id": iglesia_id,
       "roles": rolesString,
+      "ministerios": ministeriosInt,
     };
 
     String decodedResp = await BaseHttpService.basePut(
@@ -61,38 +69,27 @@ class UserController {
     return false;
   }
 
-  static Future<bool> updateFotoPerfil({required String foto_perfil}) async {
+  static Future<String> updateFotoPerfil(Uint8List croppedData,
+      {required Uint8List nbFoto}) async {
     final prefs = PreferenciasUsuario();
 
-    final bodyData = {"userID": prefs.usuarioID, "foto_perfil": foto_perfil};
-
-    List<String> paths = [foto_perfil];
-
-    List<String> keysFiles = ["foto_perfil"];
-
-    String decodedResp = await BaseHttpService.baseFile(
+    String resp = await BaseHttpService.basePhoto(
         url: UPDATE_FOTO_PERFIL,
         authorization: true,
-        bodyMultipart: bodyData,
-        pathFile: paths,
-        keyFile: keysFiles);
+        flUsuario: prefs.usuarioID,
+        photo: nbFoto);
 
-    if (decodedResp != "") {
-      final Map<String, dynamic> resp = json.decode(decodedResp);
-      if (resp["status"] == 'Success') {
-        prefs.foto_perfil = resp["nameFoto"];
-        NotificationUI.instance.notificationSuccess(resp['message']);
+    final Map<String, dynamic> decodedResp = json.decode(resp);
 
-        return true;
-      } else {
-        NotificationUI.instance.notificationWarning(resp['message']);
-      }
+    if (decodedResp['status'] == 'Success') {
+      NotificationUI.instance.notificationSuccess('${decodedResp['message']}');
+
+      return decodedResp['nameFoto'];
     } else {
       NotificationUI.instance.notificationWarning(
           'Ocurrió un error al actualizar tu foto de perfil');
+      return "";
     }
-
-    return false;
   }
 
   static Future<bool> deleteFotoPerfil() async {

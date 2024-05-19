@@ -161,20 +161,6 @@ class _BetelesPageState extends State<BetelesPage> {
     ),
     Betel(
       img:
-          "https://static.wixstatic.com/media/bf53c1_8d8fbbddeec94f46af611950c6219105~mv2.jpg/v1/fill/w_308,h_308,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/Juan.jpg",
-      first_name: "Juan Ignacio Sereno Bejar",
-      second_name: "Alejandra Avila Hurtado",
-      anf_first_name: "Lindsay Guerrero",
-      anf_second_name: "",
-      direccion_first: "Juan de Alvarado #50",
-      direccion_second: "Nueva Valladolid",
-      phone: "4433925062",
-      mapUrl:
-          "https://maps.google.com/?q=Juan+de+Alvarado+50,+Nueva+Valladolid,+58190+Morelia,+Mich.&ftid=0x842d0e86640e5a51:0x901375d4865ffa2",
-      contacto: "4433925062 | 4433935042",
-    ),
-    Betel(
-      img:
           "https://static.wixstatic.com/media/bf53c1_9fe16c78596745d58017dd68ec84f4d0~mv2.jpg/v1/fill/w_308,h_308,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/Polo.jpg",
       first_name: "Leopoldo Alfaro Granados",
       second_name: "Guadalupe Rojas Espinoza",

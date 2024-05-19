@@ -10,6 +10,7 @@ import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/controllers/user_controller.dart';
+import 'package:icarm/presentation/models/MinisterioModel.dart';
 import 'package:icarm/presentation/models/UsuarioModel.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer_pro/sizer.dart';
@@ -46,6 +47,7 @@ class _UsuarioDetailAdminPageState
   @override
   Widget build(BuildContext context) {
     ref.watch(getIglesiasProvider);
+    ref.read(getMinisteriosProvider);
     final user = ref.watch(getUserProvider(widget.usuarioID));
     final editUser = ref.watch(editingUserProvider);
 
@@ -79,155 +81,198 @@ class _UsuarioDetailAdminPageState
                 : Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        (data.fotoPerfil != null)
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      "${URL_MEDIA_FOTO_PERFIL}${data.id}/${data.fotoPerfil}",
-                                  placeholder: (context, url) =>
-                                      LoadingStandardWidget.loadingWidget(),
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    width: 55.sp,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.fitWidth),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          (data.fotoPerfil != null)
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "${URL_MEDIA_FOTO_PERFIL}${data.id}/${data.fotoPerfil}",
+                                    placeholder: (context, url) =>
+                                        LoadingStandardWidget.loadingWidget(),
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      width: 55.sp,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.fitWidth),
+                                      ),
                                     ),
+                                    height: 55.sp,
                                   ),
-                                  height: 55.sp,
-                                ),
-                              )
-                            : SvgPicture.asset("assets/icon/user-icon.svg",
-                                height: 100),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno ?? ""}",
-                          style: TxtStyle.headerStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text("AYR${random.nextInt(80) + 10}${data.id}"),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ShowDataWidget(
-                              title: "Email",
-                              data: data.email,
-                            ),
-                            ShowDataWidget(
-                              title: "Teléfono",
-                              data: data.telefono ?? "-",
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ShowDataWidget(
-                              title: "Fecha Nacimiento",
-                              data: data.fechaNacimiento != null
-                                  ? DateFormat('dd MMMM yyyy')
-                                      .format(data.fechaNacimiento!)
-                                  : "-",
-                            ),
-                            ShowDataWidget(
-                              title: "Sexo",
-                              data: data.sexo != null ? data.sexo!.name : "-",
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ShowDataWidget(
-                              title: "País",
-                              data: data.pais != null ? data.pais!.name : "-",
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Roles",
-                          style: TxtStyle.headerStyle.copyWith(fontSize: 7.sp),
-                        ),
-                        GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 1,
-                                  crossAxisSpacing: 1,
-                                  mainAxisExtent: 45),
-                          scrollDirection: Axis.vertical,
-                          itemCount: data.roles.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 15),
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 15),
-                              decoration: BoxDecoration(
-                                  color: ColorStyle.secondaryColor,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Text(
-                                data.roles[index].name,
-                                style: TxtStyle.labelText
-                                    .copyWith(color: Colors.white),
+                                )
+                              : SvgPicture.asset("assets/icon/user-icon.svg",
+                                  height: 100),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            "${data.nombre} ${data.apellidoPaterno} ${data.apellidoMaterno ?? ""}",
+                            style: TxtStyle.headerStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text("AYR${random.nextInt(80) + 10}${data.id}"),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ShowDataWidget(
+                                title: "Email",
+                                data: data.email,
                               ),
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Iglesia",
-                          style: TxtStyle.headerStyle.copyWith(fontSize: 7.sp),
-                        ),
-                        (data.iglesia != null)
-                            ? Text(
-                                data.iglesia!.nombre,
-                                style: TxtStyle.headerStyle
-                                    .copyWith(fontWeight: FontWeight.normal),
-                              )
-                            : Text("-"),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        CustomButton(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            size: 'sm',
-                            text: "Editar",
-                            onTap: () {
-                              ref
-                                  .read(editingUserProvider.notifier)
-                                  .update((state) => true);
+                              ShowDataWidget(
+                                title: "Teléfono",
+                                data: data.telefono ?? "-",
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ShowDataWidget(
+                                title: "Fecha Nacimiento",
+                                data: data.fechaNacimiento != null
+                                    ? DateFormat('dd MMMM yyyy')
+                                        .format(data.fechaNacimiento!)
+                                    : "-",
+                              ),
+                              ShowDataWidget(
+                                title: "Sexo",
+                                data: data.sexo != null ? data.sexo!.name : "-",
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ShowDataWidget(
+                                title: "País",
+                                data: data.pais != null ? data.pais!.name : "-",
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            "Roles",
+                            style:
+                                TxtStyle.headerStyle.copyWith(fontSize: 7.sp),
+                          ),
+                          GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 1,
+                                    crossAxisSpacing: 1,
+                                    mainAxisExtent: 45),
+                            scrollDirection: Axis.vertical,
+                            itemCount: data.roles.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 15),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 15),
+                                decoration: BoxDecoration(
+                                    color: ColorStyle.secondaryColor,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Text(
+                                  data.roles[index].name,
+                                  style: TxtStyle.labelText
+                                      .copyWith(color: Colors.white),
+                                ),
+                              );
                             },
-                            textColor: Colors.white,
-                            loading: false)
-                      ],
+                          ),
+                          Text(
+                            "Ministerios",
+                            style:
+                                TxtStyle.headerStyle.copyWith(fontSize: 7.sp),
+                          ),
+                          GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 1,
+                                    crossAxisSpacing: 1,
+                                    mainAxisExtent: 45),
+                            scrollDirection: Axis.vertical,
+                            itemCount: data.ministeriosData.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 15),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 15),
+                                decoration: BoxDecoration(
+                                    color: ColorStyle.secondaryColor,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Text(
+                                  data.ministeriosData[index].ministerio.name,
+                                  style: TxtStyle.labelText
+                                      .copyWith(color: Colors.white),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Iglesia",
+                            style:
+                                TxtStyle.headerStyle.copyWith(fontSize: 7.sp),
+                          ),
+                          (data.iglesia != null)
+                              ? Text(
+                                  data.iglesia!.nombre,
+                                  style: TxtStyle.headerStyle
+                                      .copyWith(fontWeight: FontWeight.normal),
+                                )
+                              : Text("-"),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CustomButton(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              size: 'sm',
+                              text: "Editar",
+                              onTap: () {
+                                ref
+                                    .read(editingUserProvider.notifier)
+                                    .update((state) => true);
+                              },
+                              textColor: Colors.white,
+                              loading: false),
+                          SizedBox(
+                            height: 60,
+                          )
+                        ],
+                      ),
                     ),
                   );
           },
@@ -290,7 +335,9 @@ class _UserDataWidgetState extends State<UserDataWidget> {
 
   Option iglesia = Option(id: 0, name: "Seleccione:");
   Option role = Option(id: 0, name: "Seleccione:");
+  Option ministerio = Option(id: 0, name: "Seleccione:");
   List<Role> listRoles = [];
+  List<MinisteriosDatum> listMinisterios = [];
   bool loading = false;
 
   @override
@@ -318,6 +365,7 @@ class _UserDataWidgetState extends State<UserDataWidget> {
         : Option(id: 0, name: "Seleccione:");
 
     listRoles = widget.user.roles;
+    listMinisterios = widget.user.ministeriosData;
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -334,6 +382,7 @@ class _UserDataWidgetState extends State<UserDataWidget> {
   Widget build(BuildContext context) {
     final iglesiaList = widget.ref.read(iglesiaListProvider);
     final rolesOptions = widget.ref.read(rolesOptionsListProvider);
+    final ministeriosOptions = widget.ref.read(ministeriosListProvider);
 
     return GestureDetector(
       onTap: unFocusFields,
@@ -482,7 +531,67 @@ class _UserDataWidgetState extends State<UserDataWidget> {
                   height: 20,
                 ),
                 DropdownWidget(
-                    title: "Roles",
+                    title: "Ministerio:",
+                    option: ministerio,
+                    isRequired: false,
+                    onTapFunction: () async {
+                      final res = await showDropdownOptions(
+                          context,
+                          MediaQuery.of(context).size.height * 0.4,
+                          ministeriosOptions);
+
+                      if (res != null) {
+                        ministerio = res[0] as Option;
+
+                        var myListFiltered = listMinisterios
+                            .where((e) => e.ministerio.name == ministerio.name);
+
+                        if (myListFiltered.length == 0) {
+                          setState(() {
+                            listMinisterios.add(MinisteriosDatum(
+                                userId: int.parse(prefs.usuarioID),
+                                ministerioId: ministerio.id,
+                                ministerio: Ministerio(
+                                  id: ministerio.id,
+                                  name: ministerio.name,
+                                )));
+                          });
+                        }
+                        ministerio = Option(id: 0, name: "Seleccione:");
+                      }
+                    }),
+                SizedBox(
+                  height: 10,
+                ),
+                (listMinisterios.isNotEmpty)
+                    ? Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                        margin: EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(),
+                        child: SizedBox(
+                          height: 3.5.h,
+                          width: double.infinity,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: listMinisterios.length,
+                            itemBuilder: (context, index) {
+                              return LabelXWidget(
+                                title: listMinisterios[index].ministerio.name,
+                                onTap: () {
+                                  setState(() {
+                                    listMinisterios.removeAt(index);
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
+                DropdownWidget(
+                    title: "Roles:",
                     option: role,
                     isRequired: false,
                     onTapFunction: () async {
@@ -525,42 +634,13 @@ class _UserDataWidgetState extends State<UserDataWidget> {
                       scrollDirection: Axis.horizontal,
                       itemCount: listRoles.length,
                       itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {},
-                          child: Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(right: 5),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 15),
-                            decoration: BoxDecoration(
-                                color: ColorStyle.secondaryColor,
-                                borderRadius: BorderRadius.circular(100)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  listRoles[index].name,
-                                  style: TxtStyle.labelText.copyWith(
-                                      color: Colors.white, fontSize: 4.sp),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      listRoles.removeAt(index);
-                                    });
-                                  },
-                                  child: Icon(
-                                    Icons.close,
-                                    size: 20,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                        return LabelXWidget(
+                          title: listRoles[index].name,
+                          onTap: () {
+                            setState(() {
+                              listRoles.removeAt(index);
+                            });
+                          },
                         );
                       },
                     ),
@@ -593,7 +673,7 @@ class _UserDataWidgetState extends State<UserDataWidget> {
                       text: "Cancelar",
                       loading: false,
                       onTap: widget.onTap,
-                      color: Colors.grey,
+                      color: Colors.grey[800],
                       textColor: Colors.white,
                     )),
                     Expanded(
@@ -623,7 +703,8 @@ class _UserDataWidgetState extends State<UserDataWidget> {
                                 sexo_id: sexo.id.toString(),
                                 pais_id: pais.id.toString(),
                                 iglesia_id: iglesia.id.toString(),
-                                roles: listRoles)
+                                roles: listRoles,
+                                ministerios: listMinisterios)
                             .then((value) {
                           NotificationUI.instance.notificationSuccess(
                               "Datos actualizados con éxito.");
@@ -718,6 +799,45 @@ class ShowDataWidget extends StatelessWidget {
               .copyWith(fontWeight: FontWeight.normal, fontSize: 4.5.sp),
         )
       ],
+    );
+  }
+}
+
+class LabelXWidget extends StatelessWidget {
+  final String title;
+  final Function onTap;
+  const LabelXWidget({super.key, required this.title, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(right: 5),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+      decoration: BoxDecoration(
+          color: ColorStyle.secondaryColor,
+          borderRadius: BorderRadius.circular(8)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TxtStyle.labelText
+                .copyWith(color: Colors.white, fontSize: 4.sp),
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          InkWell(
+            onTap: onTap as void Function(),
+            child: Icon(
+              Icons.close,
+              size: 20,
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -7,20 +8,23 @@ import '../services/notification_ui_service.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<String?> httpBase(
-    {required String base_url,
-    required String type,
-    required String path,
-    Object? body,
-    Map<String, String>? headers,
-    Map<String, String>? params,
-    Map<String, String>? bodyMultipart,
-    bool log = false,
-    bool successMessage = false,
-    bool showNoti = true,
-    List<String>? keyFile,
-    List<String>? pathFile,
-    bool authorization = false}) async {
+Future<String?> httpBase({
+  required String base_url,
+  required String type,
+  required String path,
+  Object? body,
+  Map<String, String>? headers,
+  Map<String, String>? params,
+  Map<String, String>? bodyMultipart,
+  bool log = false,
+  bool successMessage = false,
+  bool showNoti = true,
+  List<String>? keyFile,
+  List<String>? pathFile,
+  bool authorization = false,
+  Uint8List? fileBytes,
+  String? flUsuario,
+}) async {
   http.Response response = http.Response("", 500);
   try {
     if (await InternetConnectionChecker().hasConnection) {
@@ -77,6 +81,18 @@ Future<String?> httpBase(
           response = await http.Response.fromStream(resp);
           data = response.body;
 
+          break;
+
+        case "MULTIPARTPHOTO":
+          List<int> fotoBytes = fileBytes!.toList();
+          var request = http.MultipartRequest('POST', url)
+            ..fields['userID'] = flUsuario!
+            ..files.add(http.MultipartFile.fromBytes('foto_perfil', fotoBytes,
+                filename: '$flUsuario.jpg'));
+
+          var resp = await request.send();
+          response = await http.Response.fromStream(resp);
+          data = response.body;
           break;
       }
 

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:icarm/config/helpers/base_http_helper.dart';
 import 'package:icarm/config/setting/api.dart';
 
@@ -72,6 +74,24 @@ class BaseHttpService {
       pathFile: pathFile,
       bodyMultipart: bodyMultipart,
     );
+    return (response != null) ? response : "";
+  }
+
+  static Future<String> basePhoto(
+      {required String url,
+      bool authorization = false,
+      Uint8List? photo,
+      bool showNoti = true,
+      required String flUsuario}) async {
+    String? response = await httpBase(
+        type: "MULTIPARTPHOTO",
+        path: url,
+        authorization: authorization,
+        flUsuario: flUsuario,
+        showNoti: showNoti,
+        fileBytes: photo,
+        base_url: BASE_URL);
+
     return (response != null) ? response : "";
   }
 }

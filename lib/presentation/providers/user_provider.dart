@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/setting/api.dart';
 import 'package:icarm/presentation/components/dropdow_options.dart';
 import 'package:icarm/presentation/models/DefaultsModel.dart';
+import 'package:icarm/presentation/models/MinisterioModel.dart';
 import 'package:icarm/presentation/models/RoleModel.dart';
 import 'package:icarm/presentation/models/UserModel.dart';
 import 'package:icarm/presentation/models/UsuarioModel.dart';
@@ -25,6 +26,10 @@ final imageSelectedProvider = StateProvider.autoDispose<XFile?>((ref) {
 final photoProfileSelectedProvider = StateProvider.autoDispose<XFile?>((ref) {
   return null;
 });
+
+final namePhotoProfileProvider = StateProvider<String>((ref) => "");
+
+final isLoadingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 final sendNotiUserProvider =
     FutureProvider.family<void, NotiUserData>((ref, notiData) async {
@@ -172,6 +177,37 @@ final getRolesProvider = FutureProvider.autoDispose<List<Role>>((ref) async {
   return [];
 });
 
+final getMinisteriosProvider =
+    FutureProvider.autoDispose<List<Ministerio>>((ref) async {
+  String decodedResp = await BaseHttpService.baseGet(
+      url: GET_ALL_MINISTERIOS, authorization: true, params: {});
+
+  if (decodedResp != "") {
+    final Map<String, dynamic> resp = json.decode(decodedResp);
+    if (resp["status"] == 'Success') {
+      MinisterioModel listMinisterio = ministerioModelFromJson(decodedResp);
+
+      List<Option> ministeriosOptions = [];
+
+      for (var role in listMinisterio.ministerios) {
+        ministeriosOptions.add(Option(id: role.id, name: role.name));
+      }
+
+      ref
+          .read(ministeriosListProvider.notifier)
+          .update((state) => ministeriosOptions);
+
+      return listMinisterio.ministerios;
+    } else {
+      NotificationUI.instance.notificationWarning(
+          'No pudimos completar la operación, inténtelo más tarde.');
+      return [];
+    }
+  }
+  return [];
+});
+
 final rolesListProvider = StateProvider<List<Role>>((ref) => []);
 final rolesOptionsListProvider = StateProvider<List<Option>>((ref) => []);
+final ministeriosListProvider = StateProvider<List<Option>>((ref) => []);
 final editingUserProvider = StateProvider<bool>((ref) => false);

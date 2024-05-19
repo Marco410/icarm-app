@@ -155,6 +155,7 @@ class _PerfilDetailPageState extends ConsumerState<PerfilDetailPage> {
                             scrollDirection: Axis.vertical,
                             itemCount: data.roles.length,
                             shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               return Container(
                                 alignment: Alignment.center,
@@ -167,6 +168,40 @@ class _PerfilDetailPageState extends ConsumerState<PerfilDetailPage> {
                                     borderRadius: BorderRadius.circular(10)),
                                 child: Text(
                                   data.roles[index].name,
+                                  style: TxtStyle.labelText
+                                      .copyWith(color: Colors.white),
+                                ),
+                              );
+                            },
+                          ),
+                          Text(
+                            "Ministerios",
+                            style:
+                                TxtStyle.headerStyle.copyWith(fontSize: 7.sp),
+                          ),
+                          GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 1,
+                                    crossAxisSpacing: 1,
+                                    mainAxisExtent: 45),
+                            scrollDirection: Axis.vertical,
+                            itemCount: data.ministeriosData.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 15),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 15),
+                                decoration: BoxDecoration(
+                                    color: ColorStyle.secondaryColor,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Text(
+                                  data.ministeriosData[index].ministerio.name,
                                   style: TxtStyle.labelText
                                       .copyWith(color: Colors.white),
                                 ),
@@ -213,7 +248,10 @@ class _PerfilDetailPageState extends ConsumerState<PerfilDetailPage> {
                               style: TxtStyle.labelText.copyWith(
                                   decoration: TextDecoration.underline),
                             ),
-                          )
+                          ),
+                          SizedBox(
+                            height: 60,
+                          ),
                         ],
                       ),
                     ),
@@ -560,18 +598,18 @@ class _UserDataWidgetState extends State<UserDataWidget> {
                         });
 
                         await UserController.updateUser(
-                                userID: widget.user.id.toString(),
-                                nombre: nombreController.text,
-                                apellido_paterno: aPaternoController.text,
-                                apellido_materno: aMaternoController.text,
-                                fecha_nacimiento: nacimientoController.text,
-                                email: emailController.text,
-                                telefono: telefonoController.text,
-                                sexo_id: sexo.id.toString(),
-                                pais_id: pais.id.toString(),
-                                iglesia_id: iglesia.id.toString(),
-                                roles: listRoles)
-                            .then((value) {
+                            userID: widget.user.id.toString(),
+                            nombre: nombreController.text,
+                            apellido_paterno: aPaternoController.text,
+                            apellido_materno: aMaternoController.text,
+                            fecha_nacimiento: nacimientoController.text,
+                            email: emailController.text,
+                            telefono: telefonoController.text,
+                            sexo_id: sexo.id.toString(),
+                            pais_id: pais.id.toString(),
+                            iglesia_id: iglesia.id.toString(),
+                            roles: listRoles,
+                            ministerios: []).then((value) {
                           NotificationUI.instance.notificationSuccess(
                               "Datos actualizados con éxito.");
                           widget.ref.refresh(
