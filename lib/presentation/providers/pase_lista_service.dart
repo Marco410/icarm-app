@@ -10,6 +10,7 @@ import '../../config/services/http_general_service.dart';
 import '../../config/services/notification_ui_service.dart';
 import '../../config/share_prefs/prefs_usuario.dart';
 import '../models/UsuarioModel.dart';
+import 'evento_provider.dart';
 
 const storage = FlutterSecureStorage();
 final prefs = PreferenciasUsuario();
@@ -28,8 +29,11 @@ final editUserPaseListProvider = StateProvider.autoDispose<bool>((ref) {
 
 final getUserPaseListaProvider =
     FutureProvider.family.autoDispose<void, String>((ref, user_id) async {
+  final eventoSelected = ref.watch(eventoSelectedToPaseLista);
+
   final Map<String, String> getUser = {
     "user_id": user_id,
+    "evento_id": eventoSelected.id.toString()
   };
 
   String decodedResp = await BaseHttpService.baseGet(

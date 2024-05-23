@@ -7,3 +7,13 @@ class FilterUser {
     required this.role,
   });
 }
+
+class UserPaseLista {
+  String user_id;
+  String evento_id;
+
+  UserPaseLista({
+    required this.user_id,
+    required this.evento_id,
+  });
+}

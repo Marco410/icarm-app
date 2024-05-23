@@ -4,6 +4,7 @@ import 'package:icarm/config/setting/api.dart';
 
 import '../../config/services/http_general_service.dart';
 import '../../config/services/notification_ui_service.dart';
+import '../models/UsuarioModel.dart';
 
 class PaseListaController {
   PaseListaController._instance();
@@ -46,8 +47,15 @@ class PaseListaController {
     required String telefono,
     required String maestro_id,
     required String asignacion,
+    required int epastores,
+    required List<MinisteriosDatum> ministerios,
   }) async {
-    final Map<String, String> updateUser = {
+    List<int> ministeriosInt = [];
+
+    for (var ministerio in ministerios) {
+      ministeriosInt.add(ministerio.ministerio.id);
+    }
+    final updateUser = {
       "userID": userID,
       "nombre": nombre,
       "apellido_paterno": apellido_paterno,
@@ -56,6 +64,8 @@ class PaseListaController {
       "telefono": telefono,
       "maestro_id": maestro_id,
       "asignacion": asignacion,
+      "ministerios": ministeriosInt,
+      "epastores": epastores,
     };
 
     String decodedResp = await BaseHttpService.basePut(

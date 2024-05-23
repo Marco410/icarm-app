@@ -10,6 +10,7 @@ import 'package:sizer_pro/sizer.dart';
 
 import '../../../../config/setting/style.dart';
 import '../../../components/zcomponents.dart';
+import '../../../providers/auth_service.dart';
 
 class EventInvitesScreen extends ConsumerStatefulWidget {
   final String eventoID;

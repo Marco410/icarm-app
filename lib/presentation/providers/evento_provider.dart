@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/dropdow_options.dart';
 import 'package:icarm/presentation/models/EventoModel.dart';
 import 'package:icarm/presentation/models/InvitadoModel.dart';
@@ -10,8 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../config/services/http_general_service.dart';
 import '../../config/services/notification_ui_service.dart';
 import '../../config/setting/api.dart';
-
-final prefs = PreferenciasUsuario();
+import 'auth_service.dart';
 
 final imgHorizontalProvider = StateProvider.autoDispose<XFile?>((ref) {
   return null;

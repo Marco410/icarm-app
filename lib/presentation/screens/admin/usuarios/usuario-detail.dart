@@ -22,6 +22,7 @@ import '../../../components/text_field.dart';
 import '../../../components/zcomponents.dart';
 import '../../../providers/catalog_service.dart';
 import '../../../providers/user_provider.dart';
+import '../../perfil/perfil-detail.dart';
 
 class UsuarioDetailAdminPage extends ConsumerStatefulWidget {
   final String usuarioID;
@@ -768,38 +769,6 @@ class _UserDataWidgetState extends State<UserDataWidget> {
         nacimientoController.text = formattedDate;
       });
     }
-  }
-}
-
-class ShowDataWidget extends StatelessWidget {
-  final String title;
-  final String data;
-
-  const ShowDataWidget({
-    super.key,
-    required this.title,
-    required this.data,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          title,
-          style: TxtStyle.labelText.copyWith(fontSize: 4.5.sp),
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          data,
-          textAlign: TextAlign.center,
-          style: TxtStyle.labelText
-              .copyWith(fontWeight: FontWeight.normal, fontSize: 4.5.sp),
-        )
-      ],
-    );
   }
 }
 

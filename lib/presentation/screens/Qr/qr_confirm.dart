@@ -16,9 +16,14 @@ import 'package:icarm/presentation/screens/perfil/perfil-detail.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer_pro/sizer.dart';
 
+import '../../components/check_box_widget.dart';
 import '../../components/dropdow_options.dart';
+import '../../components/views/make_payment.dart';
+import '../../models/MinisterioModel.dart';
 import '../../models/UsuarioModel.dart';
 import '../../providers/pase_lista_service.dart';
+import '../admin/usuarios/usuario-detail.dart';
+import '../perfil/pase_lista/pase_lista.dart';
 
 class QRConfirm extends ConsumerStatefulWidget {
   QRConfirm();
@@ -135,6 +140,34 @@ class _QRConfirmState extends ConsumerState<QRConfirm> {
                   textColor: Colors.white,
                   margin: EdgeInsets.only(top: 10),
                 ),
+                (userScanned != null && eventoSelected.id != 0)
+                    ? CustomButton(
+                        text: "Hacer pago",
+                        textColor: Colors.black87,
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              surfaceTintColor: Colors.transparent,
+                              title: Text(
+                                "Nuevo Pago",
+                                style: TxtStyle.headerStyle,
+                              ),
+                              content: MakePaymentWidget(
+                                userID: userScanned.id.toString(),
+                                eventoID: eventoSelected.id.toString(),
+                                ref: ref,
+                              ),
+                            ),
+                          );
+                        },
+                        color: ColorStyle.thirdColor,
+                        margin: EdgeInsets.only(top: 10),
+                        loading: false)
+                    : SizedBox(),
+                (userScanned?.pagos != null && userScanned!.pagos!.length > 0)
+                    ? PagosUserWidget(userScanned: userScanned)
+                    : SizedBox()
               ],
             ),
           ),
@@ -174,7 +207,10 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
   FocusNode telefonoFocus = FocusNode();
 
   Option maestroSelected = Option(id: 0, name: "Seleccione:");
+  Option ministerio = Option(id: 0, name: "Seleccione:");
+  List<MinisteriosDatum> listMinisterios = [];
 
+  bool epastores = false;
   bool loadingEdit = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -182,12 +218,14 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
   @override
   void initState() {
     super.initState();
+    ref.read(getMinisteriosProvider);
   }
 
   @override
   Widget build(BuildContext context) {
     final edit = ref.watch(editUserPaseListProvider);
     final maestrosList = ref.watch(maestrosListOptionProvider);
+    final ministeriosOptions = widget.ref.read(ministeriosListProvider);
 
     return (widget.userScanned != null)
         ? GestureDetector(
@@ -277,13 +315,28 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
                                 ),
                                 ShowDataWidget(
                                   title: "Ministerios",
-                                  color: (widget.userScanned?.asignacion != "")
+                                  color: (widget.userScanned?.ministeriosData !=
+                                          null)
                                       ? Colors.black
                                       : Colors.red,
                                   data: widget.userScanned?.ministeriosData
                                           .map((e) => e.ministerio.name)
                                           .join(' | ') ??
                                       "-",
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ShowDataWidget(
+                                  title: "Escuela de Líderes",
+                                  data: (widget.userScanned!.epastores == 1)
+                                      ? 'Si'
+                                      : 'No',
                                 ),
                               ],
                             ),
@@ -371,6 +424,77 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
                               SizedBox(
                                 height: 15,
                               ),
+                              DropdownWidget(
+                                  title: "Ministerio:",
+                                  option: ministerio,
+                                  isRequired: false,
+                                  onTapFunction: () async {
+                                    final res = await showDropdownOptions(
+                                        context,
+                                        MediaQuery.of(context).size.height *
+                                            0.4,
+                                        ministeriosOptions);
+
+                                    if (res != null) {
+                                      ministerio = res[0] as Option;
+
+                                      var myListFiltered =
+                                          listMinisterios.where((e) =>
+                                              e.ministerio.name ==
+                                              ministerio.name);
+
+                                      if (myListFiltered.length == 0) {
+                                        setState(() {
+                                          listMinisterios.add(MinisteriosDatum(
+                                              userId:
+                                                  int.parse(prefs.usuarioID),
+                                              ministerioId: ministerio.id,
+                                              ministerio: Ministerio(
+                                                id: ministerio.id,
+                                                name: ministerio.name,
+                                              )));
+                                        });
+                                      }
+                                      ministerio =
+                                          Option(id: 0, name: "Seleccione:");
+                                    }
+                                  }),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              (listMinisterios.isNotEmpty)
+                                  ? Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 5, horizontal: 5),
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      decoration: BoxDecoration(),
+                                      child: SizedBox(
+                                        height: 3.5.h,
+                                        width: double.infinity,
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: listMinisterios.length,
+                                          itemBuilder: (context, index) {
+                                            return LabelXWidget(
+                                              title: listMinisterios[index]
+                                                  .ministerio
+                                                  .name,
+                                              onTap: () {
+                                                setState(() {
+                                                  listMinisterios
+                                                      .removeAt(index);
+                                                });
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              SizedBox(
+                                height: 15,
+                              ),
                               TextFieldWidget(
                                 label: 'Fecha de nacimiento',
                                 border: true,
@@ -389,6 +513,15 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
                                 readOnly: true,
                                 textInputType: TextInputType.datetime,
                                 isRequired: true,
+                              ),
+                              CheckBoxWidget(
+                                text: "¿Va a escuela de líderes?",
+                                value: epastores,
+                                onChange: (value) {
+                                  setState(() {
+                                    epastores = value!;
+                                  });
+                                },
                               ),
                             ],
                           ),
@@ -450,7 +583,9 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
                                         telefono: telefonoController.text,
                                         maestro_id:
                                             maestroSelected.id.toString(),
-                                        asignacion: asignacionController.text)
+                                        asignacion: asignacionController.text,
+                                        ministerios: listMinisterios,
+                                        epastores: (epastores) ? 1 : 0)
                                     .then((value) {
                                   if (value) {
                                     ref
@@ -531,6 +666,8 @@ class _UserScannedWidgetState extends ConsumerState<UserScannedWidget> {
       aPaternoController.text = user.apellidoPaterno;
       aMaternoController.text = user.apellidoMaterno ?? "";
       asignacionController.text = user.asignacion ?? "";
+      listMinisterios = widget.userScanned?.ministeriosData ?? [];
+      epastores = widget.userScanned!.epastores == 1;
 
       if (user.maestroVision != null) {
         maestroSelected = Option(

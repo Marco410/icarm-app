@@ -30,7 +30,7 @@ class _RadioPageState extends ConsumerState<RadioPage> {
     ContentAdWidget(
       image: "assets/image/home/hombres-radio.jpeg",
       title: "Hombres Valientes",
-      subTitle: "Martes 5:30pm",
+      subTitle: "Martes 6:00pm",
       actionButton: () {},
     ),
     ContentAdWidget(

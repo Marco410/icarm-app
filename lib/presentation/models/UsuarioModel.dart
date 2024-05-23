@@ -48,6 +48,7 @@ class User {
   int active;
   String updateinf;
   int passUpdate;
+  int epastores;
   DateTime createdAt;
   DateTime updatedAt;
   Iglesia? iglesia;
@@ -56,6 +57,7 @@ class User {
   String? fotoPerfil;
   MaestroVision? maestroVision;
   List<MinisteriosDatum> ministeriosData;
+  List<Pago>? pagos;
 
   User({
     required this.id,
@@ -73,6 +75,7 @@ class User {
     required this.active,
     required this.updateinf,
     required this.passUpdate,
+    required this.epastores,
     required this.createdAt,
     required this.updatedAt,
     required this.iglesia,
@@ -80,6 +83,7 @@ class User {
     required this.pais,
     required this.fotoPerfil,
     required this.ministeriosData,
+    this.pagos,
     this.maestroVision,
   });
 
@@ -101,6 +105,7 @@ class User {
         active: json["active"],
         updateinf: json["updateinf"],
         passUpdate: json["pass_update"],
+        epastores: json["epastores"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         iglesia:
@@ -116,6 +121,9 @@ class User {
         ministeriosData: json["ministerios"] != null
             ? List<MinisteriosDatum>.from(
                 json["ministerios"].map((x) => MinisteriosDatum.fromJson(x)))
+            : [],
+        pagos: json["pago"] != null
+            ? List<Pago>.from(json["pago"].map((x) => Pago.fromJson(x)))
             : [],
       );
 
@@ -166,6 +174,46 @@ class MinisteriosDatum {
         "user_id": userId,
         "ministerio_id": ministerioId,
         "ministerio": ministerio.toJson(),
+      };
+}
+
+class Pago {
+  int id;
+  int id_persona;
+  int evento_id;
+  String concepto;
+  int cantidad;
+  DateTime fecha_agrego;
+  DateTime created_at;
+
+  Pago({
+    required this.id,
+    required this.id_persona,
+    required this.evento_id,
+    required this.concepto,
+    required this.cantidad,
+    required this.fecha_agrego,
+    required this.created_at,
+  });
+
+  factory Pago.fromJson(Map<String, dynamic> json) => Pago(
+        id: json["id"],
+        id_persona: json["id_persona"],
+        evento_id: json["evento_id"],
+        concepto: json["concepto"],
+        cantidad: json["cantidad"],
+        fecha_agrego: DateTime.parse(json["fecha_agrego"]),
+        created_at: DateTime.parse(json["created_at"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "id_persona": id_persona,
+        "evento_id": evento_id,
+        "concepto": concepto,
+        "cantidad": cantidad,
+        "fecha_agrego": fecha_agrego,
+        "created_at": created_at,
       };
 }
 

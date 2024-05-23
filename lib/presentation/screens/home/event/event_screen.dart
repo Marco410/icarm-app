@@ -15,6 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../config/setting/style.dart';
 import '../../../components/zcomponents.dart';
+import '../../../providers/auth_service.dart';
 
 class EventScreen extends ConsumerStatefulWidget {
   final String eventoID;

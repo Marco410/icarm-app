@@ -6,11 +6,14 @@ import 'package:go_router/go_router.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/presentation/components/dropdown_widget.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
+import 'package:icarm/presentation/components/views/make_payment.dart';
 import 'package:icarm/presentation/controllers/pase_lista_controller.dart';
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 import 'package:icarm/presentation/providers/evento_provider.dart';
 import 'package:icarm/presentation/providers/pase_lista_service.dart';
 import 'package:icarm/presentation/providers/user_provider.dart';
 import 'package:icarm/presentation/screens/Qr/qr_confirm.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer_pro/sizer.dart';
 
 import '../../../../config/setting/style.dart';
@@ -122,8 +125,16 @@ class _EventosAdminPageState extends ConsumerState<PaseListaPage> {
                   Expanded(
                     flex: 2,
                     child: GestureDetector(
-                        onTap: () => context.pushNamed('scanner',
-                            pathParameters: {"type": "pase_lista"}),
+                        onTap: () {
+                          if (eventoSelected.id == 0) {
+                            NotificationUI.instance
+                                .notificationWarning("Selecciona un evento.");
+                            return;
+                          }
+
+                          context.pushNamed('scanner',
+                              pathParameters: {"type": "pase_lista"});
+                        },
                         child: Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
@@ -190,10 +201,11 @@ class _EventosAdminPageState extends ConsumerState<PaseListaPage> {
               SizedBox(
                 height: 16,
               ),
-              (userScanned != "")
+              (userScanned != null && eventoSelected.id != 0)
                   ? CustomButton(
                       text: "Pasar Lista",
                       textColor: Colors.white,
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       onTap: () {
                         if (edit) {
                           NotificationUI.instance
@@ -202,43 +214,171 @@ class _EventosAdminPageState extends ConsumerState<PaseListaPage> {
                           return;
                         }
 
-                        if (userScanned != null) {
-                          if (eventoSelected.id == 0) {
+                        if (eventoSelected.id == 0) {
+                          NotificationUI.instance
+                              .notificationWarning('Selecciona un evento.');
+                          return;
+                        }
+
+                        PaseListaController.addPaseLista(
+                                usuarioID: userScanned.id.toString(),
+                                eventoID: eventoSelected.id.toString())
+                            .then((value) {
+                          if (value) {
                             NotificationUI.instance
-                                .notificationWarning('Selecciona un evento.');
-                            return;
+                                .notificationSuccess('Pase de lista exitoso.');
+
+                            ref
+                                .read(userScannedProvider.notifier)
+                                .update((state) => null);
+                          } else {
+                            NotificationUI.instance.notificationWarning(
+                                'No pudimos completar la operación, inténtelo más tarde.');
                           }
+                        });
 
-                          PaseListaController.addPaseLista(
-                                  usuarioID: userScanned.id.toString(),
-                                  eventoID: eventoSelected.id.toString())
-                              .then((value) {
-                            if (value) {
-                              NotificationUI.instance.notificationSuccess(
-                                  'Pase de lista exitoso.');
-
-                              ref
-                                  .read(userScannedProvider.notifier)
-                                  .update((state) => null);
-                            } else {
-                              NotificationUI.instance.notificationWarning(
-                                  'No pudimos completar la operación, inténtelo más tarde.');
-                            }
-                          });
-
-                          /*    ref.refresh(addPaseListaProvider(PaseListaData(
+                        /*    ref.refresh(addPaseListaProvider(PaseListaData(
                               context: context,
                               user_id: userScanned.id.toString()))); */
-                        } else {
-                          NotificationUI.instance
-                              .notificationWarning("Selecciona un usuario.");
-                        }
                       },
                       loading: false)
+                  : SizedBox(),
+              (userScanned != null && eventoSelected.id != 0)
+                  ? CustomButton(
+                      text: "Hacer pago",
+                      textColor: Colors.black87,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            surfaceTintColor: Colors.transparent,
+                            title: Text(
+                              "Nuevo Pago",
+                              style: TxtStyle.headerStyle,
+                            ),
+                            content: MakePaymentWidget(
+                              userID: userScanned.id.toString(),
+                              eventoID: eventoSelected.id.toString(),
+                              ref: ref,
+                            ),
+                          ),
+                        );
+                      },
+                      color: ColorStyle.thirdColor,
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+                      loading: false)
+                  : SizedBox(),
+              (userScanned?.pagos != null && userScanned!.pagos!.length > 0)
+                  ? PagosUserWidget(userScanned: userScanned)
                   : SizedBox()
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class PagosUserWidget extends StatelessWidget {
+  const PagosUserWidget({
+    super.key,
+    required this.userScanned,
+  });
+
+  final User userScanned;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 20, bottom: 50),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 4,
+              spreadRadius: -3,
+              offset: Offset(0, 0))
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            "Pagos",
+            style: TxtStyle.headerStyle,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+            decoration: BoxDecoration(
+                color: Colors.grey[800],
+                borderRadius: BorderRadius.circular(5)),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Text(
+                  "Concepto",
+                  textAlign: TextAlign.center,
+                  style: TxtStyle.labelText.copyWith(color: Colors.white),
+                )),
+                Expanded(
+                    child: Text(
+                  "Cantidad",
+                  textAlign: TextAlign.center,
+                  style: TxtStyle.labelText.copyWith(color: Colors.white),
+                )),
+                Expanded(
+                    child: Text(
+                  "Fecha",
+                  textAlign: TextAlign.center,
+                  style: TxtStyle.labelText.copyWith(color: Colors.white),
+                )),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Container(
+            height: 200,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+            child: ListView.separated(
+              separatorBuilder: (context, index) => SizedBox(
+                height: 10,
+              ),
+              shrinkWrap: true,
+              itemCount: userScanned.pagos!.length,
+              itemBuilder: (context, index) => Container(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                      child: Text(
+                    "${userScanned.pagos![index].concepto}",
+                    textAlign: TextAlign.center,
+                  )),
+                  Expanded(
+                      child: Text(
+                    "\$${userScanned.pagos![index].cantidad.toDouble()}",
+                    textAlign: TextAlign.center,
+                  )),
+                  Expanded(
+                      child: Text(
+                    DateFormat('dd MMMM yyyy')
+                        .format(userScanned.pagos![index].created_at),
+                    textAlign: TextAlign.center,
+                  )),
+                ],
+              )),
+            ),
+          ),
+        ],
       ),
     );
   }
