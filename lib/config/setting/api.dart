@@ -56,3 +56,7 @@ const String GET_ALL_ROLES = "${CARPETA}app/users/roles";
 const String GET_ALL_MINISTERIOS = "${CARPETA}app/users/ministerios";
 
 const String ADD_PAGO = "${CARPETA}app/pago/create";
+
+const String CREATE_BETEL = "${CARPETA}app/betel/create";
+const String EDIT_BETEL = "${CARPETA}app/betel/edit";
+const String GET_BETELES = "${CARPETA}app/betel/get";

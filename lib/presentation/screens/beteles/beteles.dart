@@ -2,23 +2,27 @@
 
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
+import 'package:icarm/presentation/models/BetelModel.dart';
+import 'package:icarm/presentation/providers/betel_provider.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class BetelesPage extends StatefulWidget {
+class BetelesPage extends ConsumerStatefulWidget {
   const BetelesPage({
     Key? key,
   }) : super(key: key);
   @override
-  State<BetelesPage> createState() => _BetelesPageState();
+  ConsumerState<BetelesPage> createState() => _BetelesPageState();
 }
 
-class _BetelesPageState extends State<BetelesPage> {
-  List<Betel> betelesList = [
+class _BetelesPageState extends ConsumerState<BetelesPage> {
+  /*  List<Betel> betelesList = [
     Betel(
       img:
           "https://static.wixstatic.com/media/bf53c1_8141d29726e84eed879e04cf01ac56b6~mv2.jpg/v1/fill/w_322,h_324,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/Boris.jpg",
@@ -297,7 +301,7 @@ class _BetelesPageState extends State<BetelesPage> {
       contacto: "4432266091 | 4431330511",
     ),
   ];
-
+ */
   @override
   void initState() {
     super.initState();
@@ -307,6 +311,8 @@ class _BetelesPageState extends State<BetelesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final beteles = ref.watch(betelesProvider);
+
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       body: FadedSlideAnimation(
@@ -343,17 +349,31 @@ class _BetelesPageState extends State<BetelesPage> {
                 ),
               ),
               Expanded(
-                flex: 16,
-                child: SingleChildScrollView(
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: betelesList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return BetelWidget(betelesList[index]);
-                      }),
-                ),
-              )
+                  flex: 16,
+                  child: beteles.when(
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return LoadingStandardWidget.loadingNoDataWidget(
+                            'beteles');
+                      }
+
+                      return SingleChildScrollView(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
+                            itemCount: data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return BetelWidget(data[index]);
+                            }),
+                      );
+                    },
+                    error: (error, stackTrace) => Center(
+                      child: LoadingStandardWidget.loadingErrorWidget(),
+                    ),
+                    loading: () => Center(
+                      child: LoadingStandardWidget.loadingWidget(),
+                    ),
+                  ))
             ],
           ),
         ),
@@ -363,7 +383,7 @@ class _BetelesPageState extends State<BetelesPage> {
 }
 
 class BetelWidget extends StatefulWidget {
-  Betel betel;
+  Betele betel;
   BetelWidget(this.betel, {super.key});
 
   @override
@@ -392,7 +412,7 @@ class _BetelWidgetState extends State<BetelWidget> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: CachedNetworkImage(
-                  imageUrl: widget.betel.img,
+                  imageUrl: URL_MEDIA_BETELES + "/" + widget.betel.img,
                   placeholder: (context, url) =>
                       LoadingStandardWidget.loadingWidget(),
                   imageBuilder: (context, imageProvider) => Container(
@@ -417,11 +437,18 @@ class _BetelWidgetState extends State<BetelWidget> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5,
                   child: Text(
-                    (widget.betel.second_name.isNotEmpty)
-                        ? widget.betel.first_name +
+                    (widget.betel.user2 != null ||
+                            widget.betel.user2Name != null)
+                        ? ((widget.betel.user != null)
+                                ? "${widget.betel.user!.nombre} ${widget.betel.user!.apellidoPaterno}"
+                                : widget.betel.userName!) +
                             " &\n" +
-                            widget.betel.second_name
-                        : widget.betel.first_name,
+                            ((widget.betel.user2 != null)
+                                ? "${widget.betel.user2!.nombre} ${widget.betel.user2!.apellidoPaterno}"
+                                : widget.betel.user2Name!)
+                        : ((widget.betel.user != null)
+                            ? "${widget.betel.user!.nombre} ${widget.betel.user!.apellidoPaterno}"
+                            : widget.betel.userName!),
                     textAlign: TextAlign.center,
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 6.sp),
@@ -434,7 +461,7 @@ class _BetelWidgetState extends State<BetelWidget> {
                         onPressed: () {
                           final Uri launchUri = Uri(
                             scheme: 'tel',
-                            path: widget.betel.phone,
+                            path: widget.betel.telefono,
                           );
                           launchUrl(launchUri);
                         },
@@ -471,7 +498,7 @@ class _BetelWidgetState extends State<BetelWidget> {
     );
   }
 
-  showMyDialog(Betel betel) {
+  showMyDialog(Betele betel) {
     return showDialog<void>(
       context: context,
 
@@ -482,7 +509,7 @@ class _BetelWidgetState extends State<BetelWidget> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             title: Text(
-              betel.first_name,
+              betel.user!.nombre,
               style: TextStyle(
                   color: ColorStyle.secondaryColor,
                   fontWeight: FontWeight.bold),
@@ -517,9 +544,17 @@ class _BetelWidgetState extends State<BetelWidget> {
                     height: 5,
                   ),
                   Text(
-                    (betel.anf_second_name.isNotEmpty)
-                        ? betel.anf_first_name + " &\n" + betel.anf_second_name
-                        : betel.anf_first_name,
+                    (betel.userAnf2 != null || betel.userAnf2Name != null)
+                        ? ((betel.userAnf != null)
+                                ? "${betel.userAnf!.nombre} ${betel.userAnf!.apellidoPaterno}"
+                                : betel.userAnfName!) +
+                            " &\n" +
+                            ((betel.userAnf2 != null)
+                                ? "${betel.userAnf2!.nombre} ${betel.userAnf2!.apellidoPaterno}"
+                                : betel.userAnf2Name!)
+                        : (betel.userAnf != null)
+                            ? "${betel.userAnf!.nombre} ${betel.userAnf!.apellidoPaterno}"
+                            : betel.userAnfName!,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 15, color: Colors.black87),
                   ),
@@ -548,7 +583,7 @@ class _BetelWidgetState extends State<BetelWidget> {
                     height: 5,
                   ),
                   Text(
-                    betel.direccion_first + "\n" + betel.direccion_second,
+                    betel.direccion,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 15, color: Colors.black87),
                   ),
@@ -576,11 +611,13 @@ class _BetelWidgetState extends State<BetelWidget> {
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    betel.contacto,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15, color: Colors.black87),
-                  ),
+                  (betel.telefono != null)
+                      ? Text(
+                          betel.telefono!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15, color: Colors.black87),
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -600,30 +637,4 @@ class _BetelWidgetState extends State<BetelWidget> {
       },
     );
   }
-}
-
-class Betel {
-  final String img;
-  final String first_name;
-  final String second_name;
-  final String anf_first_name;
-  final String anf_second_name;
-  final String direccion_first;
-  final String direccion_second;
-  final String contacto;
-  final String phone;
-  final String mapUrl;
-
-  Betel({
-    required this.img,
-    required this.first_name,
-    required this.second_name,
-    required this.anf_first_name,
-    required this.anf_second_name,
-    required this.direccion_first,
-    required this.direccion_second,
-    required this.contacto,
-    required this.phone,
-    required this.mapUrl,
-  });
 }

@@ -26,10 +26,8 @@ class PaseListaController {
         /* paseListaData.context.pop(); */
         return true;
       } else {
-        NotificationUI.instance.notificationWarning(
-            'No pudimos completar la operación, inténtelo más tarde. ${resp["description"]["message"]}');
-
-        /*  ref.read(userScannedProvider.notifier).update((state) => null); */
+        NotificationUI.instance
+            .notificationWarning('${resp["description"]["message"]}');
 
         return false;
       }

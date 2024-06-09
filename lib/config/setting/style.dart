@@ -55,3 +55,13 @@ class TxtStyle {
       color: Color(0xFFD90000),
       fontWeight: FontWeight.w400);
 }
+
+class ShadowStyle {
+  static final boxShadow = [
+    BoxShadow(
+        color: Colors.black.withOpacity(0.5),
+        blurRadius: 8,
+        spreadRadius: -5,
+        offset: Offset(0, 0))
+  ];
+}

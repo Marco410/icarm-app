@@ -224,17 +224,9 @@ class _EventosAdminPageState extends ConsumerState<PaseListaPage> {
                                 usuarioID: userScanned.id.toString(),
                                 eventoID: eventoSelected.id.toString())
                             .then((value) {
-                          if (value) {
-                            NotificationUI.instance
-                                .notificationSuccess('Pase de lista exitoso.');
-
-                            ref
-                                .read(userScannedProvider.notifier)
-                                .update((state) => null);
-                          } else {
-                            NotificationUI.instance.notificationWarning(
-                                'No pudimos completar la operación, inténtelo más tarde.');
-                          }
+                          ref
+                              .read(userScannedProvider.notifier)
+                              .update((state) => null);
                         });
 
                         /*    ref.refresh(addPaseListaProvider(PaseListaData(

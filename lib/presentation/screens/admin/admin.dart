@@ -44,6 +44,11 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             icon: Icons.people_rounded,
             onTap: () => context.pushNamed("usuarios"),
           ),
+          BigButtonWidget(
+            title: "Beteles",
+            icon: Icons.church_rounded,
+            onTap: () => context.pushNamed("beteles"),
+          ),
         ],
       ),
     );
@@ -69,8 +74,9 @@ class BigButtonWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 25, horizontal: 35),
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
+            boxShadow: ShadowStyle.boxShadow,
             color: ColorStyle.secondaryColor,
-            borderRadius: BorderRadius.circular(15)),
+            borderRadius: BorderRadius.circular(10)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

@@ -21,6 +21,8 @@ class CheckBoxWidget extends StatelessWidget {
       children: [
         Checkbox(
           value: value,
+          side: BorderSide(
+              width: 2, color: (readOnly) ? Colors.grey : Colors.black87),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           activeColor: (readOnly) ? Colors.grey : ColorStyle.secondaryColor,
           onChanged: (value) => (readOnly) ? () {} : onChange(value),

@@ -1,6 +1,7 @@
 import 'package:flutter/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icarm/presentation/models/BetelModel.dart';
 import 'package:icarm/presentation/models/EventoModel.dart';
 import 'package:icarm/presentation/models/kids/kidsModel.dart';
 import 'package:icarm/presentation/screens/admin/admin.dart';
@@ -16,6 +17,8 @@ import 'package:icarm/presentation/screens/perfil/pase_lista/pase_lista.dart';
 import 'package:icarm/presentation/screens/perfil/perfil-detail.dart';
 import 'package:icarm/presentation/screens/perfil/perfil.dart';
 
+import '../../presentation/screens/admin/beteles/add_betel.dart';
+import '../../presentation/screens/admin/beteles/beteles.dart';
 import '../../presentation/screens/admin/eventos/eventos.dart';
 import '../../presentation/screens/admin/usuarios/usuario-detail.dart';
 import '../../presentation/screens/admin/usuarios/usuarios.dart';
@@ -268,6 +271,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
                           return UsuarioDetailAdminPage(
                             usuarioID: user,
+                          );
+                        },
+                      )
+                    ]),
+                GoRoute(
+                    name: "beteles",
+                    path: "beteles",
+                    builder: (context, state) => BetelesAdminPage(),
+                    routes: [
+                      GoRoute(
+                        name: "new.betel",
+                        path: 'new-betel:type',
+                        builder: (context, state) {
+                          String? ty = state.pathParameters['type'];
+                          Betele? betel = null;
+                          print("ty");
+                          print(ty);
+                          if (ty == 'edit') {
+                            betel = state.extra as Betele;
+                          }
+                          return AddBetelAdminPage(
+                            type: ty,
+                            betel: betel,
                           );
                         },
                       )
