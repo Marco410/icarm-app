@@ -59,9 +59,10 @@ class TxtStyle {
 class ShadowStyle {
   static final boxShadow = [
     BoxShadow(
-        color: Colors.black.withOpacity(0.5),
-        blurRadius: 8,
-        spreadRadius: -5,
-        offset: Offset(0, 0))
+      color: Color(0x26AAA9A9),
+      blurRadius: 8,
+      offset: Offset(0, 6),
+      spreadRadius: 2,
+    )
   ];
 }
