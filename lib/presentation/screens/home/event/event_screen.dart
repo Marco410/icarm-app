@@ -263,7 +263,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
                       ),
                       InkWell(
                         onTap: () {
-                          String searchString = (data.direccion == null)
+                          String? searchString = (data.direccion == null)
                               ? "${data.iglesia.calle} #${data.iglesia.numero} ${data.iglesia.colonia}, ${data.iglesia.ciudad}, ${data.iglesia.estado}, ${data.iglesia.pais}."
                               : data.direccion;
 
@@ -301,7 +301,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
                                     style: TxtStyle.labelText,
                                   )
                                 : Text(
-                                    data.direccion,
+                                    data.direccion ?? "",
                                     textAlign: TextAlign.center,
                                     style: TxtStyle.labelText,
                                   ),
@@ -310,7 +310,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
                             ),
                             InkWell(
                               onTap: () {
-                                String searchString = (data.direccion == null)
+                                String? searchString = (data.direccion == null)
                                     ? "${data.iglesia.calle} #${data.iglesia.numero} ${data.iglesia.colonia}, ${data.iglesia.ciudad}, ${data.iglesia.estado}, ${data.iglesia.pais}."
                                     : data.direccion;
 
