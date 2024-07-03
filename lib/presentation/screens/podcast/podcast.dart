@@ -4,7 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html_iframe/flutter_html_iframe.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
-import 'package:lottie/lottie.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PodcastPage extends StatefulWidget {
@@ -20,6 +20,12 @@ class _PodcastPageState extends State<PodcastPage> {
 
   void initState() {
     super.initState();
+
+    Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 
   @override
@@ -37,53 +43,39 @@ class _PodcastPageState extends State<PodcastPage> {
         beginOffset: Offset(0, 0.3),
         endOffset: Offset(0, 0),
         slideCurve: Curves.linearToEaseOut,
-        child: Container(
-          padding: EdgeInsets.only(left: 10, right: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text(
-                  "${prefs.nombre} escuchanos:",
-                  style: TxtStyle.headerStyle,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Lottie.network(
-                    "https://assets7.lottiefiles.com/packages/lf20_eN8m772nQj.json",
-                    height: 10),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                flex: 10,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 4,
-                            spreadRadius: -3,
-                            offset: Offset(0, 0))
-                      ],
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Html(
-                    data: '''
-                   <iframe src="https://www.amoryrestauracionmorelia.org/podcast-1" width="auto" height="${MediaQuery.of(context).size.height * 0.50}"  ></iframe>
+        child: (loading)
+            ? LoadingStandardWidget.loadingWidget()
+            : Container(
+                padding: EdgeInsets.only(left: 0, right: 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 10,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.5),
+                                  blurRadius: 4,
+                                  spreadRadius: -3,
+                                  offset: Offset(0, 0))
+                            ],
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Html(
+                          data: '''
+                   <iframe src="https://www.amoryrestauracionmorelia.org/podcast-1" width="auto" height="${MediaQuery.of(context).size.height * 0.80}"  ></iframe>
                   ''',
-                    extensions: [
-                      IframeHtmlExtension(),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 3,
+                          shrinkWrap: true,
+                          extensions: [
+                            IframeHtmlExtension(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    /*    Expanded(
+                flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Row(
@@ -147,10 +139,10 @@ class _PodcastPageState extends State<PodcastPage> {
                     ],
                   ),
                 ),
+              ), */
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }

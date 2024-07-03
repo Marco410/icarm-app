@@ -55,19 +55,20 @@ class Kid {
   String sexo;
   String enfermedad;
   int active;
+  bool? imtutor;
 
-  Kid({
-    required this.id,
-    required this.userId,
-    required this.nombre,
-    required this.aPaterno,
-    required this.aMaterno,
-    required this.fechaNacimiento,
-    required this.createAt,
-    required this.sexo,
-    required this.enfermedad,
-    required this.active,
-  });
+  Kid(
+      {required this.id,
+      required this.userId,
+      required this.nombre,
+      required this.aPaterno,
+      required this.aMaterno,
+      required this.fechaNacimiento,
+      required this.createAt,
+      required this.sexo,
+      required this.enfermedad,
+      required this.active,
+      this.imtutor = false});
 
   factory Kid.fromJson(Map<String, dynamic> json) => Kid(
         id: json["id"],
@@ -80,6 +81,7 @@ class Kid {
         sexo: json["sexo"],
         enfermedad: json["enfermedad"] ?? '',
         active: json["active"],
+        imtutor: json["imtutor"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {

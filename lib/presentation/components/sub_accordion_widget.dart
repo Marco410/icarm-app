@@ -28,6 +28,7 @@ class SubAccordionWidget extends StatelessWidget {
         padding: EdgeInsets.only(
             left: 15, right: 15, top: (active) ? 15 : 5, bottom: 10),
         margin: EdgeInsets.only(top: (active) ? 10 : 0),
+        height: 10,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(15),
@@ -56,9 +57,11 @@ class SubAccordionWidget extends StatelessWidget {
                         padding: EdgeInsets.all(10),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(
-                            "assets/image/${image}",
-                            scale: 1.1,
+                          child: Image.network(
+                            image,
+                            scale: 1,
+                            height: 80,
+                            width: 80,
                           ),
                         ),
                       ),

@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 import 'package:icarm/presentation/models/kids/TeacherModel.dart';
 
 KidsInClassModel kidsInClassModelFromJson(String str) =>
@@ -46,6 +47,7 @@ class KidWithUser {
   int active;
   DateTime createdAt;
   User user;
+  List<Tutor> tutors;
 
   KidWithUser({
     required this.id,
@@ -59,6 +61,7 @@ class KidWithUser {
     required this.active,
     required this.createdAt,
     required this.user,
+    required this.tutors,
   });
 
   factory KidWithUser.fromJson(Map<String, dynamic> json) => KidWithUser(
@@ -73,6 +76,7 @@ class KidWithUser {
         active: json["active"],
         createdAt: DateTime.parse(json["created_at"]),
         user: User.fromJson(json["user"]),
+        tutors: List<Tutor>.from(json["tutors"].map((x) => Tutor.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -88,82 +92,38 @@ class KidWithUser {
         "active": active,
         "created_at": createdAt.toIso8601String(),
         "user": user.toJson(),
+        "tutors": List<dynamic>.from(tutors.map((x) => x.toJson())),
       };
 }
 
-class User {
+class Tutor {
   int id;
-  String nombre;
-  String apellidoPaterno;
-  String apellidoMaterno;
-  String email;
-  String telefono;
-  DateTime fechaNacimiento;
-  String sexo;
-  int? edad;
-  String? maestro;
-  String? asignacion;
-  int paisId;
-  int active;
-  DateTime updateinf;
+  int tutorId;
+  int kidId;
   DateTime createdAt;
-  DateTime updatedAt;
+  User user;
 
-  User({
+  Tutor({
     required this.id,
-    required this.nombre,
-    required this.apellidoPaterno,
-    required this.apellidoMaterno,
-    required this.email,
-    required this.telefono,
-    required this.fechaNacimiento,
-    required this.sexo,
-    required this.edad,
-    required this.maestro,
-    required this.asignacion,
-    required this.paisId,
-    required this.active,
-    required this.updateinf,
+    required this.tutorId,
+    required this.kidId,
     required this.createdAt,
-    required this.updatedAt,
+    required this.user,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory Tutor.fromJson(Map<String, dynamic> json) => Tutor(
         id: json["id"],
-        nombre: json["nombre"],
-        apellidoPaterno: json["apellido_paterno"],
-        apellidoMaterno: json["apellido_materno"],
-        email: json["email"],
-        telefono: json["telefono"],
-        fechaNacimiento: DateTime.parse(json["fecha_nacimiento"]),
-        sexo: json["sexo"],
-        edad: json["edad"],
-        maestro: json["maestro"],
-        asignacion: json["asignacion"],
-        paisId: json["pais_id"],
-        active: json["active"],
-        updateinf: DateTime.parse(json["updateinf"]),
+        tutorId: json["tutor_id"],
+        kidId: json["kid_id"],
         createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        user: User.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "nombre": nombre,
-        "apellido_paterno": apellidoPaterno,
-        "apellido_materno": apellidoMaterno,
-        "email": email,
-        "telefono": telefono,
-        "fecha_nacimiento":
-            "${fechaNacimiento.year.toString().padLeft(4, '0')}-${fechaNacimiento.month.toString().padLeft(2, '0')}-${fechaNacimiento.day.toString().padLeft(2, '0')}",
-        "sexo": sexo,
-        "edad": edad,
-        "maestro": maestro,
-        "asignacion": asignacion,
-        "pais_id": paisId,
-        "active": active,
-        "updateinf": updateinf.toIso8601String(),
+        "tutor_id": tutorId,
+        "kid_id": kidId,
         "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
+        "user": user.toJson(),
       };
 }

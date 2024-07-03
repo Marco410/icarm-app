@@ -129,7 +129,6 @@ class SearchableListWidget extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       child: SearchableList<Option>(
         initialList: options,
-        autoFocusOnSearch: false,
         loadingWidget: Center(
           child: CircularProgressIndicator(
             color: ColorStyle.primaryColor,
@@ -137,7 +136,14 @@ class SearchableListWidget extends StatelessWidget {
         ),
         filter: (value) => options
             .where(
-              (e) => e.name.toLowerCase().contains(value.toLowerCase()),
+              (e) => e.name
+                  .toLowerCase()
+                  .replaceAll(r'á', 'a')
+                  .replaceAll(r'é', 'e')
+                  .replaceAll(r'í', 'i')
+                  .replaceAll(r'ó', 'o')
+                  .replaceAll(r'ú', 'u')
+                  .contains(value.toLowerCase()),
             )
             .toList(),
         style: const TextStyle(fontSize: 13),

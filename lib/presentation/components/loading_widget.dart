@@ -1,4 +1,5 @@
 import 'package:flutter/Material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../config/setting/style.dart';
@@ -6,8 +7,9 @@ import '../../config/setting/style.dart';
 class LoadingStandardWidget {
   static Widget loadingWidget() {
     return Center(
-      child: CircularProgressIndicator(
+      child: LoadingAnimationWidget.dotsTriangle(
         color: ColorStyle.secondaryColor,
+        size: 40,
       ),
     );
   }

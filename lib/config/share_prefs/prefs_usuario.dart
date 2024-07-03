@@ -88,6 +88,14 @@ class PreferenciasUsuario with ChangeNotifier {
     _prefs.setString("pais", value);
   }
 
+  String get pass_update {
+    return _prefs.getString("pass_update") ?? "";
+  }
+
+  set pass_update(String value) {
+    _prefs.setString("pass_update", value);
+  }
+
   List<String> get usuarioRol {
     return _prefs.getStringList("usuarioRol") ?? [];
   }
@@ -102,5 +110,13 @@ class PreferenciasUsuario with ChangeNotifier {
 
   set ds_token_notificaciones(String value) {
     _prefs.setString("ds_token_notificaciones", value);
+  }
+
+  String get foto_perfil {
+    return _prefs.getString("foto_perfil") ?? "";
+  }
+
+  set foto_perfil(String value) {
+    _prefs.setString("foto_perfil", value);
   }
 }

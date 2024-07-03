@@ -41,70 +41,6 @@ final getKidsProvider =
   return [];
 });
 
-final registerKid =
-    FutureProvider.family<void, KidRegisterData>((ref, kidRegister) async {
-  final Map<String, dynamic> registerKid = {
-    "user_id": prefs.usuarioID,
-    "nombre": kidRegister.nombre,
-    "a_paterno": kidRegister.a_paterno,
-    "a_materno": kidRegister.a_materno,
-    "fecha_nacimiento": kidRegister.fecha_nacimiento,
-    "sexo": kidRegister.sexo,
-    "enfermedad": kidRegister.enfermedad,
-  };
-
-  String decodedResp = "";
-
-  decodedResp = await BaseHttpService.basePost(
-      url: REGISTER_KID_URL, authorization: true, body: registerKid);
-
-  if (decodedResp != "") {
-    final Map<String, dynamic> resp = json.decode(decodedResp);
-    if (resp["status"] == 'Success') {
-      NotificationUI.instance.notificationSuccess('Hij@ registrado con éxito.');
-
-      kidRegister.context.pop();
-      ref.refresh(getKidsProvider(prefs.usuarioID));
-    } else {
-      NotificationUI.instance.notificationWarning(
-          'No pudimos completar la operación, inténtelo más tarde.');
-    }
-  }
-});
-
-final update_kid =
-    FutureProvider.family<void, KidRegisterData>((ref, kidRegister) async {
-  final Map<String, dynamic> registerKid = {
-    "kid_id": kidRegister.kid_id,
-    "nombre": kidRegister.nombre,
-    "a_paterno": kidRegister.a_paterno,
-    "a_materno": kidRegister.a_materno,
-    "fecha_nacimiento": kidRegister.fecha_nacimiento,
-    "sexo": kidRegister.sexo,
-    "enfermedad": kidRegister.enfermedad,
-  };
-
-  String decodedResp = "";
-
-  decodedResp = await BaseHttpService.basePut(
-      url: UPDATE_KID_URL, authorization: true, body: registerKid);
-
-  if (decodedResp != "") {
-    final Map<String, dynamic> resp = json.decode(decodedResp);
-    if (resp["status"] == 'Success') {
-      NotificationUI.instance
-          .notificationSuccess('Hij@ actualizado con éxito.');
-
-      kidRegister.context.pop();
-
-      ref.refresh(getKidsProvider(prefs.usuarioID));
-    } else {
-      NotificationUI.instance.notificationWarning(
-          'No pudimos completar la operación, inténtelo más tarde.');
-    }
-  }
-});
-
 final delete_kid =
     FutureProvider.family<void, KidRegisterData>((ref, kidID) async {
   final Map<String, String> deleteKid = {"kid_id": kidID.kid_id.toString()};
@@ -125,4 +61,14 @@ final delete_kid =
           'No pudimos completar la operación, inténtelo más tarde.');
     }
   }
+});
+
+final generateCodigoKidProvider =
+    FutureProvider.family<void, String>((ref, kidId) async {
+  final Map<String, String> codeKid = {"kid_id": kidId};
+
+  String decodedResp = await BaseHttpService.baseGet(
+      url: GENERATE_CODE_KID, authorization: true, params: codeKid);
+
+  return;
 });

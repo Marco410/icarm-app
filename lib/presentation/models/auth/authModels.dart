@@ -22,6 +22,7 @@ class RegisterUserData {
   final String? password;
   final String? telefono;
   final String? sexo;
+  final String? sexo_id;
   final int? pais_id;
   final BuildContext context;
 
@@ -36,6 +37,7 @@ class RegisterUserData {
     this.telefono,
     this.sexo,
     this.pais_id,
+    this.sexo_id,
     required this.context,
   });
 }

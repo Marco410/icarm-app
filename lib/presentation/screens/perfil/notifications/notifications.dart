@@ -51,8 +51,6 @@ class _NotificationsState extends ConsumerState<Notifications> {
 
                       return InkWell(
                         onTap: () {
-                          print("noti");
-                          print(noti);
                           ref.refresh(
                               notiSelectedProvider(noti['id'].toString()));
 

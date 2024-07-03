@@ -5,26 +5,35 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/api.dart';
-import 'package:icarm/presentation/models/models.dart';
+import 'package:icarm/presentation/models/paselista/paseListaModels.dart';
 import '../../config/services/http_general_service.dart';
 import '../../config/services/notification_ui_service.dart';
 import '../../config/share_prefs/prefs_usuario.dart';
+import '../models/UsuarioModel.dart';
+import 'evento_provider.dart';
 
 const storage = FlutterSecureStorage();
 final prefs = PreferenciasUsuario();
 
-final userNameScannedProvider = StateProvider<String>((ref) {
-  return '';
+final userScannedProvider = StateProvider.autoDispose<User?>((ref) {
+  return null;
 });
 
-final userIDScannedProvider = StateProvider<int>((ref) {
-  return 0;
+final loadingUserScannedProvider = StateProvider.autoDispose<bool>((ref) {
+  return false;
+});
+
+final editUserPaseListProvider = StateProvider.autoDispose<bool>((ref) {
+  return false;
 });
 
 final getUserPaseListaProvider =
-    FutureProvider.family<void, String>((ref, user_id) async {
+    FutureProvider.family.autoDispose<void, String>((ref, user_id) async {
+  final eventoSelected = ref.watch(eventoSelectedToPaseLista);
+
   final Map<String, String> getUser = {
     "user_id": user_id,
+    "evento_id": eventoSelected.id.toString()
   };
 
   String decodedResp = await BaseHttpService.baseGet(
@@ -33,19 +42,21 @@ final getUserPaseListaProvider =
   if (decodedResp != "") {
     final Map<String, dynamic> resp = json.decode(decodedResp);
     if (resp["status"] == 'Success') {
+      User userGet = User.fromJson(resp['data']['user']);
+
       String user =
           "${resp['data']['user']['nombre']} ${resp['data']['user']['apellido_paterno']} ${resp['data']['user']['apellido_materno']}";
 
       int iD = resp['data']['user']['id'];
 
-      ref.read(userNameScannedProvider.notifier).update((state) => user);
-      ref.read(userIDScannedProvider.notifier).update((state) => iD);
+      ref.read(userScannedProvider.notifier).update((state) => userGet);
+      ref.read(loadingUserScannedProvider.notifier).update((state) => false);
     } else {
       NotificationUI.instance.notificationWarning(
           'No pudimos completar la operación, inténtelo más tarde. ${resp["description"]["message"]}');
 
-      ref.read(userNameScannedProvider.notifier).update((state) => "");
-      ref.read(userIDScannedProvider.notifier).update((state) => 0);
+      ref.read(userScannedProvider.notifier).update((state) => null);
+      ref.read(loadingUserScannedProvider.notifier).update((state) => false);
     }
   }
 });
@@ -68,8 +79,7 @@ final addPaseListaProvider =
       NotificationUI.instance.notificationWarning(
           'No pudimos completar la operación, inténtelo más tarde. ${resp["description"]["message"]}');
 
-      ref.read(userNameScannedProvider.notifier).update((state) => "");
-      ref.read(userIDScannedProvider.notifier).update((state) => 0);
+      ref.read(userScannedProvider.notifier).update((state) => null);
     }
   }
 });

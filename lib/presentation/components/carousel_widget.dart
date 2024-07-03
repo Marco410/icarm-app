@@ -28,10 +28,10 @@ class CarouselWidget extends StatelessWidget {
           itemCount: textItems.length,
           carouselController: controller,
           options: CarouselOptions(
-              autoPlay: false,
+              autoPlay: true,
               initialPage: current,
               enlargeCenterPage: true,
-              height: MediaQuery.of(context).size.height * size,
+              height: size,
               animateToClosest: true,
               enlargeStrategy: CenterPageEnlargeStrategy.height,
               onPageChanged: onPageChanged as void Function(

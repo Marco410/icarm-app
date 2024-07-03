@@ -1,7 +1,6 @@
 // ignore_for_file: unused_result
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/routes/app_router.dart';
@@ -76,6 +75,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       hintText: 'Correo electrónico',
                       controller: emailController,
                       focusNode: emailFocus,
+                      autoFillHints: AutofillHints.username,
                     ),
                     SizedBox(
                       height: 10,
@@ -88,6 +88,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       hintText: 'Contraseña',
                       controller: passController,
                       focusNode: passFocus,
+                      autoFillHints: AutofillHints.password,
                     ),
                     SizedBox(
                       height: 10,
@@ -122,7 +123,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           password: passController.text,
                         )));
 
-                        Future.delayed(const Duration(seconds: 2), () {
+                        Future.delayed(const Duration(seconds: 1), () {
                           setState(() => loading = false);
                         });
                       },
@@ -135,9 +136,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                CustomButton(
+                    text: "Continuar sin iniciar sesión",
+                    onTap: () => context.goNamed('home'),
+                    color: Colors.white,
+                    textColor: ColorStyle.primaryColor,
+                    margin: EdgeInsets.all(0),
+                    loading: false),
+                Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -159,7 +165,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ],
                 ),
-                Spacer()
               ],
             ),
           ),

@@ -1,271 +1,378 @@
+// ignore_for_file: deprecated_member_use
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/components/accordion_widget.dart';
-import 'package:icarm/presentation/components/sub_accordion_widget.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
+import 'package:icarm/presentation/providers/evento_provider.dart';
+import 'package:intl/intl.dart';
+import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MaterialDrawer extends StatefulWidget {
+class MaterialDrawer extends ConsumerStatefulWidget {
   const MaterialDrawer({super.key});
 
   @override
-  State<MaterialDrawer> createState() => _MaterialDrawerState();
+  ConsumerState<MaterialDrawer> createState() => _MaterialDrawerState();
 }
 
-class _MaterialDrawerState extends State<MaterialDrawer> {
-  List<bool> links = [false, false, false, false, false, false, false];
-  List<Event> events = [
-    /* Event(
-        title: "16° Aniversario",
-        text: "8 al 10 de Noviembre",
-        selected: true,
-        horario: "",
-        direccion: "Puerto de Coatzacoalcos #95, 58337, Morelia Mich.",
-        acerca_de:
-            "Ven y celebra con nosotros nuestro 16 aniversario \n Miércoles.\nServicio de Apertura \n7:00pm\nJueves\nSeminario para pastores y líderes\n9:00am\nServicio Especial\n7:00pm\nViernes\nSeminario para pastores y líderes\n9:00am\nServicio de Clausura\n7:00pm",
-        invitados: [
-          Invitado(name: "Pedro y Lety Cantú", image: ""),
-          Invitado(name: "Job Gonzalez", image: ""),
-          Invitado(name: "Oasis Ministry", image: ""),
-        ],
-        image: 'events/aniversario.jpg'), */
-    /* Event(
-        title: "Aniversario",
-        text: "8, 9 y 10 de Noviembre",
-        image: 'events/retiro.jpg',
-        horario: "7:00 pm",
-        direccion:
-            "Puerto Coatzacoalcos #91 Col. Tinijaro Morelia, Mich. México",
-        acerca_de: "",
-        selected: false),
-    Event(
-        title: "Acción de gracias",
-        text: "31 de Diciembre",
-        image: 'events/retiro.jpg',
-        horario: "7:00 pm",
-        direccion:
-            "Puerto Coatzacoalcos #91 Col. Tinijaro Morelia, Mich. México",
-        acerca_de: "",
-        selected: false) */
-  ];
+class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
+  List<bool> links = [false, false, false, false, false, false, false, false];
 
-  List<Online> onlines = [
-    Online(
-        title: "Cursos",
-        text: "Accede a nuestros cursos online",
-        selected: true,
-        image: 'online/cursos.png'),
-    Online(
-        title: "Predicas",
-        text: "Escucha nuestros mensajes.",
-        image: 'online/cursos.png',
-        selected: false),
-    Online(
-        title: "Radio",
-        text: "Escucha A&R Radio en vivo",
-        image: 'online/cursos.png',
-        selected: false)
-  ];
   @override
   Widget build(BuildContext context) {
+    final listEventos = ref.watch(getEventosProvider("user"));
     return Drawer(
-      width: double.infinity,
+      width: MediaQuery.of(context).size.width * 0.85,
       child: SingleChildScrollView(
         child: Column(children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(top: 50, left: 30, right: 30),
-                margin: const EdgeInsets.only(bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                        onTap: () => context.pop(),
-                        child: Icon(Icons.arrow_back_ios)),
-                    Image.asset(
-                      "assets/image/logo.png",
-                      scale: 150,
-                    ),
-                    SvgPicture.asset("assets/icon/user-icon.svg"),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () => setState(() => links[0] = !links[0]),
-                child: AccordionWidget(
-                  title: "Eventos",
-                  subtitle: "Conoce nuestros próximos eventos",
-                  isOpen: links[0],
-                  content: (events.length != 0)
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.all(0),
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: events.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return SubAccordionWidget(
-                              active: events[index].selected,
-                              onTap: () {
-                                setState(() {
-                                  events[index].selected =
-                                      !events[index].selected;
-                                });
-                              },
-                              title: events[index].title,
-                              text: events[index].text,
-                              image: events[index].image,
-                              onTapContent: () {
-                                context.pushNamed(
-                                  "event",
-                                  extra: events[index],
-                                );
-                              },
-                            );
-                          })
-                      : Text(
-                          "No hay eventos en los siguientes días.",
-                          style: TxtStyle.hintText,
-                        ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () => launch(
-                    "https://www.amoryrestauracionmorelia.org/online-1") /* setState(() => links[1] = !links[1]) */,
-                child: AccordionWidget(
-                  title: "Online",
-                  subtitle: "Accede a nuestros recursos en linea",
-                  isOpen: links[1],
-                  content: /*  ListView.builder(
+          Container(
+            padding: const EdgeInsets.only(top: 50, left: 30, right: 30),
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                    onTap: () => context.pop(),
+                    child: Icon(Icons.arrow_back_ios)),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
+            onTap: () {
+              context.pushNamed("web.view", pathParameters: {
+                "url": "https://www.amoryrestauracionmorelia.org/noticias-1"
+              });
+            },
+            title: "Noticias",
+            subtitle: "Accede a nuestros recursos en linea",
+            isOpen: links[0],
+            content: /*  ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(0),
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: onlines.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SubAccordionWidget(
+                    active: onlines[index].selected,
+                    onTap: () {
+                      setState(() {
+                        onlines[index].selected =
+                            !onlines[index].selected;
+                      });
+                    },
+                    title: onlines[index].title,
+                    text: onlines[index].text,
+                    image: onlines[index].image,
+                    onTapContent: () {},
+                  );
+                }) */
+                Text("En construcción"),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
+              title: "Eventos",
+              subtitle: "Conoce nuestros próximos eventos",
+              isOpen: links[1],
+              onTap: () => setState(() => links[1] = !links[1]),
+              content: listEventos.when(
+                data: (data) {
+                  if (data.isEmpty) {
+                    return Text(
+                      "No hay eventos en los siguientes días.",
+                      style: TxtStyle.hintText,
+                    );
+                  }
+
+                  return ListView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.all(0),
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: onlines.length,
+                      itemCount: data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return SubAccordionWidget(
-                          active: onlines[index].selected,
-                          onTap: () {
-                            setState(() {
-                              onlines[index].selected =
-                                  !onlines[index].selected;
-                            });
-                          },
-                          title: onlines[index].title,
-                          text: onlines[index].text,
-                          image: onlines[index].image,
-                          onTapContent: () {},
+                        return Container(
+                          decoration: BoxDecoration(
+                              color: ColorStyle.whiteBacground,
+                              borderRadius: BorderRadius.circular(8)),
+                          margin: EdgeInsets.only(bottom: 4),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: GestureDetector(
+                            onTap: () => context.pushNamed('event',
+                                pathParameters: {
+                                  "eventoID": data[index].id.toString()
+                                }),
+                            child: Row(
+                              children: [
+                                (data[index].imgHorizontal != null)
+                                    ? CachedNetworkImage(
+                                        imageUrl:
+                                            "${URL_MEDIA_EVENTO}${data[index].id}/${data[index].imgHorizontal}",
+                                        placeholder: (context, url) =>
+                                            LoadingStandardWidget
+                                                .loadingWidget(),
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.fill),
+                                          ),
+                                        ),
+                                        height: 15.sp,
+                                        width: 25.sp,
+                                      )
+                                    : Image.asset("assets/image/no-image.png",
+                                        height: 15.sp,
+                                        width: 25.sp,
+                                        scale: 4.5),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                    flex: 4,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          data[index].nombre,
+                                          style: TxtStyle.labelText
+                                              .copyWith(fontSize: 5.sp),
+                                        ),
+                                        Text(
+                                          DateFormat('dd MMM').format(
+                                                  data[index].fechaInicio) +
+                                              "-" +
+                                              DateFormat('dd MMM')
+                                                  .format(data[index].fechaFin),
+                                          style: TxtStyle.labelText.copyWith(
+                                              fontSize: 4.sp,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ],
+                                    )),
+                                Expanded(
+                                    child: Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 6.sp,
+                                ))
+                              ],
+                            ),
+                          ),
                         );
-                      }) */
-                      Text("En construcción"),
-                ),
+                      });
+                },
+                error: (error, stackTrace) => Text(""),
+                loading: () => LoadingStandardWidget.loadingWidget(),
+              ) /* (events.length != 0)
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.all(0),
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: events.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return SubAccordionWidget(
+                        active: events[index].selected,
+                        onTap: () {
+                          setState(() {
+                            events[index].selected = !events[index].selected;
+                          });
+                        },
+                        title: events[index].title,
+                        text: events[index].text,
+                        image: events[index].image,
+                        onTapContent: () {
+                          context.pushNamed(
+                            "event",
+                            extra: events[index],
+                          );
+                        },
+                      );
+                    })
+                : Text(
+                    "No hay eventos en los siguientes días.",
+                    style: TxtStyle.hintText,
+                  ), */
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () => launch(
-                    "https://www.amoryrestauracionmorelia.org/refugios-1") /* setState(() => links[3] = !links[3]) */,
-                child: AccordionWidget(
-                  title: "Refugios",
-                  subtitle: "Conoce nuestros centros",
-                  isOpen: links[3],
-                  content: Text("En construcción"),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () => launch(
-                    "https://www.amoryrestauracionmorelia.org/alimentos-1") /* setState(() => links[4] = !links[4]) */,
-                child: AccordionWidget(
-                  title: "Banco de alimentos",
-                  subtitle: "Participa en el próximo",
-                  isOpen: links[4],
-                  content: Text("En construcción"),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () => launch(
-                    "https://www.amoryrestauracionmorelia.org/iglesias-1") /* setState(() => links[5] = !links[5]) */,
-                child: AccordionWidget(
-                  title: "Más iglesias",
-                  subtitle: "Consulta más ubicaciones en México",
-                  isOpen: links[5],
-                  content: Text("En construcción"),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () => launch(
-                    "https://www.amoryrestauracionmorelia.org/biblia-1") /* setState(() => links[6] = !links[6]) */,
-                child: AccordionWidget(
-                  title: "Biblia",
-                  subtitle: "Accede a nuestros planes de lectura",
-                  isOpen: links[6],
-                  content: Text("En construcción"),
-                ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InkWell(
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
+            onTap: () => context.pushNamed("web.view", pathParameters: {
+              "url": "https://www.amoryrestauracionmorelia.org/online-1"
+            }) /* setState(() => links[1] = !links[1]) */,
+            title: "Online",
+            subtitle: "Accede a nuestros recursos en linea",
+            isOpen: links[2],
+            content: /*  ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(0),
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: onlines.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SubAccordionWidget(
+                    active: onlines[index].selected,
                     onTap: () {
-                      launch(
-                          "https://www.facebook.com/AmoryrestauracionmoreliaOficial");
+                      setState(() {
+                        onlines[index].selected =
+                            !onlines[index].selected;
+                      });
                     },
-                    child: Icon(
-                      Icons.facebook_rounded,
-                      size: 40,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      launch(
-                          "https://www.amoryrestauracionmorelia.org/whatsapp-1");
-                    },
-                    child: Image.network(
-                      "https://static.wixstatic.com/media/3d0692_2abf6ec42ad54a56aa2258e118b24306~mv2.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/3d0692_2abf6ec42ad54a56aa2258e118b24306~mv2.png",
-                      scale: 3,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      launch(
-                          "https://www.youtube.com/channel/UCWiKT0FHEO4wIVJhHJMECWA");
-                    },
-                    child: Image.network(
-                      "https://static.wixstatic.com/media/78aa2057f0cb42fbbaffcbc36280a64a.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/78aa2057f0cb42fbbaffcbc36280a64a.png",
-                      scale: 2.5,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      launch(
-                          "https://www.instagram.com/amoryrestauracion_morelia/");
-                    },
-                    child: Image.network(
-                      "https://static.wixstatic.com/media/01c3aff52f2a4dffa526d7a9843d46ea.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/01c3aff52f2a4dffa526d7a9843d46ea.png",
-                      scale: 2.5,
-                    ),
-                  ),
-                ],
+                    title: onlines[index].title,
+                    text: onlines[index].text,
+                    image: onlines[index].image,
+                    onTapContent: () {},
+                  );
+                }) */
+                Text("En construcción"),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
+            onTap: () => context.pushNamed("web.view", pathParameters: {
+              "url": "https://www.amoryrestauracionmorelia.org/refugios-1"
+            }) /* setState(() => links[3] = !links[3]) */,
+            title: "Refugios",
+            subtitle: "Conoce nuestros centros",
+            isOpen: links[3],
+            content: Text("En construcción"),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
+            onTap: () => context.pushNamed("web.view", pathParameters: {
+              "url": "https://www.amoryrestauracionmorelia.org/alimentos-1"
+            }) /* setState(() => links[4] = !links[4]) */,
+            title: "Banco de alimentos",
+            subtitle: "Participa en el próximo",
+            isOpen: links[4],
+            content: Text("En construcción"),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
+            onTap: () => context.pushNamed("web.view", pathParameters: {
+              "url": "https://www.amoryrestauracionmorelia.org/iglesias-1"
+            }) /* setState(() => links[5] = !links[5]) */,
+            title: "Más iglesias",
+            subtitle: "Consulta más ubicaciones en México",
+            isOpen: links[5],
+            content: Text("En construcción"),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
+            onTap: () => context.pushNamed("web.view", pathParameters: {
+              "url": "https://www.amoryrestauracionmorelia.org/biblia-1"
+            }) /* setState(() => links[6] = !links[6]) */,
+            title: "Biblia",
+            subtitle: "Accede a nuestros planes de lectura",
+            isOpen: links[6],
+            content: Text("En construcción"),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          AccordionWidget(
+            onTap: () {
+              //https://donar.amoryrestauracionmorelia.org/b/9AQ8zW4Fg9xl55CdQQ
+              final Uri toLaunch = Uri(
+                  scheme: 'https',
+                  host: 'donar.amoryrestauracionmorelia.org',
+                  path: 'b/9AQ8zW4Fg9xl55CdQQ',
+                  queryParameters: {});
+
+              launchUrl(toLaunch, mode: LaunchMode.externalApplication);
+            } /* context.pushNamed("web.view", pathParameters: {
+              "url": "https://www.amoryrestauracionmorelia.org/donacionapp"
+            })  */ /* setState(() => links[6] = !links[6]) */,
+            title: "Donaciones",
+            subtitle: "Gracias por tu generosidad.",
+            isOpen: links[7],
+            content: Text("En construcción"),
+          ),
+          const SizedBox(
+            height: 100,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              InkWell(
+                onTap: () {
+                  final Uri toLaunch = Uri(
+                      scheme: 'https',
+                      host: 'facebook.com',
+                      path: 'AmoryrestauracionmoreliaOficial',
+                      queryParameters: {});
+
+                  launchUrl(toLaunch, mode: LaunchMode.externalApplication);
+                },
+                child: Icon(
+                  Icons.facebook_rounded,
+                  size: 30,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  final Uri toLaunch = Uri(
+                      scheme: 'https',
+                      host: 'amoryrestauracionmorelia.org',
+                      path: 'whatsapp-1',
+                      queryParameters: {});
+
+                  launchUrl(toLaunch, mode: LaunchMode.externalApplication);
+                },
+                child: Image.network(
+                  "https://static.wixstatic.com/media/3d0692_2abf6ec42ad54a56aa2258e118b24306~mv2.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/3d0692_2abf6ec42ad54a56aa2258e118b24306~mv2.png",
+                  scale: 4,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  final Uri toLaunch = Uri(
+                      scheme: 'https',
+                      host: 'youtube.com',
+                      path: 'channel/UCWiKT0FHEO4wIVJhHJMECWA',
+                      queryParameters: {});
+
+                  launchUrl(toLaunch, mode: LaunchMode.externalApplication);
+                },
+                child: Image.network(
+                  "https://static.wixstatic.com/media/78aa2057f0cb42fbbaffcbc36280a64a.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/78aa2057f0cb42fbbaffcbc36280a64a.png",
+                  scale: 3.5,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  final Uri toLaunch = Uri(
+                      scheme: 'https',
+                      host: 'instagram.com',
+                      path: 'amoryrestauracion_morelia',
+                      queryParameters: {});
+
+                  launchUrl(toLaunch, mode: LaunchMode.externalApplication);
+                },
+                child: Image.network(
+                  "https://static.wixstatic.com/media/01c3aff52f2a4dffa526d7a9843d46ea.png/v1/fill/w_104,h_104,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/01c3aff52f2a4dffa526d7a9843d46ea.png",
+                  scale: 3.5,
+                ),
               ),
             ],
           ),
@@ -305,50 +412,4 @@ class HeaderTextWidget extends StatelessWidget {
       ],
     );
   }
-}
-
-class Event {
-  final String title;
-  final String text;
-  final String horario;
-  final String direccion;
-  final String image;
-  final String acerca_de;
-  final List<Invitado> invitados;
-  bool selected;
-
-  Event({
-    required this.title,
-    required this.text,
-    required this.image,
-    required this.horario,
-    required this.selected,
-    required this.direccion,
-    required this.acerca_de,
-    required this.invitados,
-  });
-}
-
-class Online {
-  final String title;
-  final String text;
-  final String image;
-  bool selected;
-
-  Online({
-    required this.title,
-    required this.text,
-    required this.image,
-    required this.selected,
-  });
-}
-
-class Invitado {
-  final String name;
-  final String image;
-
-  Invitado({
-    required this.name,
-    required this.image,
-  });
 }

@@ -1,0 +1,150 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:icarm/config/setting/const.dart';
+import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/config/share_prefs/prefs_usuario.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
+import 'package:icarm/presentation/controllers/user_controller.dart';
+import 'package:icarm/presentation/providers/user_provider.dart';
+import 'package:sizer_pro/sizer.dart';
+import '../services/image_picker_service.dart';
+
+// ignore: must_be_immutable
+class UserImageProfileWidget extends ConsumerStatefulWidget {
+  late bool goToPerfil = false;
+  late String? fotoPerfil = null;
+  UserImageProfileWidget(
+      {super.key, this.goToPerfil = false, this.fotoPerfil = null});
+
+  @override
+  ConsumerState<UserImageProfileWidget> createState() =>
+      _UserImageProfileWidgetState();
+}
+
+class _UserImageProfileWidgetState
+    extends ConsumerState<UserImageProfileWidget> {
+  bool editingImage = false;
+  @override
+  Widget build(BuildContext context) {
+    final prefs = PreferenciasUsuario();
+
+    final namePhoto = ref.watch(namePhotoProfileProvider);
+
+    if (namePhoto != "") {
+      setState(() {
+        prefs.foto_perfil = namePhoto;
+      });
+    }
+
+    return GestureDetector(
+      onTap: () {
+        if (widget.goToPerfil) {
+          context.pushNamed('perfil.detail');
+        }
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          ((prefs.foto_perfil != ""))
+              ? Container(
+                  height: 130,
+                  width: 130,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          errorWidget: (context, url, error) => Image.asset(
+                              "assets/image/no-image.png",
+                              height: 28.sp,
+                              width: 40.sp,
+                              scale: 4.5),
+                          imageUrl:
+                              "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
+                          placeholder: (context, url) =>
+                              LoadingStandardWidget.loadingWidget(),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 55.sp,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.fill),
+                            ),
+                          ),
+                          height: 55.sp,
+                        ),
+                      )))
+              : SvgPicture.asset("assets/icon/user-icon.svg", height: 110),
+          Positioned(
+            bottom: -5,
+            right: -5,
+            child: GestureDetector(
+              onTap: () {
+                if (!widget.goToPerfil) {
+                  CustomImagePicker.pickImage(
+                      context: context,
+                      mounted: mounted,
+                      ref: ref,
+                      showDelete: true);
+                  ref
+                      .read(namePhotoProfileProvider.notifier)
+                      .update((state) => "");
+                } else {
+                  context.pushNamed('perfil.detail');
+                }
+              },
+              child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: ColorStyle.secondaryColor,
+                      borderRadius: BorderRadius.circular(100)),
+                  child: Icon(
+                    Icons.edit_rounded,
+                    size: 20,
+                    color: Colors.white,
+                  )),
+            ),
+          ),
+          ((prefs.foto_perfil != "") && !widget.goToPerfil)
+              ? Positioned(
+                  top: -5,
+                  left: -5,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (!widget.goToPerfil) {
+                        UserController.deleteFotoPerfil().then((value) {
+                          ref
+                              .read(imageSelectedProvider.notifier)
+                              .update((state) => null);
+
+                          setState(() {
+                            prefs.foto_perfil = "";
+                            widget.fotoPerfil = "";
+                          });
+                          ref
+                              .read(namePhotoProfileProvider.notifier)
+                              .update((state) => "");
+                        });
+                      }
+                    },
+                    child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: Colors.red[300],
+                            borderRadius: BorderRadius.circular(100)),
+                        child: Icon(
+                          Icons.delete_rounded,
+                          size: 20,
+                          color: Colors.white,
+                        )),
+                  ),
+                )
+              : SizedBox(),
+        ],
+      ),
+    );
+  }
+}

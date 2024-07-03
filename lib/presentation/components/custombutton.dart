@@ -2,6 +2,7 @@
 
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer_pro/sizer.dart';
 
 import '../../config/setting/style.dart';
 
@@ -30,24 +31,24 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FadedScaleAnimation(
-      child: InkWell(
-        onTap: (loading) ? () => {} : onTap as void Function()?,
-        child: Container(
-          width: width ?? double.infinity,
-          padding: EdgeInsets.symmetric(
-              vertical: (size == 'sm') ? 10 : 14,
-              horizontal: (size == 'sm') ? 10 : 14),
-          margin: margin ?? const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    blurRadius: 4,
-                    spreadRadius: -3,
-                    offset: Offset(0, 0))
-              ],
-              color: color ?? ColorStyle.primaryColor,
-              borderRadius: borderRadius ?? BorderRadius.circular(8)),
+      child: Container(
+        width: width ?? double.infinity,
+        padding: EdgeInsets.symmetric(
+            vertical: (size == 'sm') ? 4.sp : 5.sp,
+            horizontal: (size == 'sm') ? 4.sp : 5.sp),
+        margin: margin ?? const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.5),
+                  blurRadius: 4,
+                  spreadRadius: -3,
+                  offset: Offset(0, 0))
+            ],
+            color: color ?? ColorStyle.primaryColor,
+            borderRadius: borderRadius ?? BorderRadius.circular(8)),
+        child: InkWell(
+          onTap: (loading) ? () => {} : onTap as void Function()?,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -68,7 +69,7 @@ class CustomButton extends StatelessWidget {
                       style: TextStyle(
                           color: textColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: (size == 'sm') ? 11 : 13),
+                          fontSize: (size == 'sm') ? 4.sp : 5.sp),
                       textAlign: TextAlign.center,
                     ),
             ],

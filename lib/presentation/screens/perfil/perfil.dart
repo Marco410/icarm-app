@@ -5,14 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
+import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
-import 'package:icarm/presentation/components/app_bar_widget.dart';
-import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/drawer.dart';
+import 'package:icarm/presentation/components/zcomponents.dart';
 import 'package:icarm/presentation/providers/auth_service.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/presentation/screens/screens.dart';
 
 import '../../providers/notification_provider.dart';
+import '../../providers/providers.dart';
 
 class PerfilPage extends ConsumerStatefulWidget {
   PerfilPage();
@@ -47,82 +49,158 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
       drawer: const MaterialDrawer(),
       body: Container(
         padding: EdgeInsets.only(left: 15, right: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SvgPicture.asset("assets/icon/user-icon.svg", height: 100),
-            SizedBox(
-              height: 15,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${prefs.nombre}',
-                  style: TxtStyle.headerStyle,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              (prefs.usuarioID != "")
+                  ? UserImageProfileWidget(
+                      goToPerfil: true,
+                      fotoPerfil:
+                          (prefs.foto_perfil != "") ? prefs.foto_perfil : null,
+                    )
+                  : NoLoginWidget(),
+              SizedBox(
+                height: 15,
+              ),
+              GestureDetector(
+                onTap: () => context.pushNamed('perfil.detail'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${prefs.nombre}',
+                      style: TxtStyle.headerStyle,
+                    ),
+                    Text(
+                      "${prefs.aPaterno} ${prefs.aMaterno}",
+                      style: TxtStyle.headerStyle,
+                    )
+                  ],
                 ),
-                Text(
-                  "${prefs.aPaterno} ${prefs.aMaterno}",
-                  style: TxtStyle.headerStyle,
-                )
-              ],
-            ),
-            MenuItemWidget(
-              icon: 'noti.svg',
-              title: 'NOTIFICACIONES',
-              subtitle: 'Configura las notificaciones que recibirás.',
-              onTap: () => context.pushNamed('notifications'),
-              showDot: newNoti,
-            ),
-            MenuItemWidget(
-              icon: 'kids.svg',
-              title: 'A&R KIDS',
-              subtitle: 'Registra a tus hijos en nuestras clases.',
-              onTap: () {
-                context.pushNamed('kids');
-              },
-            ),
-            (prefs.usuarioRol.contains('1') || prefs.usuarioRol.contains('5'))
-                ? MenuItemWidget(
-                    icon: 'books.svg',
-                    title: 'PASE LISTA',
-                    subtitle: 'Pasa la lista a los alumnos',
-                    onTap: () {
-                      context.pushNamed('scanner',
-                          pathParameters: {"type": "pase_lista"});
-                    },
-                  )
-                : SizedBox(),
-            CustomButton(
-              text: "Cerrar Sesión",
-              margin: EdgeInsets.only(top: 10, right: 30, left: 30),
-              onTap: () {
-                NotificationUI.instance.notificationToAcceptAction(context,
-                    "Tu sesión se cerrará. \n\n Tendrás que volver a agregar tu usuario y contraseña.",
-                    () {
-                  ref.refresh(logoutProvider(context));
-                });
-              },
-              loading: false,
-              textColor: Colors.white,
-            ),
-            CustomButton(
-              text: "Eliminar mi cuenta",
-              margin: EdgeInsets.only(right: 30, left: 30),
-              onTap: () {
-                NotificationUI.instance.notificationToAcceptAction(context,
-                    "¿Estás seguro de eliminar tu cuenta? Se perderán todos tus datos.",
-                    () {
-                  ref.refresh(deleteAccountProvider(context));
-                });
-              },
-              color: Colors.white,
-              loading: false,
-              size: 'sm',
-              textColor: Colors.black,
-            )
-          ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              (prefs.pass_update == "1" && prefs.usuarioID != "")
+                  ? CustomButton(
+                      margin: EdgeInsets.all(0),
+                      text: "Da clic aquí para cambiar tu contraseña.",
+                      onTap: () => context.pushNamed('change.password'),
+                      textColor: Colors.white,
+                      color: Colors.blue,
+                      loading: false)
+                  : SizedBox(),
+              SizedBox(
+                height: 15,
+              ),
+              MenuItemWidget(
+                icon: 'noti.svg',
+                title: 'NOTIFICACIONES',
+                subtitle: 'Configura las notificaciones que recibirás.',
+                onTap: () => context.pushNamed('notifications'),
+                showDot: newNoti,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              (prefs.usuarioID != "")
+                  ? MenuItemWidget(
+                      icon: 'kids.svg',
+                      title: 'A&R KIDS',
+                      subtitle: 'Registra a tus hijos en nuestras clases.',
+                      onTap: () {
+                        context.pushNamed('kids');
+                      },
+                    )
+                  : SizedBox(),
+              SizedBox(
+                height: 15,
+              ),
+              (prefs.usuarioRol.contains('1') || prefs.usuarioRol.contains('5'))
+                  ? MenuItemWidget(
+                      icon: 'books.svg',
+                      title: 'PASE LISTA',
+                      subtitle: 'Pasa la lista a los alumnos',
+                      onTap: () {
+                        context.pushNamed('pase.lista');
+                      },
+                    )
+                  : SizedBox(),
+              SizedBox(
+                height: 15,
+              ),
+              (prefs.usuarioRol.contains('1') ||
+                      prefs.usuarioRol.contains('7') ||
+                      prefs.usuarioRol.contains('6'))
+                  ? MenuItemWidget(
+                      icon: 'noti.svg',
+                      title: 'NOTIFICAR A VIDEO',
+                      subtitle: 'Envia un mensaje a video para los autos',
+                      onTap: () => NotificationService.showDialogNotification(
+                          null, USER_ICARM_VIDEO, context, ref, null),
+                    )
+                  : SizedBox(),
+              SizedBox(
+                height: 15,
+              ),
+              (prefs.usuarioRol.contains('1'))
+                  ? MenuItemWidget(
+                      icon: 'user.svg',
+                      title: 'ADMINISTRACIÓN',
+                      subtitle: 'Administre los eventos de su iglesia',
+                      onTap: () => context.pushNamed("admin"),
+                    )
+                  : SizedBox(),
+              SizedBox(
+                height: 15,
+              ),
+              (prefs.usuarioID != "")
+                  ? CustomButton(
+                      text: "Cerrar Sesión",
+                      margin: EdgeInsets.only(top: 10, right: 30, left: 30),
+                      onTap: () {
+                        NotificationUI.instance.notificationToAcceptAction(
+                            context,
+                            "Tu sesión se cerrará. \n\n Tendrás que volver a agregar tu usuario y contraseña.",
+                            () {
+                          ref.refresh(logoutProvider(context));
+                        });
+                      },
+                      loading: false,
+                      color: Colors.white,
+                      textColor: Colors.black,
+                    )
+                  : SizedBox(),
+              SizedBox(
+                height: 15,
+              ),
+              (prefs.usuarioID != "")
+                  ? InkWell(
+                      onTap: () {
+                        NotificationUI.instance.notificationToAcceptAction(
+                            context,
+                            "¿Estás seguro de eliminar tu cuenta? Se perderán todos tus datos.",
+                            () {
+                          ref.refresh(deleteAccountProvider(context));
+                        });
+                      },
+                      child: Text(
+                        "Eliminar mi cuenta",
+                        style: TxtStyle.labelText
+                            .copyWith(decoration: TextDecoration.underline),
+                      ),
+                    )
+                  : SizedBox(),
+              SizedBox(
+                height: 60,
+              )
+            ],
+          ),
         ),
       ),
     );

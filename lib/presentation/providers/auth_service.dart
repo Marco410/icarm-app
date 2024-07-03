@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:icarm/config/setting/api.dart';
+import 'package:icarm/presentation/models/UsuarioModel.dart';
 import '../../config/routes/app_router.dart';
 import '../../config/services/http_general_service.dart';
 import '../../config/services/notification_ui_service.dart';
@@ -62,6 +63,7 @@ final registerProvider = FutureProvider.family<void, RegisterUserData>(
     "sexo":
         (registerUserData.sexo != "Seleccione") ? registerUserData.sexo : '',
     "pais_id": registerUserData.pais_id,
+    "sexo_id": registerUserData.sexo_id,
   };
 
   String decodedResp = "";
@@ -154,6 +156,8 @@ class AuthService {
     prefs.telefono = resp['data']['user']['telefono'].toString();
     prefs.sexo = resp['data']['user']['sexo'].toString();
     prefs.pais = resp['data']['user']['pais_id'].toString();
+    prefs.pass_update = resp['data']['user']['pass_update'].toString();
+    prefs.foto_perfil = resp['data']['user']['foto_perfil'].toString();
 
     List<String> roles = [];
     for (final rol in resp['data']['user']['roles']) {
@@ -175,5 +179,6 @@ class AuthService {
     prefs.sexo = "";
     prefs.pais = "";
     prefs.usuarioRol = [];
+    prefs.foto_perfil = "";
   }
 }

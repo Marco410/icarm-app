@@ -3,6 +3,7 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
 import 'package:icarm/config/setting/style.dart';
+import 'package:sizer_pro/sizer.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final String? hintText;
@@ -24,6 +25,9 @@ class TextFieldWidget extends StatelessWidget {
   final Widget? iconField;
   final FocusNode? focusNode;
   final Function? onEditingComplete;
+  final bool capitalize;
+  final String? autoFillHints;
+  final Function? onTyping;
 
   TextFieldWidget(
       {super.key,
@@ -44,6 +48,9 @@ class TextFieldWidget extends StatelessWidget {
       this.iconField,
       this.focusNode,
       this.onEditingComplete,
+      this.capitalize = false,
+      this.autoFillHints = "",
+      this.onTyping,
       required this.isRequired,
       required this.textInputType});
 
@@ -64,6 +71,7 @@ class TextFieldWidget extends StatelessWidget {
                     '$label ${(isRequired) ? "*" : ""}',
                     style: TextStyle(
                         color: labelColor ?? Colors.black87,
+                        fontSize: 4.5.sp,
                         fontWeight: FontWeight.bold),
                   ),
                 )
@@ -75,25 +83,27 @@ class TextFieldWidget extends StatelessWidget {
               border: border
                   ? Border.all(color: ColorStyle.hintColor)
                   : Border.all(color: Colors.transparent),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(15),
             ),
             child: TextFormField(
-              readOnly: readOnly!,
+              autofillHints: [autoFillHints ?? ""],
+              readOnly: readOnly! || TextInputType.datetime == textInputType,
               autofocus: false,
               controller: controller,
               keyboardType: textInputType,
               style: TextStyle(
-                  color: (readOnly!)
-                      ? (textInputType == TextInputType.datetime)
-                          ? Colors.black
-                          : Colors.grey
-                      : Colors.black),
+                  color: (readOnly! && TextInputType.datetime != textInputType)
+                      ? Colors.grey
+                      : Colors.black,
+                  fontSize: 5.sp),
               onTap: onTap as void Function()?,
               maxLines: lines ?? 1,
               textInputAction: TextInputAction.done,
               textCapitalization: (textInputType == TextInputType.emailAddress)
                   ? TextCapitalization.none
-                  : TextCapitalization.words,
+                  : (capitalize)
+                      ? TextCapitalization.sentences
+                      : TextCapitalization.words,
               validator: (input) {
                 if (textInputType == TextInputType.emailAddress) {
                   String pattern =
@@ -131,7 +141,7 @@ class TextFieldWidget extends StatelessWidget {
                     if (input!.isEmpty) {
                       return "Requerido";
                     }
-                    if (input.length != 10) {
+                    if (input.length != 10 && label != 'Edad') {
                       return "Debe de ser de 10 dígitos";
                     }
                   }
@@ -140,6 +150,7 @@ class TextFieldWidget extends StatelessWidget {
               },
               obscureText: !isVisible,
               focusNode: focusNode,
+              onChanged: onTyping as void Function(String)?,
               onEditingComplete: (onEditingComplete != null)
                   ? onEditingComplete as void Function()
                   : () {},
