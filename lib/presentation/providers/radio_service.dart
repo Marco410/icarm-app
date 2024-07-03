@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 
-final audioPlayer = AudioPlayer();
+final audioPlayer = AudioPlayer(
+  handleInterruptions: true,
+);
 final radioServiceProvider = StateProvider<AudioPlayer>((ref) {
   return audioPlayer;
 });

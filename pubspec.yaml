@@ -3,7 +3,7 @@ description: icarm App
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 2.4.0
+version: 2.4.1
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
@@ -15,19 +15,17 @@ dependencies:
     sdk: flutter
 
   flutter_localized_locales: ^2.0.5
-  http: ^1.1.2
-  global_configuration: ^2.0.0-nullsafety.1
+  http: ^1.2.1
   intl: ^0.19.0
   carousel_slider: ^4.2.1
   font_awesome_flutter: ^10.7.0
   shared_preferences: ^2.2.2
   cached_network_image: ^3.3.1
-  firebase_messaging: ^14.7.16
-  firebase_core: ^2.25.4
+  firebase_messaging: ^14.9.4
+  firebase_core: ^2.32.0
   sqflite: ^2.3.2
   animation_wrappers: ^3.0.0
-  video_player: ^2.8.2
-  chewie: ^1.7.5
+  video_player: ^2.9.0
   flutter_html: ^3.0.0-beta.2
   flutter_platform_alert: ^0.5.1
   lottie: ^3.1.0
@@ -43,8 +41,8 @@ dependencies:
   searchable_listview: ^2.10.2
   qr_code_scanner: ^1.0.1
   qr_flutter: ^4.1.0
-  just_audio: ^0.9.36
-  just_audio_background: ^0.0.1-beta.11
+  just_audio: ^0.9.38
+  just_audio_background: ^0.0.1-beta.12
   flutter_html_iframe: ^3.0.0-beta.2
   flutter_rte: ^1.0.0
   file_picker: ^6.1.1
@@ -56,6 +54,8 @@ dependencies:
   permission_handler: ^11.3.0
   crop_your_image: ^1.0.2
   photo_manager: ^3.1.0
+  audio_session: ^0.1.19
+  connectivity_checker: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -76,7 +76,6 @@ flutter:
         - asset: assets/icon/sficonsets.ttf
 
   assets:
-    - assets/cfg/
     - assets/image/
     - assets/image/home/
     - assets/image/events/

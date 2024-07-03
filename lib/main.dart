@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable, unused_result
+import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -69,20 +70,22 @@ class _myAppState extends ConsumerState<myApp> {
   Widget build(BuildContext context) {
     final appRouter = ref.watch(appRouterProvider);
     return Sizer(builder: (context, orientation, deviceType) {
-      return MaterialApp.router(
-        title: 'ICARM',
-        debugShowCheckedModeBanner: false,
-        scaffoldMessengerKey: NotificationService.messengerkey,
-        routerConfig: appRouter,
-        builder: BotToastInit(),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          S.delegate,
-          LocaleNamesLocalizationsDelegate(),
-        ],
-        supportedLocales: S.delegate.supportedLocales,
+      return ConnectivityAppWrapper(
+        app: MaterialApp.router(
+          title: 'ICARM',
+          debugShowCheckedModeBanner: false,
+          scaffoldMessengerKey: NotificationService.messengerkey,
+          routerConfig: appRouter,
+          builder: BotToastInit(),
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            S.delegate,
+            LocaleNamesLocalizationsDelegate(),
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+        ),
       );
     });
   }

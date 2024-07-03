@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/providers/providers.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -21,10 +25,12 @@ class RadioPage extends ConsumerStatefulWidget {
   ConsumerState<RadioPage> createState() => _RadioPageState();
 }
 
-class _RadioPageState extends ConsumerState<RadioPage> {
+class _RadioPageState extends ConsumerState<RadioPage>
+    with WidgetsBindingObserver {
   bool loading = false;
   final CarouselController _controllerC = CarouselController();
   int _current = 0;
+  bool loadingStreamRadio = false;
 
   List<Widget> textItems = [
     ContentAdWidget(
@@ -66,52 +72,117 @@ class _RadioPageState extends ConsumerState<RadioPage> {
   ];
 
   void initState() {
-    Future.microtask(() {
-      final radioProvider = ref.watch(radioServiceProvider);
+    if (mounted) {
+      ref.read(radioServiceProvider).playerStateStream.listen((state) {
+        print("state: ");
+        print(state.playing);
+        ref
+            .read(radioisPlayingProvider.notifier)
+            .update((state2) => state.playing);
+      }, onError: (e) {
+        print("On ERROR");
+        print(e);
+      });
+      ref.read(radioServiceProvider).playbackEventStream.listen((event) {
+        if (event.processingState == ProcessingState.loading) {
+          if (mounted) {
+            setState(() {
+              loadingStreamRadio = true;
+            });
+          }
+        } else if (event.processingState == ProcessingState.ready) {
+          if (mounted) {
+            setState(() {
+              loadingStreamRadio = false;
+            });
+          }
+        } else if (event.processingState == ProcessingState.buffering) {
+          if (Platform.isAndroid) {
+            ref.read(radioisPlayingProvider.notifier).update((state) => false);
+            ref.read(radioServiceProvider).stop();
 
-      radioProvider.playerStateStream.listen((state2) => ref
-          .read(radioisPlayingProvider.notifier)
-          .update((state) => state2.playing));
-    });
+            Future.delayed(Duration(milliseconds: 500), () {
+              playRadio();
+            });
+          } else {
+            print("event IOS ********************************");
+          }
+        }
+      }, onError: (Object e, StackTrace st) {
+        //ref.read(radioisPlayingProvider.notifier).update((state) => false);
+        if (e is PlatformException) {
+          print('Error code: ${e.code}');
+          print('Error message: ${e.message}');
+          print('AudioSource index: ${e.details?["index"]}');
+        } else {
+          print('An error occurred: $e');
+        }
+      });
+    }
+
+    WidgetsBinding.instance.addObserver(this);
+
     super.initState();
   }
 
   @override
   void dispose() {
+    ref.read(radioServiceProvider).dispose();
+
     super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("STATE:::::::");
+    print(state);
+  }
+
+  void playRadio() {
+    try {
+      final url = "https://stream.zeno.fm/5dsk2i7levzvv";
+      final audioSource = LockCachingAudioSource(
+        Uri.parse(url),
+        tag: MediaItem(
+          id: '1',
+          album: "Amor & Restauración Morelia",
+          title: "Radio En Vivo | Amor & Restauración Morelia",
+          artUri: Uri.parse(
+              'https://i.scdn.co/image/84b0f6c8d93100326210caa5abdd4592f4abbbcd'),
+        ),
+      );
+
+      audioPlayer.setAudioSource(audioSource);
+
+      audioPlayer.play().catchError((e) {
+        ref.read(radioisPlayingProvider.notifier).update((state) => false);
+      });
+      ref.read(radioisPlayingProvider.notifier).update((state) => true);
+    } catch (e, stackTrace) {
+      print("Error loading playlist: $e");
+      print(stackTrace);
+      ref.read(radioisPlayingProvider.notifier).update((state) => false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(radioServiceProvider);
     final radioIsPlaying = ref.watch(radioisPlayingProvider);
-
+    final audioPlayer = ref.watch(radioServiceProvider);
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
+        borderRadius: BorderRadius.circular(100),
         onTap: () async {
           if (radioIsPlaying) {
+            audioPlayer.pause().catchError((e) {
+              print("e");
+              print(e);
+            });
             ref.read(radioisPlayingProvider.notifier).update((state) => false);
-            ref.refresh(radioServiceProvider).pause();
           } else {
-            ref.read(radioisPlayingProvider.notifier).update((state) => true);
-            final url = "https://stream.zeno.fm/5dsk2i7levzvv";
-
-            ref.refresh(radioServiceProvider).setAudioSource((AudioSource.uri(
-                  Uri.parse(url),
-                  tag: MediaItem(
-                    id: '1',
-                    album: "Amor & Restauración Morelia",
-                    title: "Radio En Vivo | Amor & Restauración Morelia",
-                    artUri: Uri.parse(
-                        'https://i.scdn.co/image/84b0f6c8d93100326210caa5abdd4592f4abbbcd'),
-                  ),
-                )));
-
-            ref.refresh(radioServiceProvider).play();
-
-            //await ref.refresh(radioServiceProvider).play(UrlSource(url));
+            playRadio();
           }
         },
         child: Container(
@@ -127,11 +198,16 @@ class _RadioPageState extends ConsumerState<RadioPage> {
                     offset: Offset(0, 0))
               ],
               borderRadius: BorderRadius.circular(100)),
-          child: Icon(
-            radioIsPlaying ? Icons.pause : Icons.play_arrow,
-            size: 25.sp,
-            color: ColorStyle.primaryColor,
-          ),
+          child: (loadingStreamRadio)
+              ? SizedBox(
+                  height: 25.sp,
+                  width: 25.sp,
+                  child: LoadingStandardWidget.loadingWidget())
+              : Icon(
+                  radioIsPlaying ? Icons.pause : Icons.play_arrow,
+                  size: 25.sp,
+                  color: ColorStyle.primaryColor,
+                ),
         ),
       ),
       body: FadedSlideAnimation(

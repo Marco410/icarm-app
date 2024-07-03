@@ -57,21 +57,31 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
 
     _controller = VideoPlayerController.networkUrl(
       Uri.parse('${URL_MEDIA_VIDEOS}inicio.mp4'),
-    )
-      ..setLooping(true)
-      ..initialize().then((_) {
-        _controller.setVolume(0);
-        _controller.play();
-      });
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    );
 
-    _controllerHomeVideo = VideoPlayerController.networkUrl(
-      Uri.parse('${URL_MEDIA_VIDEOS}home.mp4'),
-    )
-      ..setLooping(true)
-      ..initialize().then((_) {
-        _controllerHomeVideo.setVolume(0);
-        _controllerHomeVideo.play();
-      });
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.setLooping(true);
+    _controller.initialize().then((_) {
+      _controller.setVolume(0);
+      _controller.play();
+    });
+
+    _controllerHomeVideo = VideoPlayerController.asset(
+      'assets/video/home.mp4',
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    );
+
+    _controllerHomeVideo.addListener(() {
+      setState(() {});
+    });
+    _controllerHomeVideo.setLooping(true);
+    _controllerHomeVideo.initialize().then((_) {
+      _controllerHomeVideo.setVolume(0);
+      _controllerHomeVideo.play();
+    });
 
     ref.refresh(getEventosProvider("user"));
 
