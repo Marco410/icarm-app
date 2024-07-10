@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/providers/providers.dart';
 import 'package:just_audio/just_audio.dart';
@@ -31,6 +34,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
   final CarouselController _controllerC = CarouselController();
   int _current = 0;
   bool loadingStreamRadio = false;
+  int connectionTrys = 0;
 
   List<Widget> textItems = [
     ContentAdWidget(
@@ -71,74 +75,135 @@ class _RadioPageState extends ConsumerState<RadioPage>
     ),
   ];
 
-  void initState() {
+  void onBuffering() {
     if (mounted) {
-      ref.read(radioServiceProvider).playerStateStream.listen((state) {
-        print("state: ");
-        print(state.playing);
-        ref
-            .read(radioisPlayingProvider.notifier)
-            .update((state2) => state.playing);
-      }, onError: (e) {
-        print("On ERROR");
-        print(e);
+      ref.read(radioisPlayingProvider.notifier).update((state2) => false);
+      setState(() {
+        loadingStreamRadio = true;
       });
-      ref.read(radioServiceProvider).playbackEventStream.listen((event) {
-        if (event.processingState == ProcessingState.loading) {
-          if (mounted) {
-            setState(() {
-              loadingStreamRadio = true;
-            });
+    }
+    Future.delayed(Duration(seconds: 3), () async {
+      if (loadingStreamRadio) {
+        await tryReconnect();
+      }
+
+      Future.delayed(Duration(seconds: 8), () async {}).whenComplete(() {
+        if (loadingStreamRadio) {
+          tryReconnect();
+        }
+      });
+    });
+  }
+
+  void onReady() {
+    if (mounted) {
+      ref.read(radioisPlayingProvider.notifier).update((state2) => true);
+      setState(() {
+        loadingStreamRadio = false;
+      });
+    }
+  }
+
+  void onIdle() {
+    if (mounted) {
+      ref.read(radioisPlayingProvider.notifier).update((state2) => false);
+    }
+  }
+
+  void onLoading() {}
+
+  void initState() {
+    ref.read(radioServiceProvider).playerStateStream.listen((state) async {
+      if (Platform.isIOS) {
+        switch (state.processingState) {
+          case ProcessingState.buffering:
+            onBuffering();
+            break;
+
+          case ProcessingState.ready:
+            onReady();
+            break;
+
+          case ProcessingState.idle:
+            onIdle();
+            break;
+
+          case ProcessingState.loading:
+            onLoading();
+            break;
+
+          case ProcessingState.completed:
+            break;
+
+          default:
+            break;
+        }
+      }
+    });
+    ref.read(radioServiceProvider).playbackEventStream.listen((event) async {
+      switch (event.processingState) {
+        case ProcessingState.buffering:
+          if (Platform.isAndroid) {
+            await tryReconnect();
           }
-        } else if (event.processingState == ProcessingState.ready) {
+          break;
+
+        case ProcessingState.ready:
           if (mounted) {
             setState(() {
               loadingStreamRadio = false;
             });
           }
-        } else if (event.processingState == ProcessingState.buffering) {
-          if (Platform.isAndroid) {
-            ref.read(radioisPlayingProvider.notifier).update((state) => false);
-            ref.read(radioServiceProvider).stop();
+          break;
 
-            Future.delayed(Duration(milliseconds: 500), () {
-              playRadio();
+        case ProcessingState.idle:
+          break;
+
+        case ProcessingState.loading:
+          if (mounted) {
+            setState(() {
+              loadingStreamRadio = true;
             });
-          } else {
-            print("event IOS ********************************");
           }
-        }
-      }, onError: (Object e, StackTrace st) {
-        //ref.read(radioisPlayingProvider.notifier).update((state) => false);
-        if (e is PlatformException) {
-          print('Error code: ${e.code}');
-          print('Error message: ${e.message}');
-          print('AudioSource index: ${e.details?["index"]}');
-        } else {
-          print('An error occurred: $e');
-        }
-      });
-    }
+          break;
 
-    WidgetsBinding.instance.addObserver(this);
+        case ProcessingState.completed:
+          break;
+
+        default:
+          break;
+      }
+    });
 
     super.initState();
   }
 
   @override
   void dispose() {
-    ref.read(radioServiceProvider).dispose();
-
     super.dispose();
-    WidgetsBinding.instance.removeObserver(this);
   }
 
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print("STATE:::::::");
-    print(state);
+  Future<void> tryReconnect() async {
+    ref.read(radioisPlayingProvider.notifier).update((state) => false);
+    await ref.read(radioServiceProvider).stop();
+
+    Future.delayed(Duration(milliseconds: 500), () {
+      playRadio();
+    });
   }
 
-  void playRadio() {
+  Future<void> playRadio() async {
+    if (await ConnectivityWrapper.instance.isConnected) {
+    } else {
+      NotificationUI.instance.notificationNoInternet();
+
+      setState(() {
+        connectionTrys++;
+      });
+
+      return;
+    }
+
     try {
       final url = "https://stream.zeno.fm/5dsk2i7levzvv";
       final audioSource = LockCachingAudioSource(
@@ -153,22 +218,81 @@ class _RadioPageState extends ConsumerState<RadioPage>
       );
 
       audioPlayer.setAudioSource(audioSource);
+      ref
+          .read(radioServiceProvider)
+          .setCanUseNetworkResourcesForLiveStreamingWhilePaused(true);
 
-      audioPlayer.play().catchError((e) {
-        ref.read(radioisPlayingProvider.notifier).update((state) => false);
+      AudioSession.instance.then((audioSession) async {
+        await audioSession.configure(AudioSessionConfiguration.speech());
+        _handleInterruptions(audioSession);
+        await audioPlayer.play();
       });
-      ref.read(radioisPlayingProvider.notifier).update((state) => true);
-    } catch (e, stackTrace) {
-      print("Error loading playlist: $e");
-      print(stackTrace);
+    } catch (e) {
       ref.read(radioisPlayingProvider.notifier).update((state) => false);
     }
+  }
+
+  void _handleInterruptions(AudioSession audioSession) {
+    bool playInterrupted = false;
+    audioSession.becomingNoisyEventStream.listen((_) {
+      stopRadio();
+    });
+    audioPlayer.playingStream.listen((playing) {
+      playInterrupted = false;
+      if (playing) {
+        audioSession.setActive(true);
+      }
+    });
+    audioSession.interruptionEventStream.listen((event) {
+      print('interruption begin: ${event.begin}');
+      print('interruption type: ${event.type}');
+      if (event.begin) {
+        switch (event.type) {
+          case AudioInterruptionType.duck:
+            if (audioSession.androidAudioAttributes!.usage ==
+                AndroidAudioUsage.game) {
+              audioPlayer.setVolume(audioPlayer.volume / 2);
+            }
+            playInterrupted = false;
+            break;
+          case AudioInterruptionType.pause:
+          case AudioInterruptionType.unknown:
+            if (audioPlayer.playing) {
+              stopRadio();
+              playInterrupted = true;
+            }
+            break;
+        }
+      } else {
+        switch (event.type) {
+          case AudioInterruptionType.duck:
+            audioPlayer.setVolume(min(1.0, audioPlayer.volume * 2));
+            playInterrupted = false;
+            break;
+          case AudioInterruptionType.pause:
+            if (playInterrupted) playRadio();
+            playInterrupted = false;
+            break;
+          case AudioInterruptionType.unknown:
+            playInterrupted = false;
+            break;
+        }
+      }
+    });
+    audioSession.devicesChangedEventStream.listen((event) {
+      print('Devices added: ${event.devicesAdded}');
+      print('Devices removed: ${event.devicesRemoved}');
+    });
+  }
+
+  Future<void> stopRadio() async {
+    await audioPlayer.stop();
+    ref.read(radioisPlayingProvider.notifier).update((state) => false);
   }
 
   @override
   Widget build(BuildContext context) {
     final radioIsPlaying = ref.watch(radioisPlayingProvider);
-    final audioPlayer = ref.watch(radioServiceProvider);
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -176,11 +300,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
         borderRadius: BorderRadius.circular(100),
         onTap: () async {
           if (radioIsPlaying) {
-            audioPlayer.pause().catchError((e) {
-              print("e");
-              print(e);
-            });
-            ref.read(radioisPlayingProvider.notifier).update((state) => false);
+            stopRadio();
           } else {
             playRadio();
           }
