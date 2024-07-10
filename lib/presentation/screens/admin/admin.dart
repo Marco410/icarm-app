@@ -49,6 +49,11 @@ class _AdminPageState extends ConsumerState<AdminPage> {
             icon: Icons.church_rounded,
             onTap: () => context.pushNamed("beteles"),
           ),
+          BigButtonWidget(
+            title: "Anuncios",
+            icon: Icons.ads_click_rounded,
+            onTap: () => context.pushNamed("ads"),
+          ),
         ],
       ),
     );

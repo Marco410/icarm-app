@@ -1,6 +1,7 @@
 import 'package:flutter/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icarm/presentation/models/AdsModel.dart';
 import 'package:icarm/presentation/models/BetelModel.dart';
 import 'package:icarm/presentation/models/EventoModel.dart';
 import 'package:icarm/presentation/models/kids/kidsModel.dart';
@@ -17,6 +18,8 @@ import 'package:icarm/presentation/screens/perfil/pase_lista/pase_lista.dart';
 import 'package:icarm/presentation/screens/perfil/perfil-detail.dart';
 import 'package:icarm/presentation/screens/perfil/perfil.dart';
 
+import '../../presentation/screens/admin/ads/add_ad.dart';
+import '../../presentation/screens/admin/ads/ads.dart';
 import '../../presentation/screens/admin/beteles/add_betel.dart';
 import '../../presentation/screens/admin/beteles/beteles.dart';
 import '../../presentation/screens/admin/eventos/eventos.dart';
@@ -294,6 +297,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                           return AddBetelAdminPage(
                             type: ty,
                             betel: betel,
+                          );
+                        },
+                      )
+                    ]),
+                GoRoute(
+                    name: "ads",
+                    path: "ads",
+                    builder: (context, state) => AdsAdminScreen(),
+                    routes: [
+                      GoRoute(
+                        name: "new.ad",
+                        path: "new-ad:type",
+                        builder: (context, state) {
+                          String? ty = state.pathParameters['type'];
+                          Ad? ad = null;
+                          print("ty");
+                          print(ty);
+                          if (ty == 'edit') {
+                            ad = state.extra as Ad;
+                          }
+                          return AddAdAdminScreen(
+                            type: ty,
+                            ad: ad,
                           );
                         },
                       )

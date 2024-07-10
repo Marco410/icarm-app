@@ -61,3 +61,5 @@ const String CREATE_BETEL = "${CARPETA}app/betel/create";
 const String EDIT_BETEL = "${CARPETA}app/betel/edit";
 const String GET_BETELES = "${CARPETA}app/betel/get";
 const String DELETE_BETEL = "${CARPETA}app/betel/delete";
+
+const String GET_ADS = "${CARPETA}app/ads";
