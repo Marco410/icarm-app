@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.19"
+  auto_scroll_text:
+    dependency: "direct main"
+    description:
+      name: auto_scroll_text
+      sha256: "8de28056f844f24f13771606417ffa109397f75a66440fe60ec2d38c133e16dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   boolean_selector:
     dependency: transitive
     description:
@@ -681,10 +689,10 @@ packages:
     dependency: "direct main"
     description:
       name: just_audio
-      sha256: "5abfab1d199e01ab5beffa61b3e782350df5dad036cb8c83b79fa45fc656614e"
+      sha256: ee50602364ba83fa6308f5512dd560c713ec3e1f2bc75f0db43618f0d82ef71a
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.38"
+    version: "0.9.39"
   just_audio_background:
     dependency: "direct main"
     description:

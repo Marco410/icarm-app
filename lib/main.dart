@@ -15,7 +15,6 @@ import 'presentation/providers/providers.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'config/routes/app_router.dart';
 
-/// Run first apps open
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //se carga la clase con unica instancia de preferencias de usuario

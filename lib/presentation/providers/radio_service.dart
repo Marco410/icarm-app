@@ -3,7 +3,7 @@ import 'package:just_audio/just_audio.dart';
 
 final audioPlayer = AudioPlayer(
   handleInterruptions: false,
-  androidApplyAudioAttributes: false,
+  androidApplyAudioAttributes: true,
   handleAudioSessionActivation: false,
 );
 

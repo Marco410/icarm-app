@@ -1,8 +1,10 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:audio_session/audio_session.dart';
+import 'package:auto_scroll_text/auto_scroll_text.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ import 'package:lottie/lottie.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:http/http.dart' as http;
 import '../../components/zcomponents.dart';
 
 class RadioPage extends ConsumerStatefulWidget {
@@ -35,6 +37,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
   int _current = 0;
   bool loadingStreamRadio = false;
   int connectionTrys = 0;
+  String currentSong = "";
 
   List<Widget> textItems = [
     ContentAdWidget(
@@ -112,40 +115,74 @@ class _RadioPageState extends ConsumerState<RadioPage>
 
   void onLoading() {}
 
-  void initState() {
-    ref.read(radioServiceProvider).playerStateStream.listen((state) async {
-      if (Platform.isIOS) {
-        switch (state.processingState) {
-          case ProcessingState.buffering:
-            onBuffering();
-            break;
+  Future<void> _fetchCurrentSong() async {
+    final url = Uri.parse(
+        "https://api.zeno.fm/mounts/metadata/subscribe/lcdmqnfduyqvv");
+    final client = http.Client();
 
-          case ProcessingState.ready:
-            onReady();
-            break;
+    try {
+      final request = http.Request('GET', url);
+      final response = await client.send(request);
 
-          case ProcessingState.idle:
-            onIdle();
-            break;
+      await for (var chunk in response.stream.transform(utf8.decoder)) {
+        final lines = chunk.split('\n');
+        for (var line in lines) {
+          if (line.startsWith('data:')) {
+            final jsonData = line.substring(5).trim();
 
-          case ProcessingState.loading:
-            onLoading();
-            break;
-
-          case ProcessingState.completed:
-            break;
-
-          default:
-            break;
+            try {
+              final Map<String, dynamic> resp = json.decode(jsonData);
+              if (resp["streamTitle"] != null) {
+                setState(() {
+                  currentSong = resp["streamTitle"];
+                });
+              }
+            } catch (e) {}
+          }
         }
+      }
+    } catch (e) {
+      print("Error: $e");
+    } finally {
+      client.close();
+    }
+  }
+
+  void initState() {
+    _fetchCurrentSong();
+
+    ref.read(radioServiceProvider).playerStateStream.listen((state) async {
+      switch (state.processingState) {
+        case ProcessingState.buffering:
+          onBuffering();
+          break;
+
+        case ProcessingState.ready:
+          onReady();
+
+          break;
+
+        case ProcessingState.idle:
+          onIdle();
+          break;
+
+        case ProcessingState.loading:
+          onLoading();
+          break;
+
+        case ProcessingState.completed:
+          break;
+
+        default:
+          break;
       }
     });
     ref.read(radioServiceProvider).playbackEventStream.listen((event) async {
       switch (event.processingState) {
         case ProcessingState.buffering:
-          if (Platform.isAndroid) {
+          /*  if (Platform.isAndroid) {
             await tryReconnect();
-          }
+          } */
           break;
 
         case ProcessingState.ready:
@@ -205,19 +242,26 @@ class _RadioPageState extends ConsumerState<RadioPage>
     }
 
     try {
+      await AudioPlayer.clearAssetCache();
       final url = "https://stream.zeno.fm/5dsk2i7levzvv";
+      final uri = Uri.parse(url);
+
       final audioSource = LockCachingAudioSource(
-        Uri.parse(url),
+        uri,
         tag: MediaItem(
           id: '1',
-          album: "Amor & Restauración Morelia",
-          title: "Radio En Vivo | Amor & Restauración Morelia",
+          album: "Radio En Vivo",
+          title: (currentSong != "")
+              ? currentSong
+              : "Radio En Vivo | Amor & Restauración Morelia",
+          artist: "Amor & Restauración Morelia",
           artUri: Uri.parse(
-              'https://i.scdn.co/image/84b0f6c8d93100326210caa5abdd4592f4abbbcd'),
+              'https://zeno.fm/_next/image/?url=https%3A%2F%2Fimages.zeno.fm%2FoU_QTjtJrboK2rm3nPb8NiKuieHzoQuYg06OF-85A8U%2Frs%3Afit%3A240%3A240%2Fg%3Ace%3A0%3A0%2FaHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zLzJmNjE2OTI2LTkzOGQtNDNmZC1iYjBiLTBiMDM0M2ExMmFhMS9pbWFnZS8_dXBkYXRlZD0xNzE5NDYwNDEyMDAw.webp&w=3840&q=100'),
         ),
       );
-
       audioPlayer.setAudioSource(audioSource);
+      await audioSource.clearCache();
+
       ref
           .read(radioServiceProvider)
           .setCanUseNetworkResourcesForLiveStreamingWhilePaused(true);
@@ -227,22 +271,27 @@ class _RadioPageState extends ConsumerState<RadioPage>
         _handleInterruptions(audioSession);
         await audioPlayer.play();
       });
+
+      /*   Timer.periodic(Duration(seconds: 10), (timer) {
+        RadioController.fetchCurrentSong();
+      }); */
+    } on PlayerException catch (e) {
+      print("Error message: ${e.message}");
+      stopRadio();
+    } on PlayerInterruptedException catch (e) {
+      print("Connection aborted: ${e.message}");
+      stopRadio();
     } catch (e) {
-      ref.read(radioisPlayingProvider.notifier).update((state) => false);
+      print('An error occured: $e');
+      stopRadio();
     }
   }
 
   void _handleInterruptions(AudioSession audioSession) {
-    bool playInterrupted = false;
     audioSession.becomingNoisyEventStream.listen((_) {
       stopRadio();
     });
-    audioPlayer.playingStream.listen((playing) {
-      playInterrupted = false;
-      if (playing) {
-        audioSession.setActive(true);
-      }
-    });
+
     audioSession.interruptionEventStream.listen((event) {
       print('interruption begin: ${event.begin}');
       print('interruption type: ${event.type}');
@@ -253,13 +302,14 @@ class _RadioPageState extends ConsumerState<RadioPage>
                 AndroidAudioUsage.game) {
               audioPlayer.setVolume(audioPlayer.volume / 2);
             }
-            playInterrupted = false;
             break;
           case AudioInterruptionType.pause:
+            if (audioPlayer.playing) {
+              pauseRadio();
+            }
           case AudioInterruptionType.unknown:
             if (audioPlayer.playing) {
-              stopRadio();
-              playInterrupted = true;
+              pauseRadio();
             }
             break;
         }
@@ -267,14 +317,12 @@ class _RadioPageState extends ConsumerState<RadioPage>
         switch (event.type) {
           case AudioInterruptionType.duck:
             audioPlayer.setVolume(min(1.0, audioPlayer.volume * 2));
-            playInterrupted = false;
             break;
           case AudioInterruptionType.pause:
-            if (playInterrupted) playRadio();
-            playInterrupted = false;
+            resumeRadio();
             break;
           case AudioInterruptionType.unknown:
-            playInterrupted = false;
+            resumeRadio();
             break;
         }
       }
@@ -283,6 +331,21 @@ class _RadioPageState extends ConsumerState<RadioPage>
       print('Devices added: ${event.devicesAdded}');
       print('Devices removed: ${event.devicesRemoved}');
     });
+
+    audioSession.configurationStream
+        .map((conf) => conf.androidAudioAttributes)
+        .distinct()
+        .listen((attributes) {});
+  }
+
+  Future<void> pauseRadio() async {
+    await audioPlayer.pause();
+    ref.read(radioisPlayingProvider.notifier).update((state) => false);
+  }
+
+  Future<void> resumeRadio() async {
+    await audioPlayer.play();
+    ref.read(radioisPlayingProvider.notifier).update((state) => true);
   }
 
   Future<void> stopRadio() async {
@@ -370,7 +433,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                     mainColor: ColorStyle.primaryColor),
               ),
               Expanded(
-                flex: 3,
+                flex: (radioIsPlaying) ? 4 : 3,
                 child: Align(
                   alignment: Alignment.center,
                   child: Padding(
@@ -394,9 +457,26 @@ class _RadioPageState extends ConsumerState<RadioPage>
                               fontWeight: FontWeight.bold),
                         ),
                         (radioIsPlaying)
-                            ? Lottie.network(
-                                "https://assets7.lottiefiles.com/packages/lf20_eN8m772nQj.json",
-                                height: 60)
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Lottie.network(
+                                      "https://assets7.lottiefiles.com/packages/lf20_eN8m772nQj.json",
+                                      height: 50),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  AutoScrollText(
+                                    " $currentSong      |    ",
+                                    curve: Curves.linear,
+                                    velocity: Velocity(
+                                        pixelsPerSecond: Offset(30, 30)),
+                                    style: TxtStyle.labelText
+                                        .copyWith(fontSize: 6.5.sp),
+                                  ),
+                                ],
+                              )
                             : Column(
                                 children: [
                                   Container(
@@ -432,7 +512,14 @@ class _RadioPageState extends ConsumerState<RadioPage>
                     alignment: Alignment.centerRight,
                     child: InkWell(
                       onTap: () {
-                        launch("https://walink.co/99cfc1");
+                        final Uri toLaunch = Uri(
+                            scheme: 'https',
+                            host: 'walink.co',
+                            path: '99cfc1',
+                            queryParameters: {});
+
+                        launchUrl(toLaunch,
+                            mode: LaunchMode.externalApplication);
                       },
                       child: Container(
                         height: 60,

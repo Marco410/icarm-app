@@ -124,7 +124,7 @@ class NotificationUI {
   // Notification No internet
   void notificationNoInternet() {
     BotToast.showNotification(
-      borderRadius: 12,
+      borderRadius: 12.0,
       duration: const Duration(seconds: 7),
       backgroundColor: Colors.blueGrey,
       leading: (cancel) => SizedBox.fromSize(
