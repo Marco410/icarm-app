@@ -8,30 +8,31 @@ import '../services/notification_ui_service.dart';
 
 const storage = FlutterSecureStorage();
 
-Future<String?> httpBase({
-  required String base_url,
-  required String type,
-  required String path,
-  Object? body,
-  Map<String, String>? headers,
-  Map<String, String>? params,
-  Map<String, String>? bodyMultipart,
-  bool log = false,
-  bool successMessage = false,
-  bool showNoti = true,
-  List<String>? keyFile,
-  List<String>? pathFile,
-  bool authorization = false,
-  Uint8List? fileBytes,
-  String? flUsuario,
-}) async {
+Future<String?> httpBase(
+    {required String base_url,
+    required String type,
+    required String path,
+    Object? body,
+    Map<String, String>? headers,
+    Map<String, String>? params,
+    Map<String, String>? bodyMultipart,
+    bool log = false,
+    bool successMessage = false,
+    bool showNoti = true,
+    List<String>? keyFile,
+    List<String>? pathFile,
+    bool authorization = false,
+    Uint8List? fileBytes,
+    String? flUsuario,
+    bool isRadio = false}) async {
   http.Response response = http.Response("", 500);
   try {
     if (await InternetConnectionChecker().hasConnection) {
       var url = Uri.https(base_url, path, params);
 
       headers ??= {};
-      headers["Content-type"] = "application/json";
+
+      headers["Content-type"] = (isRadio) ? 'audio/mpeg' : "application/json";
       headers["Accept"] = "*/*";
 
       /*     if (authorization) {
@@ -55,6 +56,7 @@ Future<String?> httpBase({
           break;
         case "GET":
           response = await http.get(url, headers: headers);
+
           data = response.body;
           break;
         case "DELETE":
@@ -117,8 +119,6 @@ Future<String?> httpBase({
       return null;
     }
   } catch (e) {
-    /*  NotificationUI.instance.notificationError(
-        "Ocurrió un error en el servidor. Intenta más tarde"); */
     return null;
   }
 }

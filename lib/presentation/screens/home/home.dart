@@ -525,7 +525,12 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                             "Domingos",
                             style: TxtStyle.labelText,
                           ),
-                          Text(" - 11:30 AM"),
+                          Row(
+                            children: [
+                              Text(" - 9:00 AM"),
+                              Text(" y 11:30 AM"),
+                            ],
+                          ),
                         ],
                       ),
                       Row(
@@ -535,7 +540,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                             "Miércoles",
                             style: TxtStyle.labelText,
                           ),
-                          Text(" - 07:15 PM"),
+                          Text(" - 07:00 PM"),
                         ],
                       ),
                       SizedBox(
@@ -555,7 +560,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                             "Viernes",
                             style: TxtStyle.labelText,
                           ),
-                          Text(" - 06:15 PM"),
+                          Text(" - 06:30 PM"),
                         ],
                       ),
                       SizedBox(
