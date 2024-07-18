@@ -242,25 +242,31 @@ class _RadioPageState extends ConsumerState<RadioPage>
     }
 
     try {
-      await AudioPlayer.clearAssetCache();
+      // await AudioPlayer.clearAssetCache();
       final url = "https://stream.zeno.fm/5dsk2i7levzvv";
-      final uri = Uri.parse(url);
 
-      final audioSource = LockCachingAudioSource(
+      //http://stream.zeno.fm/5dsk2i7levzvv
+      //final uri = Uri.parse(url);
+
+      /*  final audioSource = LockCachingAudioSource(
         uri,
+      ); */
+      //audioPlayer.setAudioSource(audioSource);
+
+      audioPlayer.setUrl(
+        url,
+        preload: false,
         tag: MediaItem(
           id: '1',
           album: "Radio En Vivo",
-          title: (currentSong != "")
-              ? currentSong
-              : "Radio En Vivo | Amor & Restauración Morelia",
+          title: "Radio En Vivo | Amor & Restauración Morelia",
           artist: "Amor & Restauración Morelia",
+          genre: 'Religious',
           artUri: Uri.parse(
               'https://zeno.fm/_next/image/?url=https%3A%2F%2Fimages.zeno.fm%2FoU_QTjtJrboK2rm3nPb8NiKuieHzoQuYg06OF-85A8U%2Frs%3Afit%3A240%3A240%2Fg%3Ace%3A0%3A0%2FaHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zLzJmNjE2OTI2LTkzOGQtNDNmZC1iYjBiLTBiMDM0M2ExMmFhMS9pbWFnZS8_dXBkYXRlZD0xNzE5NDYwNDEyMDAw.webp&w=3840&q=100'),
         ),
       );
-      audioPlayer.setAudioSource(audioSource);
-      await audioSource.clearCache();
+      //await audioSource.clearCache();
 
       ref
           .read(radioServiceProvider)
@@ -293,8 +299,6 @@ class _RadioPageState extends ConsumerState<RadioPage>
     });
 
     audioSession.interruptionEventStream.listen((event) {
-      print('interruption begin: ${event.begin}');
-      print('interruption type: ${event.type}');
       if (event.begin) {
         switch (event.type) {
           case AudioInterruptionType.duck:
@@ -468,7 +472,9 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                     height: 15,
                                   ),
                                   AutoScrollText(
-                                    " $currentSong      |    ",
+                                    (currentSong != "")
+                                        ? " $currentSong        "
+                                        : "Radio en Vivo | Amor & Restauración Morelia",
                                     curve: Curves.linear,
                                     velocity: Velocity(
                                         pixelsPerSecond: Offset(30, 30)),
