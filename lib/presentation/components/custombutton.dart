@@ -2,6 +2,7 @@
 
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:sizer_pro/sizer.dart';
 
 import '../../config/setting/style.dart';
@@ -47,7 +48,7 @@ class CustomButton extends StatelessWidget {
             ],
             color: color ?? ColorStyle.primaryColor,
             borderRadius: borderRadius ?? BorderRadius.circular(8)),
-        child: InkWell(
+        child: Bounceable(
           onTap: (loading) ? () => {} : onTap as void Function()?,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

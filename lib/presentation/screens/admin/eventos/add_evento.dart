@@ -77,7 +77,10 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
       fechaFinalController.text =
           DateFormat('yyyy-MM-dd HH:mm').format(widget.evento!.fechaFin);
 
-      direccion = (widget.evento!.direccion == "") ? true : false;
+      direccion =
+          (widget.evento!.direccion == "" || widget.evento!.direccion == null)
+              ? true
+              : false;
 
       print("widget.evento!.direccion");
       print(widget.evento!.direccion);

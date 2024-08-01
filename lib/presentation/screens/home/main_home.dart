@@ -74,7 +74,7 @@ class _MainHomeState extends ConsumerState<MainHome> {
             color: Colors.white,
           ),
           Icon(
-            Icons.settings_outlined,
+            Icons.info_rounded,
             size: 26,
             color: Colors.white,
           ),

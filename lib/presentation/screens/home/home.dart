@@ -5,6 +5,7 @@ import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
@@ -15,7 +16,6 @@ import 'package:icarm/presentation/components/components.dart';
 import 'package:icarm/presentation/components/content_ad_widget.dart';
 import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
-import 'package:icarm/presentation/components/video_home_widget.dart';
 import 'package:icarm/presentation/providers/evento_provider.dart';
 import 'package:icarm/presentation/providers/youtube_provider.dart';
 import 'package:icarm/presentation/screens/home/skeleton_home.dart';
@@ -38,7 +38,6 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
   bool loading = false;
   Future delayedLoading = Future(() => null);
 
-  late VideoPlayerController _controller;
   late VideoPlayerController _controllerHomeVideo;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
@@ -53,20 +52,6 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
 
     setState(() {
       loading = true;
-    });
-
-    _controller = VideoPlayerController.networkUrl(
-      Uri.parse('${URL_MEDIA_VIDEOS}inicio.mp4'),
-      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-    );
-
-    _controller.addListener(() {
-      setState(() {});
-    });
-    _controller.setLooping(true);
-    _controller.initialize().then((_) {
-      _controller.setVolume(0);
-      _controller.play();
     });
 
     _controllerHomeVideo = VideoPlayerController.asset(
@@ -97,7 +82,6 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _controller.dispose();
     _controllerHomeVideo.dispose();
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
@@ -116,7 +100,6 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
     final listEventos = ref.watch(listEventosProvider);
 
     List<Widget> textItems = [
-      VideoHomeWidget(loading: loading, controller: _controller),
       ContentAdWidget(
         image: "assets/image/home/hombres-radio.jpeg",
         title: "Hombres Valientes",
@@ -191,19 +174,22 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                             pathParameters: {
                               "eventoID": eventoFavorite.id.toString()
                             }),
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              "${URL_MEDIA_EVENTO}${eventoFavorite.id}/${eventoFavorite.imgVertical}",
-                          placeholder: (context, url) =>
-                              LoadingStandardWidget.loadingWidget(),
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.fill),
+                        child: Hero(
+                          tag: eventoFavorite.id,
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                "${URL_MEDIA_EVENTO}${eventoFavorite.id}/${eventoFavorite.imgVertical}",
+                            placeholder: (context, url) =>
+                                LoadingStandardWidget.loadingWidget(),
+                            imageBuilder: (context, imageProvider) => Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.fill),
+                              ),
                             ),
+                            height: 78.h,
                           ),
-                          height: 78.h,
                         ),
                       )
                     : SizedBox(),
@@ -601,14 +587,14 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                       SizedBox(
                         height: 15,
                       ),
-                      InkWell(
-                        onTap: () => NotificationUI.instance.notificationSuccess(
-                            "¡Ya recibirás las alertas de los eventos y demás!"),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(Icons.info_outline),
-                            Container(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Bounceable(
+                            onTap: () => NotificationUI.instance
+                                .notificationSuccess(
+                                    "¡Ya recibirás las alertas de los eventos y demás!"),
+                            child: Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 25),
                               decoration: BoxDecoration(
@@ -626,9 +612,8 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                                 ],
                               ),
                             ),
-                            Icon(Icons.share_rounded)
-                          ],
-                        ),
+                          ),
+                        ],
                       )
                     ],
                   ),
