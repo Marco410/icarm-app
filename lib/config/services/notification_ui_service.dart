@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:lottie/lottie.dart';
 
@@ -11,7 +12,9 @@ class NotificationUI {
   static final instance = NotificationUI._();
 
   // Notification warning
-  void notificationWarning(String text) {
+  void notificationWarning(String text) async {
+    await Haptics.vibrate(HapticsType.warning);
+
     BotToast.showNotification(
       duration: const Duration(seconds: 4),
       backgroundColor: ColorStyle.secondaryColor,
@@ -37,7 +40,9 @@ class NotificationUI {
   }
 
   // Notification error
-  void notificationError(String msg) {
+  void notificationError(String msg) async {
+    await Haptics.vibrate(HapticsType.error);
+
     BotToast.showNotification(
       duration: const Duration(seconds: 3),
       backgroundColor: Colors.red,
@@ -57,7 +62,9 @@ class NotificationUI {
   }
 
   // Notification error
-  void notificationAlert(String msg, String body) {
+  void notificationAlert(String msg, String body) async {
+    await Haptics.vibrate(HapticsType.success);
+
     BotToast.showNotification(
       duration: const Duration(seconds: 3),
       backgroundColor: ColorStyle.primaryColor,
@@ -97,7 +104,9 @@ class NotificationUI {
     );
   }
 
-  void notificationSuccess(String msg) {
+  void notificationSuccess(String msg) async {
+    await Haptics.vibrate(HapticsType.success);
+
     BotToast.showNotification(
       duration: const Duration(seconds: 3),
       backgroundColor: Colors.green[300],
@@ -122,7 +131,9 @@ class NotificationUI {
   }
 
   // Notification No internet
-  void notificationNoInternet() {
+  void notificationNoInternet() async {
+    await Haptics.vibrate(HapticsType.error);
+
     BotToast.showNotification(
       borderRadius: 12.0,
       duration: const Duration(seconds: 7),
@@ -143,6 +154,8 @@ class NotificationUI {
 
   Future<void> notificationToAcceptAction(
       BuildContext context, String msg, VoidCallback confirm) async {
+    await Haptics.vibrate(HapticsType.success);
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!

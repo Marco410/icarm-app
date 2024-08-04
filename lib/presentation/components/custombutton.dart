@@ -31,25 +31,25 @@ class CustomButton extends StatelessWidget {
       this.borderRadius});
   @override
   Widget build(BuildContext context) {
-    return FadedScaleAnimation(
-      child: Container(
-        width: width ?? double.infinity,
-        padding: EdgeInsets.symmetric(
-            vertical: (size == 'sm') ? 4.sp : 5.sp,
-            horizontal: (size == 'sm') ? 4.sp : 5.sp),
-        margin: margin ?? const EdgeInsets.all(32),
-        decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  blurRadius: 4,
-                  spreadRadius: -3,
-                  offset: Offset(0, 0))
-            ],
-            color: color ?? ColorStyle.primaryColor,
-            borderRadius: borderRadius ?? BorderRadius.circular(8)),
-        child: Bounceable(
-          onTap: (loading) ? () => {} : onTap as void Function()?,
+    return Bounceable(
+      onTap: (loading) ? () => {} : onTap as void Function()?,
+      child: FadedScaleAnimation(
+        child: Container(
+          width: width ?? double.infinity,
+          padding: EdgeInsets.symmetric(
+              vertical: (size == 'sm') ? 4.sp : 5.sp,
+              horizontal: (size == 'sm') ? 4.sp : 5.sp),
+          margin: margin ?? const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 4,
+                    spreadRadius: -3,
+                    offset: Offset(0, 0))
+              ],
+              color: color ?? ColorStyle.primaryColor,
+              borderRadius: borderRadius ?? BorderRadius.circular(8)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

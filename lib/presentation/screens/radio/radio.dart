@@ -8,7 +8,9 @@ import 'package:auto_scroll_text/auto_scroll_text.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/providers/providers.dart';
@@ -121,7 +123,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
 
   void onLoading() {}
 
-  Future<void> _fetchCurrentSong() async {
+  Stream<String> _currentSongStream() async* {
     final url = Uri.parse(
         "https://api.zeno.fm/mounts/metadata/subscribe/lcdmqnfduyqvv");
     final client = http.Client();
@@ -136,29 +138,27 @@ class _RadioPageState extends ConsumerState<RadioPage>
           if (line.startsWith('data:')) {
             final jsonData = line.substring(5).trim();
 
-            try {
-              final Map<String, dynamic> resp = json.decode(jsonData);
-              if (resp["streamTitle"] != null) {
-                if (mounted) {
-                  setState(() {
-                    currentSong = resp["streamTitle"];
-                  });
+            if (jsonData.isNotEmpty) {
+              try {
+                final Map<String, dynamic> resp = json.decode(jsonData);
+                if (resp["streamTitle"] != null) {
+                  yield resp["streamTitle"];
                 }
+              } catch (e) {
+                yield* Stream.error("Error parsing JSON: $e");
               }
-            } catch (e) {}
+            }
           }
         }
       }
     } catch (e) {
-      print("Error: $e");
+      yield* Stream.error("Request error: $e");
     } finally {
       client.close();
     }
   }
 
   void initState() {
-    _fetchCurrentSong();
-
     ref.read(radioServiceProvider).playerStateStream.listen((state) async {
       switch (state.processingState) {
         case ProcessingState.buffering:
@@ -291,10 +291,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
         _handleInterruptions(audioSession);
         await audioPlayer.play();
       });
-
-      /*   Timer.periodic(Duration(seconds: 10), (timer) {
-        RadioController.fetchCurrentSong();
-      }); */
+      await Haptics.vibrate(HapticsType.success);
     } on PlayerException catch (e) {
       print("Error message: ${e.message}");
       stopRadio();
@@ -484,51 +481,61 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                         SizedBox(
                                           height: 15,
                                         ),
-                                        (currentSong == " - ")
-                                            ? Container(
-                                                width: 30.w,
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 6,
-                                                    horizontal: 15),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    color: Colors.redAccent),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.circle_rounded,
-                                                      color: Colors.white,
-                                                      size: 15,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 8,
-                                                    ),
-                                                    Text(
-                                                      "En vivo",
-                                                      style: TxtStyle.labelText
-                                                          .copyWith(
-                                                              color:
-                                                                  Colors.white),
-                                                    ),
-                                                  ],
-                                                ))
-                                            : AutoScrollText(
-                                                (currentSong != "")
-                                                    ? " $currentSong    "
-                                                    : ' Radio En Vivo | Amor & Restauración Morelia           ',
-                                                curve: Curves.linear,
-                                                velocity: Velocity(
-                                                    pixelsPerSecond:
-                                                        Offset(30, 30)),
-                                                style: TxtStyle.labelText
-                                                    .copyWith(fontSize: 6.5.sp),
-                                              ),
+                                        StreamBuilder<String>(
+                                            stream: _currentSongStream(),
+                                            builder: (context, snapshot) {
+                                              if (!snapshot.hasData ||
+                                                  snapshot.data == " - ") {
+                                                return Container(
+                                                    width: 30.w,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 6,
+                                                            horizontal: 15),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                        color:
+                                                            Colors.redAccent),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                            Icons
+                                                                .circle_rounded,
+                                                            color: Colors.white,
+                                                            size: 15),
+                                                        SizedBox(width: 5),
+                                                        Text("En vivo",
+                                                            style: TxtStyle
+                                                                .labelText
+                                                                .copyWith(
+                                                                    color: Colors
+                                                                        .white)),
+                                                      ],
+                                                    ));
+                                              } else {
+                                                String currentSong = snapshot
+                                                        .data ??
+                                                    ' Radio En Vivo | Amor & Restauración Morelia ';
+                                                return AutoScrollText(
+                                                  currentSong + '    ',
+                                                  curve: Curves.linear,
+                                                  velocity: Velocity(
+                                                      pixelsPerSecond:
+                                                          Offset(30, 30)),
+                                                  style: TxtStyle.labelText
+                                                      .copyWith(
+                                                          fontSize: 6.5.sp),
+                                                );
+                                              }
+                                            })
                                       ],
                                     )
                                   : Column(
@@ -580,7 +587,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                           color: Colors.green,
                           iconSize: 47,
                         ),
-                        GestureDetector(
+                        Bounceable(
                           onTap: () async {
                             if (radioIsPlaying) {
                               stopRadio();
@@ -621,7 +628,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                           decoration: BoxDecoration(),
                           margin: EdgeInsets.only(right: 20),
                           alignment: Alignment.centerRight,
-                          child: InkWell(
+                          child: Bounceable(
                             onTap: () {
                               FocusScope.of(context).requestFocus(commentField);
                               Scrollable.ensureVisible(

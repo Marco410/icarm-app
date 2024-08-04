@@ -3,6 +3,7 @@ import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/setting/style.dart';
@@ -40,6 +41,7 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
         CommentModel(comment: _controllerComment.text.trim()));
 
     if (commentSent) {
+      await Haptics.vibrate(HapticsType.success);
       setState(() {
         _controllerComment.text = "";
         loader = false;
@@ -211,8 +213,12 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                             CommentF comment = doc[index].data() as CommentF;
                             return GestureDetector(
                               onDoubleTap: () async {
-                                await Comment.updateComment(
+                                final like = await Comment.updateComment(
                                     comment, doc[index].id);
+
+                                if (like) {
+                                  await Haptics.vibrate(HapticsType.success);
+                                }
                               },
                               child: Container(
                                 width: double.infinity,

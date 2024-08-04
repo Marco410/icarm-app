@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:icarm/config/generated/l10n.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/providers/user_provider.dart';
@@ -15,7 +16,9 @@ class NotificationService {
   static GlobalKey<ScaffoldMessengerState> messengerkey =
       new GlobalKey<ScaffoldMessengerState>();
 
-  static showSnackBarError(String message, BuildContext context) {
+  static showSnackBarError(String message, BuildContext context) async {
+    await Haptics.vibrate(HapticsType.error);
+
     showDialog(
         context: context,
         builder: (context) {
@@ -33,7 +36,9 @@ class NotificationService {
         barrierDismissible: true);
   }
 
-  static showSnackBarSuccess(String message, BuildContext context) {
+  static showSnackBarSuccess(String message, BuildContext context) async {
+    await Haptics.vibrate(HapticsType.success);
+
     showDialog(
         context: context,
         builder: (context) {
@@ -62,7 +67,8 @@ class NotificationService {
     messengerkey.currentState.showSnackBar(snackBar); */
   }
 
-  static showAlertInfo(String message, BuildContext context) {
+  static showAlertInfo(String message, BuildContext context) async {
+    await Haptics.vibrate(HapticsType.success);
     showDialog(
         context: context,
         builder: (context) {
@@ -95,12 +101,13 @@ class NotificationService {
   }
 
   static showDialogNotification(String? title, String userID,
-      BuildContext context, WidgetRef ref, String? telefono) {
+      BuildContext context, WidgetRef ref, String? telefono) async {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController msgController = TextEditingController();
     FocusNode titleNode = FocusNode();
     FocusNode msgNode = FocusNode();
     bool loadingNoti = false;
+    await Haptics.vibrate(HapticsType.success);
 
     showDialog(
         context: context,
