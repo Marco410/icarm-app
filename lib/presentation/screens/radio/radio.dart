@@ -236,8 +236,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
   }
 
   Future<void> tryReconnect() async {
-    ref.read(radioisPlayingProvider.notifier).update((state) => false);
-    await ref.read(radioServiceProvider).stop();
+    stopRadio();
 
     Future.delayed(Duration(milliseconds: 500), () {
       playRadio();
@@ -377,6 +376,10 @@ class _RadioPageState extends ConsumerState<RadioPage>
         duration: const Duration(milliseconds: 600), curve: Curves.ease);
   }
 
+  Future<void> onRefresh() async {
+    tryReconnect();
+  }
+
   @override
   Widget build(BuildContext context) {
     final radioIsPlaying = ref.watch(radioisPlayingProvider);
@@ -417,196 +420,239 @@ class _RadioPageState extends ConsumerState<RadioPage>
           child: Container(
             padding: EdgeInsets.all(15),
             height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                children: [
-                  Text(
-                    "A&R Radio - En vivo",
-                    style: TxtStyle.headerStyle.copyWith(
-                        color: ColorStyle.primaryColor, fontSize: 9.sp),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CarouselWidget(
-                      textItems: textItems,
-                      controller: _controllerC,
-                      current: _current,
-                      size: 90.sp,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          _current = index;
-                        });
-                      },
-                      image: "assets/image/home/iglesia.png",
-                      mainColor: ColorStyle.primaryColor),
-                  SizedBox(
-                    height: 20.h,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            FadedScaleAnimation(
-                              child: Text("Una palabra, puede cambiar tu vida.",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 6.sp,
-                                      fontWeight: FontWeight.normal)),
-                            ),
-                            Text(
-                              'Puede tardar algunos segundos en empezar.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 4.sp,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            (radioIsPlaying)
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Lottie.network(
-                                          "https://assets7.lottiefiles.com/packages/lf20_eN8m772nQj.json",
-                                          height: 50),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      AutoScrollText(
-                                        (currentSong != "")
-                                            ? " $currentSong          "
-                                            : ' Radio En Vivo | Amor & Restauración Morelia           ',
-                                        curve: Curves.linear,
-                                        velocity: Velocity(
-                                            pixelsPerSecond: Offset(30, 30)),
-                                        style: TxtStyle.labelText
-                                            .copyWith(fontSize: 6.5.sp),
-                                      ),
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      Container(
-                                        height: 4,
-                                        decoration: BoxDecoration(
-                                            color: ColorStyle.secondaryColor,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        'Da clic en el botón de play para reproducir.',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 5.sp,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    ],
-                                  ),
-                          ],
+            child: RefreshIndicator(
+              onRefresh: onRefresh,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    Text(
+                      "A&R Radio - En vivo",
+                      style: TxtStyle.headerStyle.copyWith(
+                          color: ColorStyle.primaryColor, fontSize: 9.sp),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CarouselWidget(
+                        textItems: textItems,
+                        controller: _controllerC,
+                        current: _current,
+                        size: 90.sp,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        },
+                        image: "assets/image/home/iglesia.png",
+                        mainColor: ColorStyle.primaryColor),
+                    SizedBox(
+                      height: 20.h,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              FadedScaleAnimation(
+                                child: Text(
+                                    "Una palabra, puede cambiar tu vida.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 6.sp,
+                                        fontWeight: FontWeight.normal)),
+                              ),
+                              Text(
+                                'Puede tardar algunos segundos en empezar.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 4.sp,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              (radioIsPlaying)
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Lottie.network(
+                                            "https://assets7.lottiefiles.com/packages/lf20_eN8m772nQj.json",
+                                            height: 50),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        (currentSong == " - ")
+                                            ? Container(
+                                                width: 30.w,
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 6,
+                                                    horizontal: 15),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    color: Colors.redAccent),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.circle_rounded,
+                                                      color: Colors.white,
+                                                      size: 15,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    Text(
+                                                      "En vivo",
+                                                      style: TxtStyle.labelText
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.white),
+                                                    ),
+                                                  ],
+                                                ))
+                                            : AutoScrollText(
+                                                (currentSong != "")
+                                                    ? " $currentSong    "
+                                                    : ' Radio En Vivo | Amor & Restauración Morelia           ',
+                                                curve: Curves.linear,
+                                                velocity: Velocity(
+                                                    pixelsPerSecond:
+                                                        Offset(30, 30)),
+                                                style: TxtStyle.labelText
+                                                    .copyWith(fontSize: 6.5.sp),
+                                              ),
+                                      ],
+                                    )
+                                  : Column(
+                                      children: [
+                                        Container(
+                                          height: 4,
+                                          decoration: BoxDecoration(
+                                              color: ColorStyle.secondaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          'Da clic en el botón de play para reproducir.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 5.sp,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          final Uri toLaunch = Uri(
-                              scheme: 'https',
-                              host: 'walink.co',
-                              path: '99cfc1',
-                              queryParameters: {});
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            final Uri toLaunch = Uri(
+                                scheme: 'https',
+                                host: 'walink.co',
+                                path: '99cfc1',
+                                queryParameters: {});
 
-                          launchUrl(toLaunch,
-                              mode: LaunchMode.externalApplication);
-                        },
-                        icon: ImageIcon(
-                          AssetImage(
-                            'assets/icon/whatsapp.png',
+                            launchUrl(toLaunch,
+                                mode: LaunchMode.externalApplication);
+                          },
+                          icon: ImageIcon(
+                            AssetImage(
+                              'assets/icon/whatsapp.png',
+                            ),
                           ),
+                          color: Colors.green,
+                          iconSize: 47,
                         ),
-                        color: Colors.green,
-                        iconSize: 47,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          if (radioIsPlaying) {
-                            stopRadio();
-                          } else {
-                            playRadio();
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              color: ColorStyle.whiteBacground,
-                              border: Border.all(width: 8, color: Colors.black),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black.withOpacity(0.4),
-                                    blurRadius: 11,
-                                    spreadRadius: 1,
-                                    offset: Offset(0, 0))
-                              ],
-                              borderRadius: BorderRadius.circular(100)),
-                          child: (loadingStreamRadio)
-                              ? SizedBox(
-                                  height: 25.sp,
-                                  width: 25.sp,
-                                  child: LoadingStandardWidget.loadingWidget())
-                              : Icon(
-                                  radioIsPlaying
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
-                                  size: 25.sp,
-                                  color: ColorStyle.primaryColor,
-                                ),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(),
-                        margin: EdgeInsets.only(right: 20),
-                        alignment: Alignment.centerRight,
-                        child: InkWell(
-                          onTap: () {
-                            FocusScope.of(context).requestFocus(commentField);
-                            Scrollable.ensureVisible(commnetKey.currentContext!,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.easeOut);
+                        GestureDetector(
+                          onTap: () async {
+                            if (radioIsPlaying) {
+                              stopRadio();
+                            } else {
+                              playRadio();
+                            }
                           },
                           child: Container(
-                            height: 51,
-                            width: 51,
+                            padding: EdgeInsets.all(15),
                             decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: ColorStyle.secondaryColor,
-                                    width: 3.5),
-                                borderRadius: BorderRadius.circular(50)),
-                            child: Icon(
-                              Icons.comment_outlined,
-                              color: ColorStyle.secondaryColor,
-                              size: 25,
+                                color: ColorStyle.whiteBacground,
+                                border:
+                                    Border.all(width: 8, color: Colors.black),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black.withOpacity(0.4),
+                                      blurRadius: 11,
+                                      spreadRadius: 1,
+                                      offset: Offset(0, 0))
+                                ],
+                                borderRadius: BorderRadius.circular(100)),
+                            child: (loadingStreamRadio)
+                                ? SizedBox(
+                                    height: 25.sp,
+                                    width: 25.sp,
+                                    child:
+                                        LoadingStandardWidget.loadingWidget())
+                                : Icon(
+                                    radioIsPlaying
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
+                                    size: 25.sp,
+                                    color: ColorStyle.primaryColor,
+                                  ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(),
+                          margin: EdgeInsets.only(right: 20),
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(commentField);
+                              Scrollable.ensureVisible(
+                                  commnetKey.currentContext!,
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.easeOut);
+                            },
+                            child: Container(
+                              height: 51,
+                              width: 51,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: ColorStyle.secondaryColor,
+                                      width: 3.5),
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: Icon(
+                                Icons.comment_outlined,
+                                color: ColorStyle.secondaryColor,
+                                size: 25,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  CommentsScreenWidget(
-                    commentField: commentField,
-                    commnetKey: commnetKey,
-                  ),
-                ],
+                      ],
+                    ),
+                    CommentsScreenWidget(
+                      commentField: commentField,
+                      commnetKey: commnetKey,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
