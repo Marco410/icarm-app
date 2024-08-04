@@ -57,11 +57,9 @@ class _UserImageProfileWidgetState
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: CachedNetworkImage(
-                          errorWidget: (context, url, error) => Image.asset(
-                              "assets/image/no-image.png",
-                              height: 28.sp,
-                              width: 40.sp,
-                              scale: 4.5),
+                          errorWidget: (context, url, error) =>
+                              SvgPicture.asset("assets/icon/user-icon.svg",
+                                  height: 100),
                           imageUrl:
                               "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
                           placeholder: (context, url) =>

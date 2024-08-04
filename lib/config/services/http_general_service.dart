@@ -94,4 +94,18 @@ class BaseHttpService {
 
     return (response != null) ? response : "";
   }
+
+  static Future<String> baseGetRadio(
+      {required String url,
+      bool authorization = false,
+      Map<String, String>? params}) async {
+    String? response = await httpBase(
+        base_url: "www.amoryrestauracionmorelia.com",
+        type: "GET",
+        path: url,
+        authorization: authorization,
+        params: params,
+        isRadio: true);
+    return (response != null) ? response : "";
+  }
 }

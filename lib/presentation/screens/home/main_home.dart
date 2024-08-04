@@ -1,3 +1,4 @@
+import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import 'package:flutter/material.dart';
@@ -30,14 +31,20 @@ class _MainHomeState extends ConsumerState<MainHome> {
       backgroundColor: ColorStyle.whiteBacground,
       appBar: AppBarWidget(),
       drawer: const MaterialDrawer(),
-      body: bodyAsync.when(
-          data: (widgetBody) => widgetBody,
-          error: (_, __) =>
-              Center(child: LoadingStandardWidget.loadingErrorWidget()),
-          loading: () => Container(
-                margin: const EdgeInsets.only(top: 50),
-                child: LoadingStandardWidget.loadingWidget(),
-              )),
+      body: ConnectivityWidgetWrapper(
+        alignment: Alignment.topLeft,
+        color: Colors.blueGrey,
+        message: "Se perdio la conexión a internet",
+        stacked: true,
+        child: bodyAsync.when(
+            data: (widgetBody) => widgetBody,
+            error: (_, __) =>
+                Center(child: LoadingStandardWidget.loadingErrorWidget()),
+            loading: () => Container(
+                  margin: const EdgeInsets.only(top: 50),
+                  child: LoadingStandardWidget.loadingWidget(),
+                )),
+      ),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: ColorStyle.primaryColor,
         color: ColorStyle.primaryColor,
@@ -67,7 +74,7 @@ class _MainHomeState extends ConsumerState<MainHome> {
             color: Colors.white,
           ),
           Icon(
-            Icons.settings_outlined,
+            Icons.info_rounded,
             size: 26,
             color: Colors.white,
           ),

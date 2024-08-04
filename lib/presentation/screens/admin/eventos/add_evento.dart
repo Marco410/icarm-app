@@ -77,7 +77,17 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
       fechaFinalController.text =
           DateFormat('yyyy-MM-dd HH:mm').format(widget.evento!.fechaFin);
 
-      direccion = (widget.evento!.direccion == null) ? true : false;
+      direccion =
+          (widget.evento!.direccion == "" || widget.evento!.direccion == null)
+              ? true
+              : false;
+
+      print("widget.evento!.direccion");
+      print(widget.evento!.direccion);
+
+      if (!direccion) {
+        direccionController.text = widget.evento!.direccion!;
+      }
 
       isFavorite = (widget.evento!.isFavorite == 1) ? true : false;
       canRegister = (widget.evento!.canRegister == 1) ? true : false;

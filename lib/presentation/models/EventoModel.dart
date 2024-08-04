@@ -55,7 +55,7 @@ class Evento {
   DateTime fechaInicio;
   DateTime fechaFin;
   String descripcion;
-  dynamic direccion;
+  String? direccion;
   String? imgVertical;
   String? imgHorizontal;
   int isFavorite;
@@ -92,7 +92,7 @@ class Evento {
         fechaInicio: DateTime.parse(json["fecha_inicio"]),
         fechaFin: DateTime.parse(json["fecha_fin"] ?? json["fecha_inicio"]),
         descripcion: json["descripcion"] ?? "",
-        direccion: json["direccion"] ?? "",
+        direccion: json["direccion"] ?? null,
         imgVertical: json["img_vertical"],
         imgHorizontal: json["img_horizontal"],
         isFavorite: json["is_favorite"],

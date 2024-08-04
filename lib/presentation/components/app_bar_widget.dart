@@ -34,84 +34,87 @@ class _AppBarWidgetState extends State<AppBarWidget> {
     final prefs = PreferenciasUsuario();
 
     return AppBar(
-        backgroundColor: ColorStyle.whiteBacground,
-        elevation: 0,
-        leading: (widget.backButton)
-            ? InkWell(
-                onTap: () => context.pop(),
-                child: Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: ColorStyle.primaryColor,
-                  size: 26,
-                ),
-              )
-            : InkWell(
-                onTap: () => Scaffold.of(context).openDrawer(),
-                child: Icon(
-                  Icons.menu_rounded,
-                  color: ColorStyle.primaryColor,
-                  size: 34,
-                ),
+      backgroundColor: ColorStyle.whiteBacground,
+      elevation: 0,
+      leading: (widget.backButton)
+          ? InkWell(
+              onTap: () => context.pop(),
+              child: Icon(
+                Icons.arrow_back_ios_rounded,
+                color: ColorStyle.primaryColor,
+                size: 26,
               ),
-        title: ImageIcon(
-          AssetImage("assets/image/logo.png"),
-          color: Colors.black,
-          size: 20.sp,
-        ),
-        actions: <Widget>[
-          (widget.rightButtons)
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    margin: EdgeInsets.only(right: 10),
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: () => context.pushNamed('qr'),
-                          child: Icon(
-                            Icons.qr_code_rounded,
-                            color: Colors.black,
-                            size: 30,
-                          ),
+            )
+          : InkWell(
+              onTap: () => Scaffold.of(context).openDrawer(),
+              child: Icon(
+                Icons.menu_rounded,
+                color: ColorStyle.primaryColor,
+                size: 34,
+              ),
+            ),
+      title: ImageIcon(
+        AssetImage("assets/image/logo.png"),
+        color: Colors.black,
+        size: 20.sp,
+      ),
+      actions: <Widget>[
+        (widget.rightButtons)
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () => context.pushNamed('qr'),
+                        child: Icon(
+                          Icons.qr_code_rounded,
+                          color: Colors.black,
+                          size: 30,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        InkWell(
-                            onTap: () {
-                              NavigationRoutes.goPerfil(context);
-                            },
-                            child: (prefs.foto_perfil != "")
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
-                                      placeholder: (context, url) =>
-                                          LoadingStandardWidget.loadingWidget(),
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                        width: 12.sp,
-                                        height: 13.sp,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.fill,
-                                          ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      InkWell(
+                          onTap: () {
+                            NavigationRoutes.goPerfil(context);
+                          },
+                          child: (prefs.foto_perfil != "")
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
+                                    placeholder: (context, url) =>
+                                        LoadingStandardWidget.loadingWidget(),
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      width: 12.sp,
+                                      height: 13.sp,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
-                                      height: 13.sp,
                                     ),
-                                  )
-                                : SvgPicture.asset(
-                                    "assets/icon/user-icon.svg")),
-                      ],
-                    ),
+                                    errorWidget: (context, url, error) =>
+                                        SvgPicture.asset(
+                                            "assets/icon/user-icon.svg"),
+                                    height: 13.sp,
+                                  ),
+                                )
+                              : SvgPicture.asset("assets/icon/user-icon.svg")),
+                    ],
                   ),
-                )
-              : SizedBox(),
-        ]);
+                ),
+              )
+            : SizedBox(),
+      ],
+    );
   }
 }
