@@ -102,6 +102,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                         ),
                                       ),
                                     ),
+                                    errorWidget: (context, url, error) =>
+                                        SvgPicture.asset(
+                                            "assets/icon/user-icon.svg"),
                                     height: 13.sp,
                                   ),
                                 )

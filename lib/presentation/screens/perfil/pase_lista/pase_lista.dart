@@ -363,7 +363,7 @@ class PagosUserWidget extends StatelessWidget {
                   Expanded(
                       child: Text(
                     DateFormat('dd MMMM yyyy')
-                        .format(userScanned.pagos![index].created_at),
+                        .format(userScanned.pagos![index].fecha_agrego),
                     textAlign: TextAlign.center,
                   )),
                 ],

@@ -125,49 +125,62 @@ class _QRPageState extends ConsumerState<QRPage> {
 }
 
 class NoLoginWidget extends StatelessWidget {
-  const NoLoginWidget({
-    super.key,
-  });
+  final showOnlyButton;
+  final textToShow;
+  const NoLoginWidget(
+      {super.key,
+      this.showOnlyButton = false,
+      this.textToShow = "Iniciar sesión"});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 20,
-        ),
-        SvgPicture.asset("assets/icon/user-icon.svg", height: 100),
-        SizedBox(
-          height: 15,
-        ),
+        (!showOnlyButton)
+            ? SizedBox(
+                height: 20,
+              )
+            : SizedBox(),
+        (!showOnlyButton)
+            ? SvgPicture.asset("assets/icon/user-icon.svg", height: 100)
+            : SizedBox(),
+        (!showOnlyButton)
+            ? SizedBox(
+                height: 15,
+              )
+            : SizedBox(),
         CustomButton(
-            text: "Iniciar sesión",
+            text: "${textToShow}",
             onTap: () => context.goNamed('login'),
             textColor: Colors.white,
             color: ColorStyle.primaryColor,
-            margin: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+            margin: (!showOnlyButton)
+                ? EdgeInsets.symmetric(vertical: 40, horizontal: 30)
+                : EdgeInsets.all(0),
             loading: false),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("¿No tienes una cuenta?"),
-                SizedBox(
-                  width: 5,
-                ),
-                InkWell(
-                  onTap: () => context.pushNamed('register'),
-                  child: Text(
-                    "Regístrate",
-                    style: TxtStyle.labelText,
+        (!showOnlyButton)
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("¿No tienes una cuenta?"),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      InkWell(
+                        onTap: () => context.pushNamed('register'),
+                        child: Text(
+                          "Regístrate",
+                          style: TxtStyle.labelText,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
+                ],
+              )
+            : SizedBox(),
       ],
     );
   }

@@ -125,6 +125,12 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
               CustomButton(
                 text: "Guardar nueva contraseña",
                 onTap: () async {
+                  if (passController.text == "" ||
+                      passConfirmController.text == "") {
+                    NotificationUI.instance
+                        .notificationWarning("Los campos son requeridos.");
+                    return;
+                  }
                   if (passController.text != passConfirmController.text) {
                     NotificationUI.instance
                         .notificationWarning("Las contraseñas no son iguales.");
