@@ -10,6 +10,7 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_rte/flutter_rte.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
@@ -21,7 +22,6 @@ import 'package:lottie/lottie.dart';
 
 import 'package:icarm/config/setting/style.dart';
 import 'package:sizer_pro/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import '../../components/zcomponents.dart';
 
@@ -46,7 +46,10 @@ class _RadioPageState extends ConsumerState<RadioPage>
   FocusNode commentField = FocusNode();
   double scrollPosition = 0;
   final _scrollController = ScrollController();
-
+  final HtmlEditorController editorController = HtmlEditorController(
+      toolbarOptions: HtmlToolbarOptions(
+          textStyle: TxtStyle.labelText,
+          toolbarPosition: ToolbarPosition.custom));
   List<Widget> textItems = [
     ContentAdWidget(
       image: "assets/image/home/hombres-radio.jpeg",
@@ -383,9 +386,11 @@ class _RadioPageState extends ConsumerState<RadioPage>
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        editorController.clearFocus();
       },
       child: Scaffold(
         backgroundColor: ColorStyle.whiteBacground,
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -568,24 +573,8 @@ class _RadioPageState extends ConsumerState<RadioPage>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            final Uri toLaunch = Uri(
-                                scheme: 'https',
-                                host: 'walink.co',
-                                path: '99cfc1',
-                                queryParameters: {});
-
-                            launchUrl(toLaunch,
-                                mode: LaunchMode.externalApplication);
-                          },
-                          icon: ImageIcon(
-                            AssetImage(
-                              'assets/icon/whatsapp.png',
-                            ),
-                          ),
-                          color: Colors.green,
-                          iconSize: 47,
+                        SizedBox(
+                          width: 60,
                         ),
                         Bounceable(
                           onTap: () async {
@@ -655,6 +644,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                       ],
                     ),
                     CommentsScreenWidget(
+                      editorController: editorController,
                       commentField: commentField,
                       commnetKey: commnetKey,
                     ),

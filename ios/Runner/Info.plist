@@ -24,19 +24,33 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Necesitamos acceso para una mejor experiencia.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Necesitamos acceso a tu calendario para añadir eventos.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Necesitamos acceder a tu cámara</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Necesitamos acceso a tus contactos para tus eventos.</string>
 	<key>NSFa</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Necesitamos acceder para una mejor experiencia.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Necesitamos acceder a tu galería para una mejor experiencia.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Necesitamos acceso al micro</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -56,26 +70,11 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Necesitamos acceso para una mejor experiencia.</string>
-	<key>UISupportsDocumentBrowser</key>
-	<true/>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Necesitamos acceder a tu galería para una mejor experiencia.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Necesitamos acceso al micro</string>
-	<key>FlutterDeepLinkingEnabled</key>
-	<true/>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Necesitamos acceso a tu calendario para añadir eventos.</string>
-
-	<key>NSContactsUsageDescription</key>
-	<string>Necesitamos acceso a tus contactos para tus eventos.</string>
 </dict>
 </plist>

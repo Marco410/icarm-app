@@ -82,9 +82,6 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
               ? true
               : false;
 
-      print("widget.evento!.direccion");
-      print(widget.evento!.direccion);
-
       if (!direccion) {
         direccionController.text = widget.evento!.direccion!;
       }
