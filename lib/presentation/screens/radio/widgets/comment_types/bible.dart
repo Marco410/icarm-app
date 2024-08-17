@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/models/CommentModel.dart';
 import 'package:icarm/presentation/screens/radio/widgets/comment_reder.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../../config/services/notification_ui_service.dart';
 import '../../../../controllers/comments_controller.dart';
@@ -12,16 +13,25 @@ Widget BibleWidget(
     bool isSender, CommentF comment, String commentID, BuildContext context) {
   return Stack(
     children: [
-      Container(
-          alignment: Alignment.center,
-          width: double.infinity,
-          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-          decoration: BoxDecoration(
-              color: ColorStyle.orange,
-              boxShadow: ShadowStyle.boxShadow,
-              borderRadius: BorderRadius.circular(15)),
-          child: renderComment(comment.comment)),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              margin: EdgeInsets.only(bottom: 0, top: 10, left: 20, right: 20),
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+              decoration: BoxDecoration(
+                  color: ColorStyle.bible,
+                  boxShadow: ShadowStyle.boxShadow,
+                  borderRadius: BorderRadius.circular(15)),
+              child: renderComment(comment.comment)),
+          Text(
+            timeago.format(comment.timestamp!.toDate(), locale: 'es'),
+            style: TxtStyle.hintText,
+          ),
+        ],
+      ),
       Positioned(
           top: 0,
           left: 10,

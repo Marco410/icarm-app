@@ -9,8 +9,8 @@ class ColorStyle {
   static const hintColor = Color(0xFFC5C6CC);
   static const hintLightColor = Color(0xFFE0E0E0);
   static final background = Colors.white;
-  static final orange = Color(0xFFF85046);
-  static final alert = Color(0xFFFAB440);
+  static final bible = Color(0xFF2A60FF);
+  static final alert = Color(0xFFF85046);
   static final fontColorLight = Color(0xFF656565);
   static final whiteBacground = Color(0xFFF4F5F7);
   // static final grayBackground = Color(0xFF16223A);
