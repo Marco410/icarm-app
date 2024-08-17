@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
@@ -10,19 +9,19 @@ import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_rte/flutter_rte.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/providers/providers.dart';
 import 'package:icarm/presentation/screens/radio/comments.dart';
+import 'package:icarm/presentation/screens/radio/widgets/radio_stream.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:icarm/config/setting/style.dart';
 import 'package:sizer_pro/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 import '../../components/zcomponents.dart';
 
 class RadioPage extends ConsumerStatefulWidget {
@@ -42,11 +41,15 @@ class _RadioPageState extends ConsumerState<RadioPage>
   int connectionTrys = 0;
   String currentSong = "";
   final commnetKey = new GlobalKey();
+  final streamHandler = StreamHandler();
 
   FocusNode commentField = FocusNode();
   double scrollPosition = 0;
   final _scrollController = ScrollController();
-
+  final HtmlEditorController editorController = HtmlEditorController(
+      toolbarOptions: HtmlToolbarOptions(
+          textStyle: TxtStyle.labelText,
+          toolbarPosition: ToolbarPosition.custom));
   List<Widget> textItems = [
     ContentAdWidget(
       image: "assets/image/home/hombres-radio.jpeg",
@@ -122,41 +125,6 @@ class _RadioPageState extends ConsumerState<RadioPage>
   }
 
   void onLoading() {}
-
-  Stream<String> _currentSongStream() async* {
-    final url = Uri.parse(
-        "https://api.zeno.fm/mounts/metadata/subscribe/lcdmqnfduyqvv");
-    final client = http.Client();
-
-    try {
-      final request = http.Request('GET', url);
-      final response = await client.send(request);
-
-      await for (var chunk in response.stream.transform(utf8.decoder)) {
-        final lines = chunk.split('\n');
-        for (var line in lines) {
-          if (line.startsWith('data:')) {
-            final jsonData = line.substring(5).trim();
-
-            if (jsonData.isNotEmpty) {
-              try {
-                final Map<String, dynamic> resp = json.decode(jsonData);
-                if (resp["streamTitle"] != null) {
-                  yield resp["streamTitle"];
-                }
-              } catch (e) {
-                yield* Stream.error("Error parsing JSON: $e");
-              }
-            }
-          }
-        }
-      }
-    } catch (e) {
-      yield* Stream.error("Request error: $e");
-    } finally {
-      client.close();
-    }
-  }
 
   void initState() {
     ref.read(radioServiceProvider).playerStateStream.listen((state) async {
@@ -278,6 +246,8 @@ class _RadioPageState extends ConsumerState<RadioPage>
           genre: 'Religious',
           artUri: Uri.parse(
               'https://zeno.fm/_next/image/?url=https%3A%2F%2Fimages.zeno.fm%2FoU_QTjtJrboK2rm3nPb8NiKuieHzoQuYg06OF-85A8U%2Frs%3Afit%3A240%3A240%2Fg%3Ace%3A0%3A0%2FaHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zLzJmNjE2OTI2LTkzOGQtNDNmZC1iYjBiLTBiMDM0M2ExMmFhMS9pbWFnZS8_dXBkYXRlZD0xNzE5NDYwNDEyMDAw.webp&w=3840&q=100'),
+          displayDescription: "Radio en vivo de la iglesia A&R Morelia",
+          displayTitle: "Radio En Vivo | Amor & Restauración Morelia",
         ),
       );
       //await audioSource.clearCache();
@@ -366,6 +336,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
   Future<void> stopRadio() async {
     await audioPlayer.stop();
     ref.read(radioisPlayingProvider.notifier).update((state) => false);
+    streamHandler.stopStream();
   }
 
   void scrollTop() {
@@ -383,9 +354,11 @@ class _RadioPageState extends ConsumerState<RadioPage>
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        editorController.clearFocus();
       },
       child: Scaffold(
         backgroundColor: ColorStyle.whiteBacground,
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -482,7 +455,8 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                           height: 15,
                                         ),
                                         StreamBuilder<String>(
-                                            stream: _currentSongStream(),
+                                            stream: streamHandler
+                                                .currentSongStream(),
                                             builder: (context, snapshot) {
                                               if (!snapshot.hasData ||
                                                   snapshot.data == " - ") {
@@ -568,24 +542,8 @@ class _RadioPageState extends ConsumerState<RadioPage>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            final Uri toLaunch = Uri(
-                                scheme: 'https',
-                                host: 'walink.co',
-                                path: '99cfc1',
-                                queryParameters: {});
-
-                            launchUrl(toLaunch,
-                                mode: LaunchMode.externalApplication);
-                          },
-                          icon: ImageIcon(
-                            AssetImage(
-                              'assets/icon/whatsapp.png',
-                            ),
-                          ),
-                          color: Colors.green,
-                          iconSize: 47,
+                        SizedBox(
+                          width: 60,
                         ),
                         Bounceable(
                           onTap: () async {
@@ -655,6 +613,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                       ],
                     ),
                     CommentsScreenWidget(
+                      editorController: editorController,
                       commentField: commentField,
                       commnetKey: commnetKey,
                     ),
