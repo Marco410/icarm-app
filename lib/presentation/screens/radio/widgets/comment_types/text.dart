@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:go_router/go_router.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/models/CommentModel.dart';
 import 'package:icarm/presentation/screens/radio/comments.dart';
@@ -139,13 +140,14 @@ Widget TextComment(
                 Transform.translate(
                   offset: Offset(0, -10),
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       NotificationUI.instance.notificationToAcceptAction(
                           context, "¿Estás seguro de eliminar tu comentario?",
                           () async {
                         context.pop();
                         final res = await Comment.deleteComment(commentID);
                         if (res) {
+                          await Haptics.vibrate(HapticsType.success);
                           NotificationUI.instance
                               .notificationSuccess("Comentario eliminado.");
                         } else {

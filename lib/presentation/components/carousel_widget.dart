@@ -13,7 +13,7 @@ class CarouselWidget extends StatelessWidget {
       required this.onPageChanged});
 
   final List<Widget> textItems;
-  final CarouselController controller;
+  final CarouselSliderController controller;
   final int current;
   final Function onPageChanged;
   final String image;

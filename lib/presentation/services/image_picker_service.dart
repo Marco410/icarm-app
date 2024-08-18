@@ -7,7 +7,7 @@ import 'package:flutter/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/presentation/controllers/user_controller.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photo_manager/photo_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../config/services/notification_ui_service.dart';
 import '../components/views/crop_image_page.dart';
 import '../providers/user_provider.dart';
@@ -64,13 +64,23 @@ class CustomImagePicker {
     }
 
     Future<void> requestPermissionAndProceed(ImageSource source) async {
-      final permitted = await PhotoManager.requestPermissionExtend();
-      if (!permitted.hasAccess) {
+      //final permitted = await PhotoManager.requestPermissionExtend();
+      final permitted = await Permission.mediaLibrary.status;
+      ;
+      if (source == ImageSource.gallery && permitted.isDenied) {
         NotificationUI.instance.notificationWarning(
-          source == ImageSource.gallery
-              ? "Se negaron los permisos de acceso a la galería"
-              : "Se negaron los permisos de acceso a la cámara",
+          "Se negaron los permisos de acceso a la galería",
         );
+        Permission.mediaLibrary.request();
+        return;
+      }
+      final permitted2 = await Permission.camera.status;
+
+      if (source == ImageSource.camera && permitted2.isDenied) {
+        NotificationUI.instance.notificationWarning(
+          "Se negaron los permisos de acceso a la cámara",
+        );
+        Permission.camera.request();
         return;
       }
 

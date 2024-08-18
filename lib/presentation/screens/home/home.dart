@@ -43,7 +43,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
   Duration position = Duration.zero;
   _HomeState();
 
-  final CarouselController _controllerC = CarouselController();
+  final CarouselSliderController _controllerC = CarouselSliderController();
   int _current = 2;
 
   @override

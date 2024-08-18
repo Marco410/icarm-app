@@ -43,7 +43,7 @@ Widget AlertWidget(
                             color: ColorStyle.alert,
                             borderRadius: BorderRadius.circular(30)),
                         child: Icon(
-                          Icons.warning_rounded,
+                          Icons.article_rounded,
                           color: ColorStyle.whiteBacground,
                           size: 21,
                         ))),
