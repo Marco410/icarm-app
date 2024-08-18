@@ -57,8 +57,8 @@ Future<void> showComment(BuildContext context, CommentF comment,
                             ),
                             Text(
                               comment.nameSender,
-                              style: TxtStyle.headerStyle.copyWith(
-                                  color: Colors.white, fontSize: 6.sp),
+                              style: TxtStyle.headerStyle
+                                  .copyWith(color: Colors.white, fontSize: 6.f),
                             ),
                             Container(
                                 alignment: Alignment.center,
@@ -161,7 +161,7 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                             textAlign: TextAlign.center,
                                             style: TxtStyle.labelText.copyWith(
                                                 color: Colors.white,
-                                                fontSize: 6.sp),
+                                                fontSize: 6.f),
                                           ),
                                         ),
                                       );

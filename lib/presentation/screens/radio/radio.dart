@@ -399,7 +399,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                     Text(
                       "A&R Radio - En vivo",
                       style: TxtStyle.headerStyle.copyWith(
-                          color: ColorStyle.primaryColor, fontSize: 9.sp),
+                          color: ColorStyle.primaryColor, fontSize: 9.f),
                     ),
                     SizedBox(
                       height: 10,
@@ -430,14 +430,14 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                     "Una palabra, puede cambiar tu vida.",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 6.sp,
+                                        fontSize: 7.f,
                                         fontWeight: FontWeight.normal)),
                               ),
                               Text(
                                 'Puede tardar algunos segundos en empezar.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 4.sp,
+                                    fontSize: 5.f,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -506,7 +506,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                                           Offset(30, 30)),
                                                   style: TxtStyle.labelText
                                                       .copyWith(
-                                                          fontSize: 6.5.sp),
+                                                          fontSize: 6.5.f),
                                                 );
                                               }
                                             })
@@ -528,7 +528,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                           'Da clic en el botón de play para reproducir.',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                              fontSize: 5.sp,
+                                              fontSize: 5.f,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.bold),
                                         )
