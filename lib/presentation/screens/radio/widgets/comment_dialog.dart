@@ -19,7 +19,6 @@ import 'package:timeago/timeago.dart' as timeago;
 Future<void> showComment(BuildContext context, CommentF comment,
     String commentID, bool isSender) async {
   // ignore: use_build_context_synchronously
-  FocusNode myFocusNodeResena = FocusNode();
   await Haptics.vibrate(HapticsType.success);
   final TextEditingController replyController = TextEditingController();
   FocusNode replyFocus = FocusNode();
@@ -32,7 +31,7 @@ Future<void> showComment(BuildContext context, CommentF comment,
       return StatefulBuilder(
           builder: ((ctx, setState) => GestureDetector(
                 onTap: () {
-                  myFocusNodeResena.unfocus();
+                  replyFocus.unfocus();
                 },
                 child: Stack(
                   alignment: Alignment.topCenter,
@@ -65,9 +64,81 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                 alignment: Alignment.center,
                                 width: 60.w,
                                 child: renderComment(comment.comment)),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextFieldWidget(
+                                    border: false,
+                                    isRequired: false,
+                                    textInputType: TextInputType.text,
+                                    hintText: 'Escribe tu respuesta',
+                                    controller: replyController,
+                                    focusNode: replyFocus,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                (!loader)
+                                    ? SizedBox(
+                                        height: 45,
+                                        width: 45,
+                                        child: Bounceable(
+                                          onTap: () async {
+                                            if (replyController.text == "") {
+                                              return;
+                                            }
+
+                                            setState(() {
+                                              loader = true;
+                                            });
+
+                                            final replySent =
+                                                await Comment.addReply(
+                                                    comment,
+                                                    commentID,
+                                                    replyController.text);
+
+                                            if (replySent) {
+                                              await Haptics.vibrate(
+                                                  HapticsType.success);
+                                              setState(() {
+                                                replyController.text = "";
+                                                loader = false;
+                                              });
+                                            } else {
+                                              NotificationUI.instance
+                                                  .notificationError(
+                                                      "Ocurrió un error al añadir tu respuesta. Por favor intente de nuevo.");
+                                              setState(() {
+                                                loader = false;
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                                color: (!isSender)
+                                                    ? ColorStyle.secondaryColor
+                                                    : ColorStyle.primaryColor,
+                                                boxShadow:
+                                                    ShadowStyle.boxShadow,
+                                                borderRadius:
+                                                    BorderRadius.circular(40)),
+                                            child: const Icon(
+                                              Icons.send_rounded,
+                                              color: Colors.white,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : LoadingStandardWidget.loadingWidget(30),
+                              ],
+                            ),
                             Container(
                                 height: 1,
-                                margin: EdgeInsets.symmetric(vertical: 5),
+                                margin: EdgeInsets.symmetric(vertical: 10),
                                 color: Colors.grey),
                             Container(
                               child: StreamBuilder<CommentF>(
@@ -295,81 +366,8 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                         ));
                                   }),
                             ),
-                            Spacer(),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextFieldWidget(
-                                    border: false,
-                                    isRequired: false,
-                                    textInputType: TextInputType.number,
-                                    hintText: 'Escribe tu respuesta',
-                                    controller: replyController,
-                                    focusNode: replyFocus,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                (!loader)
-                                    ? SizedBox(
-                                        height: 45,
-                                        width: 45,
-                                        child: Bounceable(
-                                          onTap: () async {
-                                            if (replyController.text == "") {
-                                              return;
-                                            }
-
-                                            setState(() {
-                                              loader = true;
-                                            });
-
-                                            final replySent =
-                                                await Comment.addReply(
-                                                    comment,
-                                                    commentID,
-                                                    replyController.text);
-
-                                            if (replySent) {
-                                              await Haptics.vibrate(
-                                                  HapticsType.success);
-                                              setState(() {
-                                                replyController.text = "";
-                                                loader = false;
-                                              });
-                                            } else {
-                                              NotificationUI.instance
-                                                  .notificationError(
-                                                      "Ocurrió un error al añadir tu respuesta. Por favor intente de nuevo.");
-                                              setState(() {
-                                                loader = false;
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                                color: (!isSender)
-                                                    ? ColorStyle.secondaryColor
-                                                    : ColorStyle.primaryColor,
-                                                boxShadow:
-                                                    ShadowStyle.boxShadow,
-                                                borderRadius:
-                                                    BorderRadius.circular(40)),
-                                            child: const Icon(
-                                              Icons.send_rounded,
-                                              color: Colors.white,
-                                              size: 18,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : LoadingStandardWidget.loadingWidget(30),
-                              ],
-                            ),
                             SizedBox(
-                              height: 50,
+                              height: 30,
                             )
                           ],
                         ),
@@ -385,20 +383,22 @@ Future<void> showComment(BuildContext context, CommentF comment,
                       ),
                     ),
                     Positioned(
-                        top: -10,
-                        right: 10,
+                        top: -5,
+                        right: 5,
                         child: Bounceable(
                           onTap: () => context.pop(),
                           child: Container(
-                            height: 30,
-                            width: 30,
+                            height: 35,
+                            width: 35,
                             decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(40),
-                                boxShadow: ShadowStyle.boxShadow),
+                              color: (isSender)
+                                  ? ColorStyle.secondaryColor
+                                  : ColorStyle.primaryColor,
+                              borderRadius: BorderRadius.circular(40),
+                            ),
                             child: Icon(
                               Icons.close_rounded,
-                              color: Colors.redAccent,
+                              color: Colors.white,
                             ),
                           ),
                         ))

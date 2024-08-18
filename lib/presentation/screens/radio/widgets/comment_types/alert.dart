@@ -17,41 +17,44 @@ Widget AlertWidget(
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-                alignment: Alignment.center,
-                width: double.infinity,
-                margin:
-                    EdgeInsets.only(bottom: 0, top: 10, left: 20, right: 20),
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                decoration: BoxDecoration(
-                    color: ColorStyle.alert,
-                    boxShadow: ShadowStyle.boxShadow,
-                    borderRadius: BorderRadius.circular(8)),
-                child: renderComment(comment.comment)),
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    margin: EdgeInsets.only(
+                        bottom: 0, top: 27, left: 20, right: 20),
+                    padding: EdgeInsets.only(
+                        top: 10, bottom: 5, left: 15, right: 15),
+                    decoration: BoxDecoration(
+                        color: ColorStyle.alert,
+                        boxShadow: ShadowStyle.boxShadow,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: renderComment(comment.comment)),
+                Positioned(
+                    top: 5,
+                    child: Container(
+                        padding: EdgeInsets.all(5),
+                        width: 45,
+                        height: 45,
+                        decoration: BoxDecoration(
+                            color: ColorStyle.alert,
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Icon(
+                          Icons.warning_rounded,
+                          color: ColorStyle.whiteBacground,
+                          size: 21,
+                        ))),
+              ],
+            ),
             Text(
               timeago.format(comment.timestamp!.toDate(), locale: 'es'),
               style: TxtStyle.hintText,
             ),
           ],
         ),
-        Positioned(
-            top: 0,
-            left: 10,
-            child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: ShadowStyle.boxShadow,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(4))),
-                child: Icon(
-                  Icons.warning,
-                  color: ColorStyle.secondaryColor,
-                  size: 15,
-                ))),
         (isSender)
             ? Positioned(
                 bottom: 0,
