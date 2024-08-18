@@ -21,7 +21,7 @@ class ColorStyle {
 class TxtStyle {
   static final headerStyle = TextStyle(
       fontFamily: "Montserrat",
-      fontSize: 8.f,
+      fontSize: 9.f,
       fontWeight: FontWeight.w800,
       color: ColorStyle.primaryColor,
       letterSpacing: 1.5);
@@ -35,19 +35,19 @@ class TxtStyle {
 
   static final descriptionStyle = TextStyle(
       fontFamily: "Montserrat",
-      fontSize: 5.f,
+      fontSize: 6.f,
       color: Colors.white,
       fontWeight: FontWeight.w400);
 
   static final labelText = TextStyle(
       fontFamily: "Montserrat",
-      fontSize: 5.f,
+      fontSize: 6.f,
       color: ColorStyle.primaryColor,
       fontWeight: FontWeight.bold);
 
   static final hintText = TextStyle(
       fontFamily: "Montserrat",
-      fontSize: 4.5.f,
+      fontSize: 5.f,
       color: Colors.grey,
       fontWeight: FontWeight.w400);
 

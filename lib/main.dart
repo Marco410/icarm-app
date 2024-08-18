@@ -17,7 +17,6 @@ import 'config/routes/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //se carga la clase con unica instancia de preferencias de usuario
   final prefs = new PreferenciasUsuario();
   await prefs.initPrefs();
 

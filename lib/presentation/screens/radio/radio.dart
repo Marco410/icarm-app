@@ -430,14 +430,14 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                     "Una palabra, puede cambiar tu vida.",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 7.f,
+                                        fontSize: 8.f,
                                         fontWeight: FontWeight.normal)),
                               ),
                               Text(
                                 'Puede tardar algunos segundos en empezar.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontSize: 5.f,
+                                    fontSize: 6.f,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -528,7 +528,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                           'Da clic en el botón de play para reproducir.',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                              fontSize: 5.f,
+                                              fontSize: 5.5.f,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.bold),
                                         )

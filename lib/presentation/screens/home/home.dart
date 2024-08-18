@@ -218,7 +218,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                                         ? "${prefs.nombre} ¡bienvenido!"
                                         : '¡Bienvenido!',
                                     style: TxtStyle.headerStyle.copyWith(
-                                        color: Colors.white, fontSize: 9.sp),
+                                        color: Colors.white, fontSize: 11.f),
                                     textAlign: TextAlign.center,
                                   ),
                                   SizedBox(
@@ -390,7 +390,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                                                                     color: Colors
                                                                         .white,
                                                                     fontSize:
-                                                                        4.3.sp),
+                                                                        5.f),
                                                           ),
                                                         )),
                                                     Positioned(
@@ -437,8 +437,8 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                                                                 style: TxtStyle
                                                                     .labelText
                                                                     .copyWith(
-                                                                        fontSize: 4
-                                                                            .sp,
+                                                                        fontSize:
+                                                                            5.f,
                                                                         color: Colors
                                                                             .white),
                                                               ),
@@ -452,8 +452,8 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                                                                 style: TxtStyle
                                                                     .labelText
                                                                     .copyWith(
-                                                                        fontSize: 3.5
-                                                                            .sp,
+                                                                        fontSize:
+                                                                            4.f,
                                                                         color: Colors
                                                                             .white),
                                                               ),
@@ -499,7 +499,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                       ),
                       Text(
                         "Servicios generales",
-                        style: TxtStyle.labelText.copyWith(fontSize: 17),
+                        style: TxtStyle.labelText.copyWith(fontSize: 9.f),
                       ),
                       SizedBox(
                         height: 5,
@@ -534,7 +534,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                       ),
                       Text(
                         "Jóvenes",
-                        style: TxtStyle.labelText.copyWith(fontSize: 17),
+                        style: TxtStyle.labelText.copyWith(fontSize: 9.f),
                       ),
                       SizedBox(
                         height: 5,
@@ -554,7 +554,7 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                       ),
                       Text(
                         "Noches de Restauración",
-                        style: TxtStyle.labelText.copyWith(fontSize: 17),
+                        style: TxtStyle.labelText.copyWith(fontSize: 9.f),
                       ),
                       SizedBox(
                         height: 5,

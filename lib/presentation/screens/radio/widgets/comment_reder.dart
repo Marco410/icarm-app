@@ -9,7 +9,7 @@ Widget renderComment(String comment) {
     style: {
       "p": Style(
           color: Colors.white,
-          fontSize: FontSize(5.f),
+          fontSize: FontSize(5.6.f),
           lineHeight: LineHeight(1.3),
           margin: Margins.only(bottom: 4),
           textDecorationColor: Colors.white,
@@ -22,7 +22,7 @@ Widget renderComment(String comment) {
       ),
       "li": Style(
         color: Colors.white,
-        fontSize: FontSize(5.f),
+        fontSize: FontSize(5.6.f),
         lineHeight: LineHeight(0),
         margin: Margins.only(bottom: 0),
         textDecorationColor: Colors.white,
