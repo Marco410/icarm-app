@@ -147,8 +147,9 @@ class SearchableListWidget extends StatelessWidget {
             )
             .toList(),
         style: const TextStyle(fontSize: 13),
-        builder: (List<Option> displayedList, int itemIndex, Option item) =>
-            ItemOption(option: item),
+        /*  builder: (List<Option> displayedList, int itemIndex, Option item) =>
+            ItemOption(option: item), */
+        itemBuilder: (Option item) => ItemOption(option: item),
         emptyWidget: const Text("Sin coincidencias"),
         inputDecoration: InputDecoration(
             contentPadding:

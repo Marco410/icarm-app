@@ -52,10 +52,12 @@ Widget BibleWidget(
                       ))),
             ],
           ),
-          Text(
-            timeago.format(comment.timestamp!.toDate(), locale: 'es'),
-            style: TxtStyle.hintText,
-          ),
+          (comment.timestamp != null)
+              ? Text(
+                  timeago.format(comment.timestamp!.toDate(), locale: 'es'),
+                  style: TxtStyle.hintText,
+                )
+              : SizedBox(),
         ],
       ),
       (isSender)

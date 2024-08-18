@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,13 +25,6 @@ class EventScreen extends ConsumerStatefulWidget {
 }
 
 class _EventScreenState extends ConsumerState<EventScreen> {
-  List<Calendar> _calendars = [];
-  List<Calendar> get _writableCalendars =>
-      _calendars.where((c) => c.isReadOnly == false).toList();
-
-  List<Calendar> get _readOnlyCalendars =>
-      _calendars.where((c) => c.isReadOnly == true).toList();
-
   @override
   void initState() {
     super.initState();

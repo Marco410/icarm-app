@@ -63,7 +63,7 @@ class CropImagePage extends ConsumerWidget {
           title: Text(
             "Selecciona el área a cortar",
             style: TxtStyle.headerStyle
-                .copyWith(fontSize: 5.5.sp, color: Colors.white),
+                .copyWith(fontSize: 6.5.f, color: Colors.white),
           ),
         ),
         body: Stack(
@@ -78,10 +78,11 @@ class CropImagePage extends ConsumerWidget {
                       controller: cropController,
                       baseColor: Colors.white,
                       maskColor: Colors.black54,
-                      aspectRatio: 1,
+                      aspectRatio: 4 / 4,
                       radius: 20,
                       interactive: false,
                       progressIndicator: LoadingStandardWidget.loadingWidget(),
+                      withCircleUi: true,
                       cornerDotBuilder: (size, edgeAlignment) {
                         return Align(
                           alignment: Alignment.center,
@@ -126,9 +127,9 @@ class CropImagePage extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(15)),
                       child: Center(
                         child: Text(
-                          "Cortar",
+                          "Cortar y guardar",
                           style: TxtStyle.headerStyle
-                              .copyWith(color: Colors.white, fontSize: 5.sp),
+                              .copyWith(color: Colors.white, fontSize: 5.f),
                         ),
                       )),
                 )

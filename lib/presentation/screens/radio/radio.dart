@@ -35,7 +35,7 @@ class RadioPage extends ConsumerStatefulWidget {
 class _RadioPageState extends ConsumerState<RadioPage>
     with WidgetsBindingObserver {
   bool loading = false;
-  final CarouselController _controllerC = CarouselController();
+  final CarouselSliderController _controllerC = CarouselSliderController();
   int _current = 0;
   bool loadingStreamRadio = false;
   int connectionTrys = 0;
