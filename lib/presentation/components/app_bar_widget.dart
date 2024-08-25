@@ -98,7 +98,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                             BorderRadius.circular(100),
                                         image: DecorationImage(
                                           image: imageProvider,
-                                          fit: BoxFit.fill,
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     ),

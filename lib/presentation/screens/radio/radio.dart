@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'dart:math';
 
 import 'package:animation_wrappers/animation_wrappers.dart';
@@ -43,13 +44,13 @@ class _RadioPageState extends ConsumerState<RadioPage>
   final commnetKey = new GlobalKey();
   final streamHandler = StreamHandler();
 
-  FocusNode commentField = FocusNode();
   double scrollPosition = 0;
   final _scrollController = ScrollController();
   final HtmlEditorController editorController = HtmlEditorController(
       toolbarOptions: HtmlToolbarOptions(
           textStyle: TxtStyle.labelText,
           toolbarPosition: ToolbarPosition.custom));
+
   List<Widget> textItems = [
     ContentAdWidget(
       image: "assets/image/home/hombres-radio.jpeg",
@@ -192,7 +193,15 @@ class _RadioPageState extends ConsumerState<RadioPage>
       setState(() {
         scrollPosition = _scrollController.offset;
       });
+
+      if (scrollPosition > 100) {
+        editorController.clearFocus();
+      }
     });
+
+    if (editorController.initialized) {
+      editorController.initEditor(context);
+    }
 
     super.initState();
   }
@@ -200,6 +209,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
   @override
   void dispose() {
     super.dispose();
+    editorController.dispose();
     _scrollController.dispose();
   }
 
@@ -588,11 +598,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                           alignment: Alignment.centerRight,
                           child: Bounceable(
                             onTap: () {
-                              FocusScope.of(context).requestFocus(commentField);
-                              Scrollable.ensureVisible(
-                                  commnetKey.currentContext!,
-                                  duration: Duration(milliseconds: 500),
-                                  curve: Curves.easeOut);
+                              editorController.setFocus();
                             },
                             child: Container(
                               height: 51,
@@ -614,7 +620,6 @@ class _RadioPageState extends ConsumerState<RadioPage>
                     ),
                     CommentsScreenWidget(
                       editorController: editorController,
-                      commentField: commentField,
                       commnetKey: commnetKey,
                     ),
                   ],

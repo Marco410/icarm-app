@@ -38,7 +38,7 @@ Future<void> showComment(BuildContext context, CommentF comment,
                   clipBehavior: Clip.none,
                   children: [
                     Container(
-                      height: 55.h,
+                      height: 80.h,
                       color: const Color(0xFF737373),
                       child: Container(
                         padding:
