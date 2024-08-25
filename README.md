@@ -13,7 +13,7 @@ Ajustes para el paquete ´flutter_rte´
 
 En ´editor_widget´, función ´_hintTextWidget()´ linea 336 después del ´else´, añadir esto:
 
---
+```Dart
 return Padding(
 padding: const EdgeInsets.only(left: 10, top: 5),
 child: Text(editorOptions.hint ?? '',
@@ -28,11 +28,12 @@ color: Theme.of(context)
 ?.color
 ?.withOpacity(.3))),
 );
---
+```
 
 En ´_ScrollPatchState()´linea 463 comentar la excepción para iOS.
 
-/_ else if (!widget.controller.hasFocus) {
+```Dart
+else if (!widget.controller.hasFocus) {
 if (io.Platform.isIOS) {
 return GestureDetector(
 onTap: () {
@@ -40,4 +41,5 @@ widget.controller.setFocus();
 },
 child: const AbsorbPointer(child: SizedBox.expand()));
 }
-} _/
+}
+```
