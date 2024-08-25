@@ -64,16 +64,18 @@ class CustomImagePicker {
     }
 
     Future<void> requestPermissionAndProceed(ImageSource source) async {
-      //final permitted = await PhotoManager.requestPermissionExtend();
-      final permitted = await Permission.mediaLibrary.status;
-      ;
-      if (source == ImageSource.gallery && permitted.isDenied) {
+      /*  if (source == ImageSource.gallery && permitted.isDenied) {
         NotificationUI.instance.notificationWarning(
           "Se negaron los permisos de acceso a la galería",
         );
-        Permission.mediaLibrary.request();
+        var p = await Permission.accessMediaLocation.request();
+        if (p == PermissionStatus.permanentlyDenied) {
+          openAppSettings();
+        }
+        print("p");
+        print(p);
         return;
-      }
+      } */
       final permitted2 = await Permission.camera.status;
 
       if (source == ImageSource.camera && permitted2.isDenied) {

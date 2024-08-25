@@ -53,28 +53,26 @@ class _UserImageProfileWidgetState
                   height: 130,
                   width: 130,
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: CachedNetworkImage(
-                          errorWidget: (context, url, error) =>
-                              SvgPicture.asset("assets/icon/user-icon.svg",
-                                  height: 100),
-                          imageUrl:
-                              "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
-                          placeholder: (context, url) =>
-                              LoadingStandardWidget.loadingWidget(),
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: 55.sp,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.fill),
-                            ),
-                          ),
-                          height: 55.sp,
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      errorWidget: (context, url, error) => SvgPicture.asset(
+                          "assets/icon/user-icon.svg",
+                          height: 100),
+                      imageUrl:
+                          "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
+                      placeholder: (context, url) =>
+                          LoadingStandardWidget.loadingWidget(),
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: 55.sp,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
                         ),
-                      )))
+                      ),
+                      height: 55.sp,
+                    ),
+                  ))
               : SvgPicture.asset("assets/icon/user-icon.svg", height: 110),
           Positioned(
             bottom: -5,

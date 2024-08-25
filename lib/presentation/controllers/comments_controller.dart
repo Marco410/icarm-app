@@ -84,7 +84,6 @@ class Comment {
 
       DocumentSnapshot doc = await commentRef.get();
       if (!doc.exists) {
-        print("El documento no existe");
         return false;
       }
 

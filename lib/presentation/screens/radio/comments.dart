@@ -23,14 +23,10 @@ import '../../providers/auth_service.dart';
 import 'widgets/comment_types/text.dart';
 
 class CommentsScreenWidget extends StatefulWidget {
-  final FocusNode commentField;
   final GlobalKey commnetKey;
   final HtmlEditorController editorController;
   const CommentsScreenWidget(
-      {super.key,
-      required this.commentField,
-      required this.commnetKey,
-      required this.editorController});
+      {super.key, required this.commnetKey, required this.editorController});
 
   @override
   State<CommentsScreenWidget> createState() => _CommentsScreenWidgetState();
@@ -140,10 +136,19 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: ShadowStyle.boxShadow),
                                 child: HtmlEditor(
-                                  height: 64,
-                                  enableDictation: false,
-                                  hint: "Escribe tu comentario.",
-                                  controller: widget.editorController,
+                                  height: 74,
+                                  hint: "Escribe tu comentario...",
+                                  controller: widget.editorController
+                                    ..callbacks = Callbacks(onFocus: () {
+                                      Scrollable.ensureVisible(
+                                              widget.commnetKey.currentContext!,
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              curve: Curves.easeOut)
+                                          .whenComplete(() {
+                                        widget.editorController.setFocus();
+                                      });
+                                    }),
                                 ),
                               ),
                             ),
@@ -288,46 +293,40 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                     stream: Comment.getComments(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return Expanded(
-                            flex: 10,
+                        return Center(
                             child: LoadingStandardWidget.loadingErrorWidget());
                       }
 
                       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return Expanded(
-                          flex: 10,
-                          child: Center(
-                            child: LoadingStandardWidget.loadingNoDataWidget(
-                                'comentarios'),
-                          ),
+                        return Center(
+                          child: LoadingStandardWidget.loadingNoDataWidget(
+                              'comentarios'),
                         );
                       }
                       final doc = snapshot.data!.docs;
 
-                      return Expanded(
-                          flex: 10,
-                          child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: doc.length,
-                            itemBuilder: (context, index) {
-                              bool isSender =
-                                  doc[index]['userId'] == prefs.usuarioID;
-                              CommentF comment = doc[index].data() as CommentF;
-                              return Container(
-                                width: double.infinity,
-                                margin: EdgeInsets.only(bottom: 5),
-                                child: (comment.type == 'alert')
-                                    ? AlertWidget(isSender, comment,
+                      return ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: doc.length,
+                        itemBuilder: (context, index) {
+                          bool isSender =
+                              doc[index]['userId'] == prefs.usuarioID;
+                          CommentF comment = doc[index].data() as CommentF;
+                          return Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(bottom: 5),
+                            child: (comment.type == 'alert')
+                                ? AlertWidget(
+                                    isSender, comment, doc[index].id, context)
+                                : (comment.type == 'bible')
+                                    ? BibleWidget(isSender, comment,
                                         doc[index].id, context)
-                                    : (comment.type == 'bible')
-                                        ? BibleWidget(isSender, comment,
-                                            doc[index].id, context)
-                                        : TextComment(isSender, comment,
-                                            doc[index].id, context),
-                              );
-                            },
-                          ));
+                                    : TextComment(isSender, comment,
+                                        doc[index].id, context),
+                          );
+                        },
+                      );
                     }),
               ),
             ),
@@ -442,7 +441,7 @@ class ImagePerfilWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                     image: DecorationImage(
                       image: imageProvider,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
