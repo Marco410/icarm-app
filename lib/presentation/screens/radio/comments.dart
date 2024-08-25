@@ -195,10 +195,23 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                                   boxShadow: ShadowStyle.boxShadow,
                                   borderRadius: BorderRadius.circular(8),
                                   color: Colors.white),
-                              child: Text(
-                                "Tipo de comentario: ${TypeComment[typeComment]}",
-                                style: TxtStyle.labelText
-                                    .copyWith(fontSize: 4.5.f),
+                              child: Row(
+                                children: [
+                                  Text("Tipo de comentario:",
+                                      style: TxtStyle.labelText.copyWith(
+                                        fontSize: 4.5.f,
+                                      )),
+                                  Text(
+                                    "${TypeComment[typeComment]}",
+                                    style: TxtStyle.labelText.copyWith(
+                                        fontSize: 4.5.f,
+                                        color: (typeComment == 'text')
+                                            ? Colors.black
+                                            : (typeComment == 'alert')
+                                                ? ColorStyle.alert
+                                                : ColorStyle.bible),
+                                  ),
+                                ],
                               )),
                         ),
                       ],
