@@ -56,7 +56,8 @@ Widget TextComment(
                       padding: EdgeInsets.only(
                           right: (isSender) ? 15 : 5,
                           left: (isSender) ? 5 : 15),
-                      child: renderComment(comment.comment),
+                      child:
+                          renderComment(comment.comment, Colors.white, 5.6.f),
                     ),
                   ),
                   Positioned(

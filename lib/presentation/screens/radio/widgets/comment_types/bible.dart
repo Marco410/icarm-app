@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:icarm/presentation/models/CommentModel.dart';
 import 'package:icarm/presentation/screens/radio/widgets/comment_reder.dart';
+import 'package:sizer_pro/sizer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../../config/services/notification_ui_service.dart';
@@ -35,7 +36,7 @@ Widget BibleWidget(
                           topRight: Radius.circular(8),
                           bottomLeft: Radius.circular(8),
                           bottomRight: Radius.circular(8))),
-                  child: renderComment(comment.comment)),
+                  child: renderComment(comment.comment, Colors.white, 5.6.f)),
               Positioned(
                   top: 5,
                   child: Container(

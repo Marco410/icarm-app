@@ -46,9 +46,7 @@ Future<void> showComment(BuildContext context, CommentF comment,
                         height: 90.h,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                            color: (isSender)
-                                ? ColorStyle.secondaryColor
-                                : ColorStyle.primaryColor,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(40)),
                         child: Column(
                           children: [
@@ -57,23 +55,25 @@ Future<void> showComment(BuildContext context, CommentF comment,
                             ),
                             Text(
                               comment.nameSender,
-                              style: TxtStyle.headerStyle
-                                  .copyWith(color: Colors.white, fontSize: 6.f),
+                              style: TxtStyle.headerStyle.copyWith(
+                                  color: Colors.black87, fontSize: 7.f),
                             ),
                             Container(
                                 alignment: Alignment.center,
                                 width: 60.w,
-                                child: renderComment(comment.comment)),
+                                child: renderComment(
+                                    comment.comment, Colors.black87, 6.f)),
                             Row(
                               children: [
                                 Expanded(
                                   child: TextFieldWidget(
-                                    border: false,
+                                    border: true,
                                     isRequired: false,
                                     textInputType: TextInputType.text,
                                     hintText: 'Escribe tu respuesta',
                                     controller: replyController,
                                     focusNode: replyFocus,
+                                    capitalize: true,
                                   ),
                                 ),
                                 SizedBox(
@@ -156,12 +156,27 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                       return Expanded(
                                         flex: 10,
                                         child: Center(
-                                          child: Text(
-                                            "Este comentario aún no tiene respuestas.",
-                                            textAlign: TextAlign.center,
-                                            style: TxtStyle.labelText.copyWith(
-                                                color: Colors.white,
-                                                fontSize: 6.f),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              ImageIcon(
+                                                  AssetImage(
+                                                    "assets/icon/reply.png",
+                                                  ),
+                                                  color:
+                                                      ColorStyle.secondaryColor,
+                                                  size: 40),
+                                              SizedBox(height: 10),
+                                              Text(
+                                                "Este comentario aún no tiene respuestas.",
+                                                textAlign: TextAlign.center,
+                                                style: TxtStyle.labelText
+                                                    .copyWith(
+                                                        color: Colors.black87,
+                                                        fontSize: 7.f),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       );
@@ -226,7 +241,7 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                                               .labelText
                                                               .copyWith(
                                                                   color: Colors
-                                                                      .white),
+                                                                      .black87),
                                                         ),
                                                         Container(
                                                           constraints:
@@ -238,7 +253,7 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                                                 isSender:
                                                                     isSenderReply,
                                                                 color: Colors
-                                                                    .white),
+                                                                    .black87),
                                                             child: Container(
                                                               padding: EdgeInsets.only(
                                                                   right:
@@ -263,7 +278,7 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                                                       .labelText
                                                                       .copyWith(
                                                                           color: Colors
-                                                                              .black,
+                                                                              .white,
                                                                           fontWeight:
                                                                               FontWeight.normal),
                                                                 ),

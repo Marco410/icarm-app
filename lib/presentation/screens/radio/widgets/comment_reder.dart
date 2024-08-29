@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:sizer_pro/sizer.dart';
 
-Widget renderComment(String comment) {
+Widget renderComment(String comment, Color color, double fontSize) {
   return Html(
     data: comment,
     shrinkWrap: true,
     style: {
       "p": Style(
-          color: Colors.white,
-          fontSize: FontSize(5.6.f),
+          color: color,
+          fontSize: FontSize(fontSize),
           lineHeight: LineHeight(1.3),
           margin: Margins.only(bottom: 4),
           textDecorationColor: Colors.white,

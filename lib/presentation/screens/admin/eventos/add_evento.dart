@@ -232,8 +232,10 @@ class _AddEventosAdminPageState extends ConsumerState<AddEventosAdminPage> {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
+                            boxShadow: ShadowStyle.boxShadow,
+                            color: Colors.white,
                             border: Border.all(
-                                width: 0.5, color: ColorStyle.hintColor),
+                                width: 0.3, color: ColorStyle.hintColor),
                           ),
                           child: (!isEditing)
                               ? HtmlEditor(

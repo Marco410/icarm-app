@@ -55,130 +55,138 @@ class _EventosAdminPageState extends ConsumerState<EventosAdminPage> {
             textAlign: TextAlign.center,
           ),
           listEventos.when(
-            data: (data) {
-              if (data.isEmpty) {
-                return Center(
-                    child:
-                        LoadingStandardWidget.loadingNoDataWidget("eventos"));
-              }
-              return Expanded(
-                flex: 10,
-                child: RefreshIndicator(
-                  onRefresh: () => refreshEventos(ref),
-                  child: ListView.builder(
-                    itemCount: data.length,
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          context.pushNamed('new.evento',
-                              pathParameters: {"type": 'edit'},
-                              extra: data[index]);
-                        },
-                        child: FadedScaleAnimation(
-                          child: Container(
-                              padding: EdgeInsets.all(20),
-                              margin: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black.withOpacity(0.5),
-                                      blurRadius: 10,
-                                      spreadRadius: -9,
-                                      offset: Offset(0, -1))
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  (data[index].imgHorizontal != null)
-                                      ? Expanded(
-                                          flex: 2,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  "${URL_MEDIA_EVENTO}${data[index].id}/${data[index].imgHorizontal}",
-                                              placeholder: (context, url) =>
-                                                  LoadingStandardWidget
-                                                      .loadingWidget(),
-                                              imageBuilder:
-                                                  (context, imageProvider) =>
-                                                      Container(
-                                                width: 40.sp,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  image: DecorationImage(
-                                                      image: imageProvider,
-                                                      fit: BoxFit.fill),
+              data: (data) {
+                if (data.isEmpty) {
+                  return Center(
+                      child:
+                          LoadingStandardWidget.loadingNoDataWidget("eventos"));
+                }
+                return Expanded(
+                  flex: 10,
+                  child: RefreshIndicator(
+                    onRefresh: () => refreshEventos(ref),
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () {
+                            context.pushNamed('new.evento',
+                                pathParameters: {"type": 'edit'},
+                                extra: data[index]);
+                          },
+                          child: FadedScaleAnimation(
+                            child: Container(
+                                padding: EdgeInsets.all(20),
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.5),
+                                        blurRadius: 10,
+                                        spreadRadius: -9,
+                                        offset: Offset(0, -1))
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    (data[index].imgHorizontal != null)
+                                        ? Expanded(
+                                            flex: 2,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    "${URL_MEDIA_EVENTO}${data[index].id}/${data[index].imgHorizontal}",
+                                                placeholder: (context, url) =>
+                                                    LoadingStandardWidget
+                                                        .loadingWidget(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Container(
+                                                  color: ColorStyle.hintColor,
+                                                  child: Icon(Icons
+                                                      .image_not_supported_rounded),
                                                 ),
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  width: 40.sp,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.fill),
+                                                  ),
+                                                ),
+                                                height: 28.sp,
                                               ),
-                                              height: 28.sp,
+                                            ),
+                                          )
+                                        : Expanded(
+                                            flex: 2,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              child: Image.asset(
+                                                  "assets/image/no-image.png",
+                                                  height: 28.sp,
+                                                  width: 40.sp,
+                                                  scale: 4.5),
                                             ),
                                           ),
-                                        )
-                                      : Expanded(
-                                          flex: 2,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            child: Image.asset(
-                                                "assets/image/no-image.png",
-                                                height: 28.sp,
-                                                width: 40.sp,
-                                                scale: 4.5),
-                                          ),
-                                        ),
-                                  SizedBox(
-                                    width: 30,
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          data[index].nombre,
-                                          style: TxtStyle.labelText
-                                              .copyWith(fontSize: 5.5.sp),
-                                        ),
-                                        Text(
-                                          DateFormat('dd MMM').format(
-                                                  data[index].fechaInicio) +
-                                              "-" +
-                                              DateFormat('dd MMM')
-                                                  .format(data[index].fechaFin),
-                                          style: TxtStyle.labelText.copyWith(
-                                              fontSize: 4.sp,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                      ],
+                                    SizedBox(
+                                      width: 30,
                                     ),
-                                  ),
-                                  Expanded(
-                                      flex: 1,
-                                      child:
-                                          Icon(Icons.arrow_forward_ios_rounded))
-                                ],
-                              )),
-                        ),
-                      );
-                    },
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            data[index].nombre,
+                                            style: TxtStyle.labelText
+                                                .copyWith(fontSize: 5.5.sp),
+                                          ),
+                                          Text(
+                                            DateFormat('dd MMM').format(
+                                                    data[index].fechaInicio) +
+                                                "-" +
+                                                DateFormat('dd MMM').format(
+                                                    data[index].fechaFin),
+                                            style: TxtStyle.labelText.copyWith(
+                                                fontSize: 4.sp,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Icon(
+                                            Icons.arrow_forward_ios_rounded))
+                                  ],
+                                )),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              );
-            },
-            loading: () => Center(child: LoadingStandardWidget.loadingWidget()),
-            error: (error, stackTrace) =>
-                Center(child: LoadingStandardWidget.loadingErrorWidget()),
-          ),
+                );
+              },
+              loading: () =>
+                  Center(child: LoadingStandardWidget.loadingWidget()),
+              error: (error, stackTrace) =>
+                  Center(child: LoadingStandardWidget.loadingErrorWidget())),
         ],
       ),
     );

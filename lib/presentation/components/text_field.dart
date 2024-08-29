@@ -79,12 +79,12 @@ class TextFieldWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: color ?? Colors.white,
-              border: border
-                  ? Border.all(color: ColorStyle.hintColor)
-                  : Border.all(color: Colors.transparent),
-              borderRadius: BorderRadius.circular(15),
-            ),
+                color: color ?? Colors.white,
+                border: border
+                    ? Border.all(color: ColorStyle.hintColor, width: 0.3)
+                    : Border.all(color: Colors.transparent),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: ShadowStyle.boxShadow),
             child: TextFormField(
               autofillHints: [autoFillHints ?? ""],
               readOnly: readOnly! || TextInputType.datetime == textInputType,

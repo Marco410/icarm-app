@@ -52,7 +52,9 @@ class DropdownWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: ColorStyle.hintColor)),
+                    boxShadow: ShadowStyle.boxShadow,
+                    border:
+                        Border.all(color: ColorStyle.hintColor, width: 0.3)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
