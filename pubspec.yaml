@@ -85,10 +85,8 @@ flutter:
     - assets/image/home/
     - assets/image/events/
     - assets/image/online/
-    - assets/avatars/
     - assets/icon/
     - assets/logos/
-    - assets/sounds/
     - assets/video/
 
 flutter_intl:
