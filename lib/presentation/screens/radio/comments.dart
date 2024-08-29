@@ -197,7 +197,7 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                                   color: Colors.white),
                               child: Row(
                                 children: [
-                                  Text("Tipo de comentario:",
+                                  Text("Tipo de comentario: ",
                                       style: TxtStyle.labelText.copyWith(
                                         fontSize: 4.5.f,
                                       )),

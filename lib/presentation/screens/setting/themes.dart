@@ -30,6 +30,6 @@ class ThemeBloc {
             scaffoldBackgroundColor: ColorStyle.background,
             primaryColor: ColorStyle.primaryColor,
             textSelectionTheme: TextSelectionThemeData(), colorScheme: ColorScheme.fromSwatch()
-                .copyWith(secondary: ColorStyle.primaryColor).copyWith(background: ColorStyle.blackBackground)));
+                .copyWith(secondary: ColorStyle.primaryColor).copyWith(surface: ColorStyle.blackBackground)));
   }
 }
