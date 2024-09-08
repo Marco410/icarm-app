@@ -241,10 +241,18 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                 child: Text(
                                     "Una palabra, puede cambiar tu vida.",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 8.f,
-                                        fontWeight: FontWeight.normal)),
+                                    style: TxtStyle.labelText.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 8.f)),
                               ),
+                              Text('En vivo las 24 hrs.',
+                                  textAlign: TextAlign.center,
+                                  style: TxtStyle.labelText),
+                              Text(
+                                  'Todos nuestros programas se guardan en todas nuestras plataformas. No te los pierdas.',
+                                  textAlign: TextAlign.center,
+                                  style: TxtStyle.labelText
+                                      .copyWith(fontWeight: FontWeight.normal)),
                               Text(
                                 'Puede tardar algunos segundos en empezar.',
                                 textAlign: TextAlign.center,
@@ -327,7 +335,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                   : Column(
                                       children: [
                                         Container(
-                                          height: 4,
+                                          height: 3.5,
                                           decoration: BoxDecoration(
                                               color: ColorStyle.secondaryColor,
                                               borderRadius:

@@ -36,6 +36,7 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
   bool loader = false;
   bool showTypeMessage = false;
   String typeComment = 'text';
+  bool canSendCommentsTypes = false;
 
   addComment() async {
     if (widget.editorController.contentIsEmpty) return;
@@ -64,6 +65,11 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
 
   @override
   void initState() {
+    setState(() {
+      canSendCommentsTypes =
+          prefs.usuarioRol.contains('1') || prefs.usuarioRol.contains('5');
+    });
+
     super.initState();
   }
 
@@ -78,11 +84,18 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
         key: widget.commnetKey,
         height: 50.h,
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        margin: EdgeInsets.only(top: 20, bottom: 15),
+        margin: EdgeInsets.only(top: 30, bottom: 15),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: ShadowStyle.boxShadow),
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0x26AAA9A9),
+                blurRadius: 10,
+                offset: Offset(0, 6),
+                spreadRadius: 20,
+              )
+            ]),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +129,7 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                       children: [
                         Row(
                           children: [
-                            (prefs.usuarioRol.contains('2'))
+                            (canSendCommentsTypes)
                                 ? IconButtonWidget(
                                     onTap: () {
                                       setState(() {
@@ -180,34 +193,36 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                                 : LoadingStandardWidget.loadingWidget(30),
                           ],
                         ),
-                        Positioned(
-                          bottom: -15,
-                          child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 2),
-                              decoration: BoxDecoration(
-                                  boxShadow: ShadowStyle.boxShadow,
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white),
-                              child: Row(
-                                children: [
-                                  Text("Tipo de comentario: ",
-                                      style: TxtStyle.labelText.copyWith(
-                                        fontSize: 4.5.f,
-                                      )),
-                                  Text(
-                                    "${TypeComment[typeComment]}",
-                                    style: TxtStyle.labelText.copyWith(
-                                        fontSize: 4.5.f,
-                                        color: (typeComment == 'text')
-                                            ? Colors.black
-                                            : (typeComment == 'alert')
-                                                ? ColorStyle.alert
-                                                : ColorStyle.bible),
-                                  ),
-                                ],
-                              )),
-                        ),
+                        (canSendCommentsTypes)
+                            ? Positioned(
+                                bottom: -15,
+                                child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 2),
+                                    decoration: BoxDecoration(
+                                        boxShadow: ShadowStyle.boxShadow,
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.white),
+                                    child: Row(
+                                      children: [
+                                        Text("Tipo de comentario: ",
+                                            style: TxtStyle.labelText.copyWith(
+                                              fontSize: 4.5.f,
+                                            )),
+                                        Text(
+                                          "${TypeComment[typeComment]}",
+                                          style: TxtStyle.labelText.copyWith(
+                                              fontSize: 4.5.f,
+                                              color: (typeComment == 'text')
+                                                  ? Colors.black
+                                                  : (typeComment == 'alert')
+                                                      ? ColorStyle.alert
+                                                      : ColorStyle.bible),
+                                        ),
+                                      ],
+                                    )),
+                              )
+                            : SizedBox(),
                       ],
                     ),
                   ),
