@@ -14,3 +14,15 @@ final radioServiceProvider = StateProvider<AudioPlayer>((ref) {
 final radioisPlayingProvider = StateProvider<bool>((ref) {
   return false;
 });
+
+final loadingStreamRadioProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
+final prosessionStateProvider = StateProvider<ProcessingState>((ref) {
+  return ProcessingState.idle;
+});
+
+final dateBufferProvider = StateProvider<DateTime?>((ref) {
+  return null;
+});

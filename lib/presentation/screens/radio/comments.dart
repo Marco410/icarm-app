@@ -116,19 +116,21 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                       children: [
                         Row(
                           children: [
-                            IconButtonWidget(
-                                onTap: () {
-                                  setState(() {
-                                    showTypeMessage = !showTypeMessage;
-                                  });
-                                },
-                                icon: (!showTypeMessage)
-                                    ? Icons.add_rounded
-                                    : Icons.remove,
-                                color: ColorStyle.whiteBacground,
-                                iconColor: (!showTypeMessage)
-                                    ? ColorStyle.primaryColor
-                                    : ColorStyle.secondaryColor),
+                            (prefs.usuarioRol.contains('2'))
+                                ? IconButtonWidget(
+                                    onTap: () {
+                                      setState(() {
+                                        showTypeMessage = !showTypeMessage;
+                                      });
+                                    },
+                                    icon: (!showTypeMessage)
+                                        ? Icons.add_rounded
+                                        : Icons.remove,
+                                    color: ColorStyle.whiteBacground,
+                                    iconColor: (!showTypeMessage)
+                                        ? ColorStyle.primaryColor
+                                        : ColorStyle.secondaryColor)
+                                : SizedBox(),
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
@@ -157,28 +159,20 @@ class _CommentsScreenWidgetState extends State<CommentsScreenWidget> {
                                 ? SizedBox(
                                     height: 40,
                                     width: 40,
-                                    child: Material(
-                                      borderRadius: BorderRadius.circular(50),
-                                      color: ColorStyle.secondaryColor,
-                                      child: InkWell(
-                                        splashColor: Colors.black26,
-                                        borderRadius: BorderRadius.circular(50),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: ColorStyle.secondaryColor,
+                                          boxShadow: ShadowStyle.boxShadow,
+                                          borderRadius:
+                                              BorderRadius.circular(13)),
+                                      child: Bounceable(
                                         onTap: () async {
                                           addComment();
                                         },
-                                        hoverColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        child: Ink(
-                                          decoration: BoxDecoration(
-                                              color: Colors.transparent,
-                                              boxShadow: ShadowStyle.boxShadow,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: const Icon(
-                                            Icons.send_rounded,
-                                            color: Colors.white,
-                                            size: 24,
-                                          ),
+                                        child: const Icon(
+                                          Icons.send_rounded,
+                                          color: Colors.white,
+                                          size: 24,
                                         ),
                                       ),
                                     ),
