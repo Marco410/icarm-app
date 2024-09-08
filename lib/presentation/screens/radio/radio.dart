@@ -233,7 +233,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                       child: Align(
                         alignment: Alignment.center,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          padding: const EdgeInsets.only(left: 15, right: 15),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -243,24 +243,28 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                     textAlign: TextAlign.center,
                                     style: TxtStyle.labelText.copyWith(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 8.f)),
+                                        fontSize: 7.f)),
                               ),
-                              Text('En vivo las 24 hrs.',
-                                  textAlign: TextAlign.center,
-                                  style: TxtStyle.labelText),
+                              (!radioIsPlaying && loadingStreamRadio)
+                                  ? Text('En vivo las 24 hrs.',
+                                      textAlign: TextAlign.center,
+                                      style: TxtStyle.labelText)
+                                  : SizedBox(),
                               Text(
                                   'Todos nuestros programas se guardan en todas nuestras plataformas. No te los pierdas.',
                                   textAlign: TextAlign.center,
                                   style: TxtStyle.labelText
                                       .copyWith(fontWeight: FontWeight.normal)),
-                              Text(
-                                'Puede tardar algunos segundos en empezar.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 6.f,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              (!radioIsPlaying && loadingStreamRadio)
+                                  ? Text(
+                                      'Puede tardar algunos segundos en empezar.',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 6.f,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : SizedBox(),
                               (radioIsPlaying && !loadingStreamRadio)
                                   ? Column(
                                       crossAxisAlignment:
@@ -359,21 +363,13 @@ class _RadioPageState extends ConsumerState<RadioPage>
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.none,
                       children: [
-                        SizedBox(
-                          width: 60,
-                        ),
-                        PlayButtonRadio(
-                          radioIsPlaying: radioIsPlaying,
-                          radioController: radioController,
-                          loadingStreamRadio: loadingStreamRadio,
-                          connection: true,
-                        ),
                         Container(
                           decoration: BoxDecoration(),
-                          margin: EdgeInsets.only(right: 20),
+                          margin: EdgeInsets.only(right: 40),
                           alignment: Alignment.centerRight,
                           child: Bounceable(
                             onTap: () {
@@ -394,6 +390,17 @@ class _RadioPageState extends ConsumerState<RadioPage>
                               ),
                             ),
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            PlayButtonRadio(
+                              radioIsPlaying: radioIsPlaying,
+                              radioController: radioController,
+                              loadingStreamRadio: loadingStreamRadio,
+                              connection: true,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -439,6 +446,7 @@ class PlayButtonRadio extends StatelessWidget {
         height: 45.sp,
         width: 45.sp,
         padding: EdgeInsets.all(15),
+        margin: EdgeInsets.only(top: 10),
         decoration: BoxDecoration(
             color: ColorStyle.whiteBacground,
             border: Border.all(width: 8, color: Colors.black),
