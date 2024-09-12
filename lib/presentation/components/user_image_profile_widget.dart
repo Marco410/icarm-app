@@ -29,6 +29,7 @@ class _UserImageProfileWidgetState
   bool editingImage = false;
   @override
   Widget build(BuildContext context) {
+    final loadingPageCrop = ref.watch(loadingCropPageProvider);
     final prefs = PreferenciasUsuario();
 
     final namePhoto = ref.watch(namePhotoProfileProvider);
@@ -78,9 +79,12 @@ class _UserImageProfileWidgetState
             bottom: -5,
             right: -5,
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
                 if (!widget.goToPerfil) {
-                  CustomImagePicker.pickImage(
+                  ref
+                      .read(loadingCropPageProvider.notifier)
+                      .update((state) => true);
+                  final res = await CustomImagePicker.pickImage(
                       context: context,
                       mounted: mounted,
                       ref: ref,
@@ -88,6 +92,12 @@ class _UserImageProfileWidgetState
                   ref
                       .read(namePhotoProfileProvider.notifier)
                       .update((state) => "");
+
+                  if (res != null && !res) {
+                    ref
+                        .read(loadingCropPageProvider.notifier)
+                        .update((state) => false);
+                  }
                 } else {
                   context.pushNamed('perfil.detail');
                 }
@@ -97,11 +107,13 @@ class _UserImageProfileWidgetState
                   decoration: BoxDecoration(
                       color: ColorStyle.secondaryColor,
                       borderRadius: BorderRadius.circular(100)),
-                  child: Icon(
-                    Icons.edit_rounded,
-                    size: 20,
-                    color: Colors.white,
-                  )),
+                  child: (loadingPageCrop)
+                      ? LoadingStandardWidget.loadingWidget(20, Colors.white)
+                      : Icon(
+                          Icons.edit_rounded,
+                          size: 20,
+                          color: Colors.white,
+                        )),
             ),
           ),
           ((prefs.foto_perfil != "") && !widget.goToPerfil)
@@ -144,3 +156,7 @@ class _UserImageProfileWidgetState
     );
   }
 }
+
+final loadingCropPageProvider = StateProvider.autoDispose<bool>((ref) {
+  return false;
+});

@@ -89,8 +89,8 @@ class CropImagePage extends ConsumerWidget {
                           widthFactor: 1.5,
                           heightFactor: 1.5,
                           child: Container(
-                            width: size / 1.5,
-                            height: size / 1.5,
+                            width: size / 1.4,
+                            height: size / 1.4,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
@@ -104,7 +104,8 @@ class CropImagePage extends ConsumerWidget {
                       },
                       image: uint8List,
                       onCropped: onCropped,
-                      initialArea: Rect.fromLTWH(0, 0, width, height),
+                      initialArea:
+                          Rect.fromLTWH(250, 250, width - 500, height - 500),
                     ),
                   ),
                 ),

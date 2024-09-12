@@ -1,24 +1,18 @@
 import 'dart:async';
 
-import 'dart:math';
-
 import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:audio_session/audio_session.dart';
 import 'package:auto_scroll_text/auto_scroll_text.dart';
 import 'package:carousel_slider/carousel_controller.dart';
-import 'package:connectivity_checker/connectivity_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_rte/flutter_rte.dart';
-import 'package:haptic_feedback/haptic_feedback.dart';
-import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
+import 'package:icarm/presentation/controllers/radio_controller.dart';
 import 'package:icarm/presentation/providers/providers.dart';
 import 'package:icarm/presentation/screens/radio/comments.dart';
 import 'package:icarm/presentation/screens/radio/widgets/radio_stream.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:icarm/config/setting/style.dart';
@@ -33,12 +27,28 @@ class RadioPage extends ConsumerStatefulWidget {
   ConsumerState<RadioPage> createState() => _RadioPageState();
 }
 
+/* Radio Tests:
+  1. User play
+  2. User pause
+  3. User stop
+  4. User has no connection
+  5. User has internet connection
+  6. User is listen and lost connection
+  7. User is listen and lost connection then in 3 seconds is reconnecting
+  8. User is listen and lost connection then in 8 seconds is reconnecting
+  8. User is listen and lost connection then in 12 seconds is reconnecting
+  9. User is listen and lost connection then in 15 seconds is reconnecting
+  9. User is listen and lost connection then in 20 seconds is reconnecting
+  9. User is listen and lost connection then in 23 seconds is reconnecting
+  9. User is listen and lost connection then in 24 seconds is reconnecting
+  9. User is listen and lost connection then in 25 seconds is reconnecting
+  9. User is listen and lost connection then in 30 seconds is reconnecting
+ */
 class _RadioPageState extends ConsumerState<RadioPage>
     with WidgetsBindingObserver {
   bool loading = false;
   final CarouselSliderController _controllerC = CarouselSliderController();
   int _current = 0;
-  bool loadingStreamRadio = false;
   int connectionTrys = 0;
   String currentSong = "";
   final commnetKey = new GlobalKey();
@@ -50,6 +60,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
       toolbarOptions: HtmlToolbarOptions(
           textStyle: TxtStyle.labelText,
           toolbarPosition: ToolbarPosition.custom));
+  late RadioController radioController;
 
   List<Widget> textItems = [
     ContentAdWidget(
@@ -90,104 +101,14 @@ class _RadioPageState extends ConsumerState<RadioPage>
     ),
   ];
 
-  void onBuffering() {
-    if (mounted) {
-      ref.read(radioisPlayingProvider.notifier).update((state2) => false);
-      setState(() {
-        loadingStreamRadio = true;
-      });
-    }
-    Future.delayed(Duration(seconds: 3), () async {
-      if (loadingStreamRadio) {
-        await tryReconnect();
-      }
-
-      Future.delayed(Duration(seconds: 8), () async {}).whenComplete(() {
-        if (loadingStreamRadio) {
-          tryReconnect();
-        }
-      });
-    });
-  }
-
-  void onReady() {
-    if (mounted) {
-      ref.read(radioisPlayingProvider.notifier).update((state2) => true);
-      setState(() {
-        loadingStreamRadio = false;
-      });
-    }
-  }
-
-  void onIdle() {
-    if (mounted) {
-      ref.read(radioisPlayingProvider.notifier).update((state2) => false);
-    }
-  }
-
-  void onLoading() {}
-
   void initState() {
-    ref.read(radioServiceProvider).playerStateStream.listen((state) async {
-      switch (state.processingState) {
-        case ProcessingState.buffering:
-          onBuffering();
-          break;
+    radioController = RadioController(
+        audioPlayer: audioPlayer,
+        ref: ref,
+        streamHandler: streamHandler,
+        mounted: mounted);
 
-        case ProcessingState.ready:
-          onReady();
-
-          break;
-
-        case ProcessingState.idle:
-          onIdle();
-          break;
-
-        case ProcessingState.loading:
-          onLoading();
-          break;
-
-        case ProcessingState.completed:
-          break;
-
-        default:
-          break;
-      }
-    });
-    ref.read(radioServiceProvider).playbackEventStream.listen((event) async {
-      switch (event.processingState) {
-        case ProcessingState.buffering:
-          /*  if (Platform.isAndroid) {
-            await tryReconnect();
-          } */
-          break;
-
-        case ProcessingState.ready:
-          if (mounted) {
-            setState(() {
-              loadingStreamRadio = false;
-            });
-          }
-          break;
-
-        case ProcessingState.idle:
-          break;
-
-        case ProcessingState.loading:
-          if (mounted) {
-            setState(() {
-              loadingStreamRadio = true;
-            });
-          }
-          break;
-
-        case ProcessingState.completed:
-          break;
-
-        default:
-          break;
-      }
-    });
+    radioController.streamsRadio();
 
     _scrollController.addListener(() {
       setState(() {
@@ -213,154 +134,36 @@ class _RadioPageState extends ConsumerState<RadioPage>
     _scrollController.dispose();
   }
 
-  Future<void> tryReconnect() async {
-    stopRadio();
-
-    Future.delayed(Duration(milliseconds: 500), () {
-      playRadio();
-    });
-  }
-
-  Future<void> playRadio() async {
-    if (await ConnectivityWrapper.instance.isConnected) {
-    } else {
-      NotificationUI.instance.notificationNoInternet();
-
-      setState(() {
-        connectionTrys++;
-      });
-
-      return;
-    }
-
-    try {
-      // await AudioPlayer.clearAssetCache();
-      final url = "https://stream.zeno.fm/5dsk2i7levzvv";
-
-      //http://stream.zeno.fm/5dsk2i7levzvv
-      //final uri = Uri.parse(url);
-
-      /*  final audioSource = LockCachingAudioSource(
-        uri,
-      ); */
-      //audioPlayer.setAudioSource(audioSource);
-
-      audioPlayer.setUrl(
-        url,
-        preload: false,
-        tag: MediaItem(
-          id: '1',
-          album: "Radio En Vivo",
-          title: "Radio En Vivo | Amor & Restauración Morelia",
-          artist: "Amor & Restauración Morelia",
-          genre: 'Religious',
-          artUri: Uri.parse(
-              'https://zeno.fm/_next/image/?url=https%3A%2F%2Fimages.zeno.fm%2FoU_QTjtJrboK2rm3nPb8NiKuieHzoQuYg06OF-85A8U%2Frs%3Afit%3A240%3A240%2Fg%3Ace%3A0%3A0%2FaHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zLzJmNjE2OTI2LTkzOGQtNDNmZC1iYjBiLTBiMDM0M2ExMmFhMS9pbWFnZS8_dXBkYXRlZD0xNzE5NDYwNDEyMDAw.webp&w=3840&q=100'),
-          displayDescription: "Radio en vivo de la iglesia A&R Morelia",
-          displayTitle: "Radio En Vivo | Amor & Restauración Morelia",
-        ),
-      );
-      //await audioSource.clearCache();
-
-      ref
-          .read(radioServiceProvider)
-          .setCanUseNetworkResourcesForLiveStreamingWhilePaused(true);
-
-      AudioSession.instance.then((audioSession) async {
-        await audioSession.configure(AudioSessionConfiguration.speech());
-        _handleInterruptions(audioSession);
-        await audioPlayer.play();
-      });
-      await Haptics.vibrate(HapticsType.success);
-    } on PlayerException catch (e) {
-      print("Error message: ${e.message}");
-      stopRadio();
-    } on PlayerInterruptedException catch (e) {
-      print("Connection aborted: ${e.message}");
-      stopRadio();
-    } catch (e) {
-      print('An error occured: $e');
-      stopRadio();
-    }
-  }
-
-  void _handleInterruptions(AudioSession audioSession) {
-    audioSession.becomingNoisyEventStream.listen((_) {
-      stopRadio();
-    });
-
-    audioSession.interruptionEventStream.listen((event) {
-      if (event.begin) {
-        switch (event.type) {
-          case AudioInterruptionType.duck:
-            if (audioSession.androidAudioAttributes!.usage ==
-                AndroidAudioUsage.game) {
-              audioPlayer.setVolume(audioPlayer.volume / 2);
-            }
-            break;
-          case AudioInterruptionType.pause:
-            if (audioPlayer.playing) {
-              pauseRadio();
-            }
-          case AudioInterruptionType.unknown:
-            if (audioPlayer.playing) {
-              pauseRadio();
-            }
-            break;
-        }
-      } else {
-        switch (event.type) {
-          case AudioInterruptionType.duck:
-            audioPlayer.setVolume(min(1.0, audioPlayer.volume * 2));
-            break;
-          case AudioInterruptionType.pause:
-            resumeRadio();
-            break;
-          case AudioInterruptionType.unknown:
-            resumeRadio();
-            break;
-        }
-      }
-    });
-    audioSession.devicesChangedEventStream.listen((event) {
-      print('Devices added: ${event.devicesAdded}');
-      print('Devices removed: ${event.devicesRemoved}');
-    });
-
-    audioSession.configurationStream
-        .map((conf) => conf.androidAudioAttributes)
-        .distinct()
-        .listen((attributes) {});
-  }
-
-  Future<void> pauseRadio() async {
-    await audioPlayer.pause();
-    ref.read(radioisPlayingProvider.notifier).update((state) => false);
-  }
-
-  Future<void> resumeRadio() async {
-    await audioPlayer.play();
-    ref.read(radioisPlayingProvider.notifier).update((state) => true);
-  }
-
-  Future<void> stopRadio() async {
-    await audioPlayer.stop();
-    ref.read(radioisPlayingProvider.notifier).update((state) => false);
-    streamHandler.stopStream();
-  }
-
   void scrollTop() {
     _scrollController.animateTo(0.0,
         duration: const Duration(milliseconds: 600), curve: Curves.ease);
   }
 
   Future<void> onRefresh() async {
-    tryReconnect();
+    radioController.tryReconnect();
   }
 
   @override
   Widget build(BuildContext context) {
     final radioIsPlaying = ref.watch(radioisPlayingProvider);
+    final loadingStreamRadio = ref.watch(loadingStreamRadioProvider);
+    final prosessionState = ref.watch(prosessionStateProvider);
+    final dateBuffer = ref.watch(dateBufferProvider);
+
+    // This function catch when user lost connection
+    // When user lost connection loadingStream === true, processiongState is === buffering
+    // and dateBuffer is != null
+    // when pass more than 25 seconds radio will stop
+    if (loadingStreamRadio &&
+        prosessionState == ProcessingState.buffering &&
+        dateBuffer != null) {
+      Duration seg = DateTime.now().difference(dateBuffer);
+
+      if (seg.inSeconds > 25) {
+        radioController.stopRadio();
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -398,7 +201,6 @@ class _RadioPageState extends ConsumerState<RadioPage>
           endOffset: Offset(0, 0),
           slideCurve: Curves.linearToEaseOut,
           child: Container(
-            padding: EdgeInsets.all(15),
             height: MediaQuery.of(context).size.height,
             child: RefreshIndicator(
               onRefresh: onRefresh,
@@ -431,7 +233,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                       child: Align(
                         alignment: Alignment.center,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          padding: const EdgeInsets.only(left: 15, right: 15),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -439,19 +241,31 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                 child: Text(
                                     "Una palabra, puede cambiar tu vida.",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 8.f,
-                                        fontWeight: FontWeight.normal)),
+                                    style: TxtStyle.labelText.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 7.f)),
                               ),
+                              (!radioIsPlaying && loadingStreamRadio)
+                                  ? Text('En vivo las 24 hrs.',
+                                      textAlign: TextAlign.center,
+                                      style: TxtStyle.labelText)
+                                  : SizedBox(),
                               Text(
-                                'Puede tardar algunos segundos en empezar.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 6.f,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              (radioIsPlaying)
+                                  'Todos nuestros programas se guardan en todas nuestras plataformas, no te los pierdas.',
+                                  textAlign: TextAlign.center,
+                                  style: TxtStyle.labelText
+                                      .copyWith(fontWeight: FontWeight.normal)),
+                              (!radioIsPlaying && loadingStreamRadio)
+                                  ? Text(
+                                      'Puede tardar algunos segundos en empezar.',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 6.f,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : SizedBox(),
+                              (radioIsPlaying && !loadingStreamRadio)
                                   ? Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
@@ -525,7 +339,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                   : Column(
                                       children: [
                                         Container(
-                                          height: 4,
+                                          height: 3.5,
                                           decoration: BoxDecoration(
                                               color: ColorStyle.secondaryColor,
                                               borderRadius:
@@ -549,52 +363,13 @@ class _RadioPageState extends ConsumerState<RadioPage>
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.none,
                       children: [
-                        SizedBox(
-                          width: 60,
-                        ),
-                        Bounceable(
-                          onTap: () async {
-                            if (radioIsPlaying) {
-                              stopRadio();
-                            } else {
-                              playRadio();
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                                color: ColorStyle.whiteBacground,
-                                border:
-                                    Border.all(width: 8, color: Colors.black),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black.withOpacity(0.4),
-                                      blurRadius: 11,
-                                      spreadRadius: 1,
-                                      offset: Offset(0, 0))
-                                ],
-                                borderRadius: BorderRadius.circular(100)),
-                            child: (loadingStreamRadio)
-                                ? SizedBox(
-                                    height: 25.sp,
-                                    width: 25.sp,
-                                    child:
-                                        LoadingStandardWidget.loadingWidget())
-                                : Icon(
-                                    radioIsPlaying
-                                        ? Icons.pause
-                                        : Icons.play_arrow,
-                                    size: 25.sp,
-                                    color: ColorStyle.primaryColor,
-                                  ),
-                          ),
-                        ),
                         Container(
                           decoration: BoxDecoration(),
-                          margin: EdgeInsets.only(right: 20),
+                          margin: EdgeInsets.only(right: 40),
                           alignment: Alignment.centerRight,
                           child: Bounceable(
                             onTap: () {
@@ -616,6 +391,17 @@ class _RadioPageState extends ConsumerState<RadioPage>
                             ),
                           ),
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            PlayButtonRadio(
+                              radioIsPlaying: radioIsPlaying,
+                              radioController: radioController,
+                              loadingStreamRadio: loadingStreamRadio,
+                              connection: true,
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                     CommentsScreenWidget(
@@ -628,6 +414,66 @@ class _RadioPageState extends ConsumerState<RadioPage>
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class PlayButtonRadio extends StatelessWidget {
+  const PlayButtonRadio(
+      {super.key,
+      required this.radioIsPlaying,
+      required this.radioController,
+      required this.loadingStreamRadio,
+      required this.connection});
+
+  final bool radioIsPlaying;
+  final RadioController radioController;
+  final bool loadingStreamRadio;
+  final bool connection;
+
+  @override
+  Widget build(BuildContext context) {
+    return Bounceable(
+      onTap: () async {
+        if (radioIsPlaying) {
+          radioController.stopRadio();
+        } else {
+          radioController.playRadio();
+        }
+      },
+      child: Container(
+        height: 45.sp,
+        width: 45.sp,
+        padding: EdgeInsets.all(15),
+        margin: EdgeInsets.only(top: 10),
+        decoration: BoxDecoration(
+            color: ColorStyle.whiteBacground,
+            border: Border.all(width: 8, color: Colors.black),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 11,
+                  spreadRadius: 1,
+                  offset: Offset(0, 0))
+            ],
+            borderRadius: BorderRadius.circular(100)),
+        child: (!connection)
+            ? Icon(
+                Icons.wifi_off_rounded,
+                size: 22.sp,
+                color: ColorStyle.primaryColor,
+              )
+            : (loadingStreamRadio)
+                ? SizedBox(
+                    height: 25.sp,
+                    width: 25.sp,
+                    child: LoadingStandardWidget.loadingWidget())
+                : Icon(
+                    radioIsPlaying ? Icons.pause : Icons.play_arrow,
+                    size: 25.sp,
+                    color: ColorStyle.primaryColor,
+                  ),
       ),
     );
   }

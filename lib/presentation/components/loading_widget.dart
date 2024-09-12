@@ -5,10 +5,10 @@ import 'package:lottie/lottie.dart';
 import '../../config/setting/style.dart';
 
 class LoadingStandardWidget {
-  static Widget loadingWidget([double? size]) {
+  static Widget loadingWidget([double? size, Color? color]) {
     return Center(
       child: LoadingAnimationWidget.dotsTriangle(
-        color: ColorStyle.secondaryColor,
+        color: color ?? ColorStyle.secondaryColor,
         size: size ?? 40,
       ),
     );
