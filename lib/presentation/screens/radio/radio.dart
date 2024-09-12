@@ -251,7 +251,7 @@ class _RadioPageState extends ConsumerState<RadioPage>
                                       style: TxtStyle.labelText)
                                   : SizedBox(),
                               Text(
-                                  'Todos nuestros programas se guardan en todas nuestras plataformas. No te los pierdas.',
+                                  'Todos nuestros programas se guardan en todas nuestras plataformas, no te los pierdas.',
                                   textAlign: TextAlign.center,
                                   style: TxtStyle.labelText
                                       .copyWith(fontWeight: FontWeight.normal)),

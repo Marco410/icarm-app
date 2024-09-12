@@ -19,7 +19,7 @@ class Comment {
         'type': commentModel.type,
         'comment': commentModel.comment,
         'timestamp': FieldValue.serverTimestamp(),
-        'isTesting': true,
+        'isTesting': false,
         'active': true,
         'nameSender': (prefs.usuarioID != "")
             ? '${prefs.nombre} ${prefs.aPaterno}'
@@ -122,7 +122,7 @@ class Comment {
       return FirebaseFirestore.instance
           .collection('comments')
           .orderBy('timestamp', descending: true)
-          .where('isTesting', isEqualTo: true)
+          .where('isTesting', isEqualTo: false)
           .where('active', isEqualTo: true)
           .limit(10)
           .withConverter(

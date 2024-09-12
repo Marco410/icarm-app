@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:icarm/presentation/components/user_image_profile_widget.dart';
 import 'package:icarm/presentation/controllers/user_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,11 +14,12 @@ import '../components/views/crop_image_page.dart';
 import '../providers/user_provider.dart';
 
 class CustomImagePicker {
-  static Future<void> pickImage(
-      {required BuildContext context,
-      required bool mounted,
-      required WidgetRef ref,
-      required bool showDelete}) async {
+  static Future<void> pickImage({
+    required BuildContext context,
+    required bool mounted,
+    required WidgetRef ref,
+    required bool showDelete,
+  }) async {
     Future<void> processPickedImage(Uint8List uint8List) async {
       // extract dimensions
       ui.Codec codec = await ui.instantiateImageCodec(uint8List);
@@ -26,13 +28,18 @@ class CustomImagePicker {
       double height = frameInfo.image.height.toDouble();
 
       if (!mounted) return;
-      Navigator.push(
+
+      print("Entraaaaa");
+      ref.read(loadingCropPageProvider.notifier).update((state) => false);
+
+      // Push CropImagePage and wait for result
+      Navigator.push<bool>(
         context,
         MaterialPageRoute(
           // ignore: deprecated_member_use
           builder: (context) => WillPopScope(
             onWillPop: () async {
-              return false;
+              return false; // Prevent back navigation
             },
             child: CropImagePage(
               width: width,
@@ -40,11 +47,13 @@ class CustomImagePicker {
               uint8List: uint8List,
               onCropped: (croppedData) async {
                 final namePhoto = await UserController.updateFotoPerfil(
-                    croppedData,
-                    nbFoto: croppedData);
+                  croppedData,
+                  nbFoto: croppedData,
+                );
+
                 if (namePhoto != "") {
                   if (mounted) {
-                    Navigator.pop(context);
+                    Navigator.pop(context, true); // Return true when success
                   }
 
                   ref
@@ -55,6 +64,7 @@ class CustomImagePicker {
                 } else {
                   NotificationUI.instance
                       .notificationWarning("No se pudo actualizar la imagen");
+                  Navigator.pop(context, false); // Return false on failure
                 }
               },
             ),
@@ -103,5 +113,6 @@ class CustomImagePicker {
         requestPermissionAndProceed(ImageSource.gallery);
 
     takeGallery();
+    return null;
   }
 }
