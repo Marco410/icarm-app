@@ -79,9 +79,12 @@ class _UserImageProfileWidgetState
             bottom: -5,
             right: -5,
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
                 if (!widget.goToPerfil) {
-                  CustomImagePicker.pickImage(
+                  ref
+                      .read(loadingCropPageProvider.notifier)
+                      .update((state) => true);
+                  final res = await CustomImagePicker.pickImage(
                       context: context,
                       mounted: mounted,
                       ref: ref,
@@ -90,9 +93,11 @@ class _UserImageProfileWidgetState
                       .read(namePhotoProfileProvider.notifier)
                       .update((state) => "");
 
-                  ref
-                      .read(loadingCropPageProvider.notifier)
-                      .update((state) => true);
+                  if (res != null && !res) {
+                    ref
+                        .read(loadingCropPageProvider.notifier)
+                        .update((state) => false);
+                  }
                 } else {
                   context.pushNamed('perfil.detail');
                 }

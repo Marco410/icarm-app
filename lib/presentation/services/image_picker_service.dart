@@ -14,26 +14,26 @@ import '../components/views/crop_image_page.dart';
 import '../providers/user_provider.dart';
 
 class CustomImagePicker {
-  static Future<void> pickImage({
+  static Future<bool?> pickImage({
     required BuildContext context,
     required bool mounted,
     required WidgetRef ref,
     required bool showDelete,
   }) async {
-    Future<void> processPickedImage(Uint8List uint8List) async {
+    Future<bool?> processPickedImage(Uint8List uint8List) async {
       // extract dimensions
       ui.Codec codec = await ui.instantiateImageCodec(uint8List);
       ui.FrameInfo frameInfo = await codec.getNextFrame();
       double width = frameInfo.image.width.toDouble();
       double height = frameInfo.image.height.toDouble();
 
-      if (!mounted) return;
+      if (!mounted) return false;
 
       print("Entraaaaa");
       ref.read(loadingCropPageProvider.notifier).update((state) => false);
 
       // Push CropImagePage and wait for result
-      Navigator.push<bool>(
+      final result = Navigator.push<bool>(
         context,
         MaterialPageRoute(
           // ignore: deprecated_member_use
@@ -71,21 +71,10 @@ class CustomImagePicker {
           ),
         ),
       );
+      return result;
     }
 
-    Future<void> requestPermissionAndProceed(ImageSource source) async {
-      /*  if (source == ImageSource.gallery && permitted.isDenied) {
-        NotificationUI.instance.notificationWarning(
-          "Se negaron los permisos de acceso a la galería",
-        );
-        var p = await Permission.accessMediaLocation.request();
-        if (p == PermissionStatus.permanentlyDenied) {
-          openAppSettings();
-        }
-        print("p");
-        print(p);
-        return;
-      } */
+    Future<bool?> requestPermissionAndProceed(ImageSource source) async {
       final permitted2 = await Permission.camera.status;
 
       if (source == ImageSource.camera && permitted2.isDenied) {
@@ -93,7 +82,7 @@ class CustomImagePicker {
           "Se negaron los permisos de acceso a la cámara",
         );
         Permission.camera.request();
-        return;
+        return true;
       }
 
       final imagePicker = ImagePicker();
@@ -107,12 +96,12 @@ class CustomImagePicker {
         final Uint8List uint8List = await pickedFile.readAsBytes();
         processPickedImage(uint8List);
       }
+      return pickedFile != null;
     }
 
-    void takeGallery() async =>
+    Future<bool?> takeGallery() =>
         requestPermissionAndProceed(ImageSource.gallery);
 
-    takeGallery();
-    return null;
+    return takeGallery();
   }
 }
