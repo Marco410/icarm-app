@@ -88,12 +88,12 @@ class _UsuarioDetailAdminPageState
                           SizedBox(
                             height: 10,
                           ),
-                          (data.fotoPerfil != null)
+                          (data.fotoPerfil != null || data.fotoPerfil != 'null')
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
                                   child: CachedNetworkImage(
                                     imageUrl:
-                                        "${URL_MEDIA_FOTO_PERFIL}${data.id}/${data.fotoPerfil}",
+                                        "${URL_MEDIA_FOTO_PERFIL}${data.fotoPerfil}",
                                     placeholder: (context, url) =>
                                         LoadingStandardWidget.loadingWidget(),
                                     imageBuilder: (context, imageProvider) =>
@@ -108,6 +108,10 @@ class _UsuarioDetailAdminPageState
                                       ),
                                     ),
                                     height: 55.sp,
+                                    errorWidget: (context, url, error) =>
+                                        SvgPicture.asset(
+                                            "assets/icon/user-icon.svg",
+                                            height: 55.sp),
                                   ),
                                 )
                               : SvgPicture.asset("assets/icon/user-icon.svg",

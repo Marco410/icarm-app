@@ -289,8 +289,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         builder: (context, state) {
                           String? ty = state.pathParameters['type'];
                           Betele? betel = null;
-                          print("ty");
-                          print(ty);
                           if (ty == 'edit') {
                             betel = state.extra as Betele;
                           }
@@ -312,8 +310,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         builder: (context, state) {
                           String? ty = state.pathParameters['type'];
                           Ad? ad = null;
-                          print("ty");
-                          print(ty);
                           if (ty == 'edit') {
                             ad = state.extra as Ad;
                           }

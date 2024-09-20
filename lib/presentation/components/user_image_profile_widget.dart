@@ -27,6 +27,13 @@ class UserImageProfileWidget extends ConsumerStatefulWidget {
 class _UserImageProfileWidgetState
     extends ConsumerState<UserImageProfileWidget> {
   bool editingImage = false;
+  bool deletingImage = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final loadingPageCrop = ref.watch(loadingCropPageProvider);
@@ -49,7 +56,7 @@ class _UserImageProfileWidgetState
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          ((prefs.foto_perfil != ""))
+          ((prefs.foto_perfil != "" || prefs.foto_perfil != "null"))
               ? Container(
                   height: 130,
                   width: 130,
@@ -59,8 +66,7 @@ class _UserImageProfileWidgetState
                       errorWidget: (context, url, error) => SvgPicture.asset(
                           "assets/icon/user-icon.svg",
                           height: 100),
-                      imageUrl:
-                          "${URL_MEDIA_FOTO_PERFIL}${prefs.usuarioID}/${prefs.foto_perfil.toLowerCase()}",
+                      imageUrl: "${URL_MEDIA_FOTO_PERFIL}${prefs.foto_perfil}",
                       placeholder: (context, url) =>
                           LoadingStandardWidget.loadingWidget(),
                       imageBuilder: (context, imageProvider) => Container(
@@ -98,6 +104,11 @@ class _UserImageProfileWidgetState
                         .read(loadingCropPageProvider.notifier)
                         .update((state) => false);
                   }
+
+                  Future.delayed(Duration(seconds: 1), () {
+                    CachedNetworkImage.evictFromCache(
+                        "${URL_MEDIA_FOTO_PERFIL}${prefs.foto_perfil}");
+                  });
                 } else {
                   context.pushNamed('perfil.detail');
                 }
@@ -123,7 +134,10 @@ class _UserImageProfileWidgetState
                   child: GestureDetector(
                     onTap: () {
                       if (!widget.goToPerfil) {
-                        UserController.deleteFotoPerfil().then((value) {
+                        setState(() {
+                          deletingImage = true;
+                        });
+                        UserController.deleteFotoPerfil().then((value) async {
                           ref
                               .read(imageSelectedProvider.notifier)
                               .update((state) => null);
@@ -131,10 +145,15 @@ class _UserImageProfileWidgetState
                           setState(() {
                             prefs.foto_perfil = "";
                             widget.fotoPerfil = "";
+                            deletingImage = false;
                           });
                           ref
                               .read(namePhotoProfileProvider.notifier)
                               .update((state) => "");
+                          Future.delayed(Duration(seconds: 1), () {
+                            CachedNetworkImage.evictFromCache(
+                                "${URL_MEDIA_FOTO_PERFIL}${prefs.foto_perfil}");
+                          });
                         });
                       }
                     },
@@ -143,11 +162,14 @@ class _UserImageProfileWidgetState
                         decoration: BoxDecoration(
                             color: Colors.red[300],
                             borderRadius: BorderRadius.circular(100)),
-                        child: Icon(
-                          Icons.delete_rounded,
-                          size: 20,
-                          color: Colors.white,
-                        )),
+                        child: (deletingImage)
+                            ? LoadingStandardWidget.loadingWidget(
+                                20, Colors.white)
+                            : Icon(
+                                Icons.delete_rounded,
+                                size: 20,
+                                color: Colors.white,
+                              )),
                   ),
                 )
               : SizedBox(),

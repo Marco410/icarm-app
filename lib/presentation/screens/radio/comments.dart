@@ -453,8 +453,7 @@ class ImagePerfilWidget extends StatelessWidget {
           ? ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: CachedNetworkImage(
-                imageUrl:
-                    "${URL_MEDIA_FOTO_PERFIL}${userID}/${photo.toLowerCase()}",
+                imageUrl: "${URL_MEDIA_FOTO_PERFIL}${photo}",
                 placeholder: (context, url) => LoaderImageWidget(),
                 imageBuilder: (context, imageProvider) => Container(
                   width: 12.sp,

@@ -2,7 +2,7 @@ const String YOUTUBE_BASE = "www.googleapis.com";
 const String YOUTUBE_API = "youtube/v3/search";
 
 const String BASE_URL = "www.amoryrestauracionmorelia.com";
-const String CARPETA = "/repositories/public/api/";
+const String CARPETA = "/icarm-back/public/api/";
 const String LOGIN_URL = "${CARPETA}auth/login";
 const String REGISTER_USER_URL = "${CARPETA}auth/register";
 const String UPDATE_USER_URL = "${CARPETA}auth/update";
@@ -63,3 +63,6 @@ const String GET_BETELES = "${CARPETA}app/betel/get";
 const String DELETE_BETEL = "${CARPETA}app/betel/delete";
 
 const String GET_ADS = "${CARPETA}app/ads";
+const String CREATE_AD = "${CARPETA}app/ads/create";
+const String EDIT_AD = "${CARPETA}app/ads/edit";
+const String DELETE_AD = "${CARPETA}app/ads/delete";

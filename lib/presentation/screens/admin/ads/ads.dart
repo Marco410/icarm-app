@@ -2,10 +2,13 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/Material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
+import 'package:icarm/presentation/controllers/ad_controller.dart';
 import 'package:icarm/presentation/providers/user_provider.dart';
 import 'package:sizer_pro/sizer.dart';
 
@@ -43,7 +46,7 @@ class _AdsAdminScreenState extends ConsumerState<AdsAdminScreen> {
 
     return Scaffold(
         backgroundColor: ColorStyle.whiteBacground,
-        floatingActionButton: InkWell(
+        floatingActionButton: Bounceable(
           onTap: () =>
               context.pushNamed('new.ad', pathParameters: {"type": 'new'}),
           child: Container(
@@ -86,7 +89,7 @@ class _AdsAdminScreenState extends ConsumerState<AdsAdminScreen> {
                         shrinkWrap: true,
                         itemCount: data.length,
                         physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) => InkWell(
+                        itemBuilder: (context, index) => Bounceable(
                           onTap: () => context.pushNamed('new.ad',
                               pathParameters: {"type": "edit"},
                               extra: data[index]),
@@ -121,19 +124,17 @@ class _AdsAdminScreenState extends ConsumerState<AdsAdminScreen> {
                                             child: CustomButton(
                                                 text: "Aceptar",
                                                 onTap: () {
-                                                  /*    BetelController.delete(
+                                                  AdController.delete(
                                                           data[index]
                                                               .id
                                                               .toString())
-                                                      .then((value) {
-                                                    if (value) {
-                                                      ref.refresh(adsProvider);
-                                                      NotificationUI.instance
-                                                          .notificationSuccess(
-                                                              "Betel eliminado con éxito");
-                                                      context.pop(true);
-                                                    }
-                                                  }); */
+                                                      .then((val) {
+                                                    ref.refresh(adsProvider);
+                                                    NotificationUI.instance
+                                                        .notificationSuccess(
+                                                            "Anuncio eliminado con éxito");
+                                                    context.pop(true);
+                                                  });
                                                 },
                                                 size: 'sm',
                                                 textColor: Colors.white,
@@ -179,19 +180,40 @@ class _AdsAdminScreenState extends ConsumerState<AdsAdminScreen> {
                                         imageUrl:
                                             "${URL_MEDIA_ADS}${data[index].img}",
                                         placeholder: (context, url) =>
-                                            LoadingStandardWidget
-                                                .loadingWidget(),
+                                            Container(
+                                          width: 70,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                              color: ColorStyle.hintLightColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: LoadingStandardWidget
+                                              .loadingWidget(),
+                                        ),
                                         imageBuilder:
                                             (context, imageProvider) =>
                                                 Container(
                                           width: 70,
-                                          height: 70,
+                                          height: 60,
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(15),
+                                                BorderRadius.circular(8),
                                             image: DecorationImage(
                                                 image: imageProvider,
                                                 fit: BoxFit.fill),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                          width: 70,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                              color: ColorStyle.hintLightColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: Icon(
+                                            Icons.image_not_supported_rounded,
+                                            color: ColorStyle.hintDarkColor,
                                           ),
                                         ),
                                       ),
