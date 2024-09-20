@@ -37,7 +37,7 @@ class TextFieldWidget extends StatelessWidget {
       this.label,
       this.labelColor,
       required this.border,
-      this.suffixIcon,
+      this.suffixIcon = null,
       this.margin,
       this.prefixIcon,
       this.color,
@@ -77,7 +77,12 @@ class TextFieldWidget extends StatelessWidget {
                 )
               : const SizedBox(),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(
+                right: 15,
+                left: 16,
+                top: (suffixIcon != null) ? 10 : 3,
+                bottom: (suffixIcon != null) ? 0 : 3),
             decoration: BoxDecoration(
                 color: color ?? Colors.white,
                 border: border
@@ -95,7 +100,7 @@ class TextFieldWidget extends StatelessWidget {
                   color: (readOnly! && TextInputType.datetime != textInputType)
                       ? Colors.grey
                       : Colors.black,
-                  fontSize: 5.sp),
+                  fontSize: 5.3.sp),
               onTap: onTap as void Function()?,
               maxLines: lines ?? 1,
               textInputAction: TextInputAction.done,
@@ -163,7 +168,14 @@ class TextFieldWidget extends StatelessWidget {
                   suffixStyle: theme.textTheme.titleSmall!.copyWith(
                     color: theme.primaryColor,
                   ),
-                  suffixIcon: suffixIcon,
+                  suffixIcon: (suffixIcon != null)
+                      ? Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(bottom: 10),
+                          height: 10,
+                          width: 10,
+                          child: suffixIcon)
+                      : null,
                   focusColor: Colors.black),
             ),
           ),

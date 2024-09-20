@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/Material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
@@ -45,7 +46,7 @@ class _BetelesAdminPageState extends ConsumerState<BetelesAdminPage> {
 
     return Scaffold(
         backgroundColor: ColorStyle.whiteBacground,
-        floatingActionButton: InkWell(
+        floatingActionButton: Bounceable(
           onTap: () =>
               context.pushNamed('new.betel', pathParameters: {"type": 'new'}),
           child: Container(
@@ -88,7 +89,7 @@ class _BetelesAdminPageState extends ConsumerState<BetelesAdminPage> {
                         shrinkWrap: true,
                         itemCount: data.length,
                         physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) => InkWell(
+                        itemBuilder: (context, index) => Bounceable(
                           onTap: () => context.pushNamed('new.betel',
                               pathParameters: {"type": "edit"},
                               extra: data[index]),

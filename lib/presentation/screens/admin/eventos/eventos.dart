@@ -24,7 +24,7 @@ class EventosAdminPage extends ConsumerStatefulWidget {
 class _EventosAdminPageState extends ConsumerState<EventosAdminPage> {
   @override
   Widget build(BuildContext context) {
-    final listEventos = ref.watch(getEventosProvider("admin"));
+    final listEventos = ref.watch(getEventosProvider("admin_list"));
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,
       floatingActionButton: InkWell(

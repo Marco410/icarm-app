@@ -81,14 +81,10 @@ class PushNotificationService {
   }
 
   static Future _onMessageHandler(RemoteMessage message) async {
-    print("_onMessageHandler");
-    print(message);
     _messageStream.add(message);
   }
 
   static Future _onMessageOpenApp(RemoteMessage message) async {
-    print("_onMessageOpenApp");
-    print(message);
     _messageStream.add(message);
   }
 

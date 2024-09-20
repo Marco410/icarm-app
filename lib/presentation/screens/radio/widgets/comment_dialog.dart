@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:icarm/presentation/screens/Qr/qr_page.dart';
 import 'package:icarm/presentation/screens/radio/comments.dart';
 import 'package:icarm/presentation/screens/radio/widgets/comment_bubble.dart';
 import 'package:icarm/presentation/screens/radio/widgets/comment_reder.dart';
@@ -63,79 +64,93 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                 width: 60.w,
                                 child: renderComment(
                                     comment.comment, Colors.black87, 6.f)),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextFieldWidget(
-                                    border: true,
-                                    isRequired: false,
-                                    textInputType: TextInputType.text,
-                                    hintText: 'Escribe tu respuesta',
-                                    controller: replyController,
-                                    focusNode: replyFocus,
-                                    capitalize: true,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                (!loader)
-                                    ? SizedBox(
-                                        height: 45,
-                                        width: 45,
-                                        child: Bounceable(
-                                          onTap: () async {
-                                            if (replyController.text == "") {
-                                              return;
-                                            }
-
-                                            setState(() {
-                                              loader = true;
-                                            });
-
-                                            final replySent =
-                                                await Comment.addReply(
-                                                    comment,
-                                                    commentID,
-                                                    replyController.text);
-
-                                            if (replySent) {
-                                              await Haptics.vibrate(
-                                                  HapticsType.success);
-                                              setState(() {
-                                                replyController.text = "";
-                                                loader = false;
-                                              });
-                                            } else {
-                                              NotificationUI.instance
-                                                  .notificationError(
-                                                      "Ocurrió un error al añadir tu respuesta. Por favor intente de nuevo.");
-                                              setState(() {
-                                                loader = false;
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                                color: (!isSender)
-                                                    ? ColorStyle.secondaryColor
-                                                    : ColorStyle.primaryColor,
-                                                boxShadow:
-                                                    ShadowStyle.boxShadow,
-                                                borderRadius:
-                                                    BorderRadius.circular(40)),
-                                            child: const Icon(
-                                              Icons.send_rounded,
-                                              color: Colors.white,
-                                              size: 18,
-                                            ),
-                                          ),
+                            (prefs.usuarioID == "")
+                                ? Expanded(
+                                    flex: 2,
+                                    child: NoLoginWidget(
+                                      showOnlyButton: true,
+                                      textToShow:
+                                          "Inicia sesión para responder este comentario.",
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFieldWidget(
+                                          border: true,
+                                          isRequired: false,
+                                          textInputType: TextInputType.text,
+                                          hintText: 'Escribe tu respuesta',
+                                          controller: replyController,
+                                          focusNode: replyFocus,
+                                          capitalize: true,
                                         ),
-                                      )
-                                    : LoadingStandardWidget.loadingWidget(30),
-                              ],
-                            ),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      (!loader)
+                                          ? SizedBox(
+                                              height: 45,
+                                              width: 45,
+                                              child: Bounceable(
+                                                onTap: () async {
+                                                  if (replyController.text ==
+                                                      "") {
+                                                    return;
+                                                  }
+
+                                                  setState(() {
+                                                    loader = true;
+                                                  });
+
+                                                  final replySent =
+                                                      await Comment.addReply(
+                                                          comment,
+                                                          commentID,
+                                                          replyController.text);
+
+                                                  if (replySent) {
+                                                    await Haptics.vibrate(
+                                                        HapticsType.success);
+                                                    setState(() {
+                                                      replyController.text = "";
+                                                      loader = false;
+                                                    });
+                                                  } else {
+                                                    NotificationUI.instance
+                                                        .notificationError(
+                                                            "Ocurrió un error al añadir tu respuesta. Por favor intente de nuevo.");
+                                                    setState(() {
+                                                      loader = false;
+                                                    });
+                                                  }
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                      color: (!isSender)
+                                                          ? ColorStyle
+                                                              .secondaryColor
+                                                          : ColorStyle
+                                                              .primaryColor,
+                                                      boxShadow:
+                                                          ShadowStyle.boxShadow,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              40)),
+                                                  child: const Icon(
+                                                    Icons.send_rounded,
+                                                    color: Colors.white,
+                                                    size: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : LoadingStandardWidget.loadingWidget(
+                                              30),
+                                    ],
+                                  ),
                             Container(
                                 height: 1,
                                 margin: EdgeInsets.symmetric(vertical: 10),

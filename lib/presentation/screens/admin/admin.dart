@@ -1,4 +1,5 @@
 import 'package:flutter/Material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer_pro/sizer.dart';
@@ -72,7 +73,7 @@ class BigButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return Bounceable(
       onTap: onTap as void Function(),
       child: Container(
         width: double.infinity,
@@ -80,7 +81,7 @@ class BigButtonWidget extends StatelessWidget {
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
             boxShadow: ShadowStyle.boxShadow,
-            color: ColorStyle.secondaryColor,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,22 +91,22 @@ class BigButtonWidget extends StatelessWidget {
                 Icon(
                   icon,
                   size: 9.sp,
-                  color: ColorStyle.whiteBacground,
+                  color: ColorStyle.secondaryColor,
                 ),
                 SizedBox(
                   width: 20,
                 ),
                 Text(
                   title,
-                  style: TxtStyle.headerWhiteStyle.copyWith(
-                      color: ColorStyle.whiteBacground, fontSize: 8.sp),
+                  style: TxtStyle.headerWhiteStyle
+                      .copyWith(color: ColorStyle.primaryColor, fontSize: 8.sp),
                 )
               ],
             ),
             Icon(
               Icons.arrow_forward_ios_rounded,
               size: 30,
-              color: ColorStyle.whiteBacground,
+              color: ColorStyle.secondaryColor,
             )
           ],
         ),

@@ -52,9 +52,6 @@ class _myAppState extends ConsumerState<myApp> {
   @override
   void initState() {
     PushNotificationService.messagesStream.listen((message) {
-      print("message.notification!.title");
-      print(message.notification!);
-
       ref.refresh(storeNotificationProvider(message));
 
       NotificationUI.instance.notificationAlert(

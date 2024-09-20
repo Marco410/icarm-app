@@ -28,6 +28,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   FocusNode emailFocus = FocusNode();
 
   bool loading = false;
+  bool visible = false;
 
   unFocusNodes() {
     passFocus.unfocus();
@@ -84,11 +85,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       border: true,
                       isRequired: true,
                       textInputType: TextInputType.text,
-                      isVisible: false,
+                      isVisible: visible,
                       hintText: 'Contraseña',
                       controller: passController,
                       focusNode: passFocus,
                       autoFillHints: AutofillHints.password,
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              visible = !visible;
+                            });
+                          },
+                          icon: Icon(
+                            (visible) ? Icons.visibility : Icons.visibility_off,
+                            color: ColorStyle.secondaryColor,
+                          )),
                     ),
                     SizedBox(
                       height: 10,
