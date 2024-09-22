@@ -62,22 +62,26 @@ class _UserImageProfileWidgetState
                   width: 130,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: CachedNetworkImage(
-                      errorWidget: (context, url, error) => SvgPicture.asset(
-                          "assets/icon/user-icon.svg",
-                          height: 100),
-                      imageUrl: "${URL_MEDIA_FOTO_PERFIL}${prefs.foto_perfil}",
-                      placeholder: (context, url) =>
-                          LoadingStandardWidget.loadingWidget(),
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: 55.sp,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          image: DecorationImage(
-                              image: imageProvider, fit: BoxFit.cover),
+                    child: Hero(
+                      tag: prefs.usuarioID,
+                      child: CachedNetworkImage(
+                        errorWidget: (context, url, error) => SvgPicture.asset(
+                            "assets/icon/user-icon.svg",
+                            height: 100),
+                        imageUrl:
+                            "${URL_MEDIA_FOTO_PERFIL}${prefs.foto_perfil}",
+                        placeholder: (context, url) =>
+                            LoadingStandardWidget.loadingWidget(),
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 55.sp,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                          ),
                         ),
+                        height: 55.sp,
                       ),
-                      height: 55.sp,
                     ),
                   ))
               : SvgPicture.asset("assets/icon/user-icon.svg", height: 110),

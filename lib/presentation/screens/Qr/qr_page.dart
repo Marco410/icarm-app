@@ -2,6 +2,7 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/drawer.dart';
 import 'package:icarm/config/setting/style.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 class QRPage extends ConsumerStatefulWidget {
   QRPage();
@@ -21,19 +23,31 @@ class QRPage extends ConsumerStatefulWidget {
 class _QRPageState extends ConsumerState<QRPage> {
   _QRPageState();
 
+  double? _originalBrightness;
+
   @override
   void initState() {
     super.initState();
+    brightnessFunc();
+  }
+
+  void brightnessFunc() async {
+    _originalBrightness = await ScreenBrightness().current;
+    await ScreenBrightness().setScreenBrightness(1.0);
   }
 
   @override
   void dispose() {
     super.dispose();
+    if (_originalBrightness != null) {
+      ScreenBrightness().setScreenBrightness(_originalBrightness!);
+    }
   }
 
   Widget build(BuildContext context) {
     final prefs = PreferenciasUsuario();
     Random random = new Random();
+
     final qrData = "AYR${random.nextInt(80) + 10}${prefs.usuarioID}";
     return Scaffold(
       backgroundColor: ColorStyle.whiteBacground,

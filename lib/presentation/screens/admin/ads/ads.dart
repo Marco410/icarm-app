@@ -27,6 +27,7 @@ class _AdsAdminScreenState extends ConsumerState<AdsAdminScreen> {
   final TextEditingController msgController = TextEditingController();
   FocusNode msgNode = FocusNode();
   String roleSelected = "";
+  bool deletingAd = false;
   @override
   void initState() {
     Future.microtask(() {});
@@ -99,54 +100,66 @@ class _AdsAdminScreenState extends ConsumerState<AdsAdminScreen> {
                               return await showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      "Alerta",
-                                      style: TxtStyle.headerStyle,
-                                    ),
-                                    content: const Text(
-                                        "¿Estás seguro de eliminar el anuncio?"),
-                                    actions: <Widget>[
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: CustomButton(
-                                                text: "Cancelar",
-                                                onTap: () => context.pop(false),
-                                                size: 'sm',
-                                                color:
-                                                    ColorStyle.whiteBacground,
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                loading: false),
-                                          ),
-                                          Expanded(
-                                            child: CustomButton(
-                                                text: "Aceptar",
-                                                onTap: () {
-                                                  AdController.delete(
-                                                          data[index]
-                                                              .id
-                                                              .toString())
-                                                      .then((val) {
-                                                    ref.refresh(adsProvider);
-                                                    NotificationUI.instance
-                                                        .notificationSuccess(
-                                                            "Anuncio eliminado con éxito");
-                                                    context.pop(true);
-                                                  });
-                                                },
-                                                size: 'sm',
-                                                textColor: Colors.white,
-                                                color: ColorStyle.primaryColor,
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                loading: false),
-                                          )
-                                        ],
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context,
+                                          StateSetter setStat) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Alerta",
+                                        style: TxtStyle.headerStyle,
                                       ),
-                                    ],
-                                  );
+                                      content: const Text(
+                                          "¿Estás seguro de eliminar el anuncio?"),
+                                      actions: <Widget>[
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: CustomButton(
+                                                  text: "Cancelar",
+                                                  onTap: () =>
+                                                      context.pop(false),
+                                                  size: 'sm',
+                                                  color:
+                                                      ColorStyle.whiteBacground,
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  loading: false),
+                                            ),
+                                            Expanded(
+                                              child: CustomButton(
+                                                  text: "Aceptar",
+                                                  onTap: () {
+                                                    setStat(() {
+                                                      deletingAd = true;
+                                                    });
+                                                    AdController.delete(
+                                                            data[index]
+                                                                .id
+                                                                .toString())
+                                                        .then((val) {
+                                                      ref.refresh(adsProvider);
+                                                      NotificationUI.instance
+                                                          .notificationSuccess(
+                                                              "Anuncio eliminado con éxito");
+                                                      context.pop(true);
+                                                      setStat(() {
+                                                        deletingAd = false;
+                                                      });
+                                                    });
+                                                  },
+                                                  size: 'sm',
+                                                  textColor: Colors.white,
+                                                  color:
+                                                      ColorStyle.primaryColor,
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  loading: deletingAd),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  });
                                 },
                               );
                             },
@@ -176,44 +189,49 @@ class _AdsAdminScreenState extends ConsumerState<AdsAdminScreen> {
                                 children: [
                                   Row(
                                     children: [
-                                      CachedNetworkImage(
-                                        imageUrl:
-                                            "${URL_MEDIA_ADS}${data[index].img}",
-                                        placeholder: (context, url) =>
-                                            Container(
-                                          width: 70,
-                                          height: 60,
-                                          decoration: BoxDecoration(
-                                              color: ColorStyle.hintLightColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          child: LoadingStandardWidget
-                                              .loadingWidget(),
-                                        ),
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                Container(
-                                          width: 70,
-                                          height: 60,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.fill),
+                                      Hero(
+                                        tag: data[index].id,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "${URL_MEDIA_ADS}${data[index].img}",
+                                          placeholder: (context, url) =>
+                                              Container(
+                                            width: 70,
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    ColorStyle.hintLightColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: LoadingStandardWidget
+                                                .loadingWidget(),
                                           ),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Container(
-                                          width: 70,
-                                          height: 60,
-                                          decoration: BoxDecoration(
-                                              color: ColorStyle.hintLightColor,
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  Container(
+                                            width: 70,
+                                            height: 60,
+                                            decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          child: Icon(
-                                            Icons.image_not_supported_rounded,
-                                            color: ColorStyle.hintDarkColor,
+                                                  BorderRadius.circular(8),
+                                              image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fill),
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Container(
+                                            width: 70,
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    ColorStyle.hintLightColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: Icon(
+                                              Icons.image_not_supported_rounded,
+                                              color: ColorStyle.hintDarkColor,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -224,10 +242,14 @@ class _AdsAdminScreenState extends ConsumerState<AdsAdminScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            data[index].title,
-                                            style: TxtStyle.headerStyle
-                                                .copyWith(fontSize: 7.sp),
+                                          SizedBox(
+                                            width: 55.w,
+                                            child: Text(
+                                              data[index].title,
+                                              overflow: TextOverflow.fade,
+                                              style: TxtStyle.headerStyle
+                                                  .copyWith(fontSize: 6.5.sp),
+                                            ),
                                           ),
                                           Text(
                                             data[index].subtitle,

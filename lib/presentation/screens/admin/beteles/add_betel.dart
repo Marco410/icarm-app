@@ -1,9 +1,12 @@
 // ignore_for_file: unused_result
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/const.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/controllers/betel_controller.dart';
 import 'package:icarm/presentation/models/BetelModel.dart';
 import 'package:icarm/presentation/providers/betel_provider.dart';
@@ -395,8 +398,35 @@ class _AddBetelAdminPageState extends ConsumerState<AddBetelAdminPage> {
                                         height: 120,
                                         width: 120,
                                         child: (widget.type == "edit")
-                                            ? Image.network(
+                                            ? /* Image.network(
                                                 "${URL_MEDIA_BETELES}${widget.betel!.img}",
+                                              ) */
+                                            Hero(
+                                                tag: widget.betel!.id,
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      "${URL_MEDIA_BETELES}${widget.betel!.img}",
+                                                  placeholder: (context, url) =>
+                                                      LoadingStandardWidget
+                                                          .loadingWidget(),
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.fitWidth,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      SvgPicture.asset(
+                                                          "assets/icon/user-icon.svg"),
+                                                ),
                                               )
                                             : Image.asset(
                                                 imageSelected!.path,

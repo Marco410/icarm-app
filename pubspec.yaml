@@ -3,7 +3,7 @@ description: icarm App
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 2.4.6
+version: 2.4.7
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
@@ -62,6 +62,7 @@ dependencies:
   path_provider: ^2.1.4
   uuid: ^4.4.2
   flutter_cache_manager: ^3.4.1
+  screen_brightness: ^1.0.1
 
 dev_dependencies:
   flutter_test:

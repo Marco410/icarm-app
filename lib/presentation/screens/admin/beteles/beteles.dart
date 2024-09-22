@@ -179,23 +179,26 @@ class _BetelesAdminPageState extends ConsumerState<BetelesAdminPage> {
                                 children: [
                                   Row(
                                     children: [
-                                      CachedNetworkImage(
-                                        imageUrl:
-                                            "${URL_MEDIA_BETELES}${data[index].img}",
-                                        placeholder: (context, url) =>
-                                            LoadingStandardWidget
-                                                .loadingWidget(),
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                Container(
-                                          width: 70,
-                                          height: 70,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.fill),
+                                      Hero(
+                                        tag: data[index].id,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "${URL_MEDIA_BETELES}${data[index].img}",
+                                          placeholder: (context, url) =>
+                                              LoadingStandardWidget
+                                                  .loadingWidget(),
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  Container(
+                                            width: 70,
+                                            height: 70,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fill),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -208,24 +211,28 @@ class _BetelesAdminPageState extends ConsumerState<BetelesAdminPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            (data[index].user2 != null ||
-                                                    data[index].user2Name !=
-                                                        null)
-                                                ? ((data[index].user != null)
-                                                        ? "${data[index].user!.nombre} ${data[index].user!.apellidoPaterno}"
-                                                        : data[index]
-                                                            .userName!) +
-                                                    " &\n" +
-                                                    ((data[index].user2 != null)
-                                                        ? "${data[index].user2!.nombre} ${data[index].user2!.apellidoPaterno}"
-                                                        : data[index]
-                                                            .user2Name!)
-                                                : ((data[index].user != null)
-                                                    ? "${data[index].user!.nombre} ${data[index].user!.apellidoPaterno}"
-                                                    : data[index].userName!),
-                                            style: TxtStyle.labelText
-                                                .copyWith(fontSize: 5.5.sp),
+                                          SizedBox(
+                                            width: 55.w,
+                                            child: Text(
+                                              (data[index].user2 != null ||
+                                                      data[index].user2Name !=
+                                                          null)
+                                                  ? ((data[index].user != null)
+                                                          ? "${data[index].user!.nombre} ${data[index].user!.apellidoPaterno}"
+                                                          : data[index]
+                                                              .userName!) +
+                                                      " &\n" +
+                                                      ((data[index].user2 !=
+                                                              null)
+                                                          ? "${data[index].user2!.nombre} ${data[index].user2!.apellidoPaterno}"
+                                                          : data[index]
+                                                              .user2Name!)
+                                                  : ((data[index].user != null)
+                                                      ? "${data[index].user!.nombre} ${data[index].user!.apellidoPaterno}"
+                                                      : data[index].userName!),
+                                              style: TxtStyle.labelText
+                                                  .copyWith(fontSize: 5.5.sp),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -233,7 +240,7 @@ class _BetelesAdminPageState extends ConsumerState<BetelesAdminPage> {
                                   ),
                                   Icon(
                                     Icons.arrow_forward_ios_rounded,
-                                    size: 30,
+                                    size: 25,
                                   )
                                 ],
                               ),

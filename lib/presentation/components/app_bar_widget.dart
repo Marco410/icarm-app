@@ -84,28 +84,31 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           child: (prefs.foto_perfil != "")
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        "${URL_MEDIA_FOTO_PERFIL}${prefs.foto_perfil}",
-                                    placeholder: (context, url) =>
-                                        LoadingStandardWidget.loadingWidget(),
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
-                                      width: 12.sp,
-                                      height: 13.sp,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
+                                  child: Hero(
+                                    tag: prefs.usuarioID,
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "${URL_MEDIA_FOTO_PERFIL}${prefs.foto_perfil}",
+                                      placeholder: (context, url) =>
+                                          LoadingStandardWidget.loadingWidget(),
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        width: 12.sp,
+                                        height: 13.sp,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
+                                      errorWidget: (context, url, error) =>
+                                          SvgPicture.asset(
+                                              "assets/icon/user-icon.svg"),
+                                      height: 13.sp,
                                     ),
-                                    errorWidget: (context, url, error) =>
-                                        SvgPicture.asset(
-                                            "assets/icon/user-icon.svg"),
-                                    height: 13.sp,
                                   ),
                                 )
                               : SvgPicture.asset("assets/icon/user-icon.svg")),

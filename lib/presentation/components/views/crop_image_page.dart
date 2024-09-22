@@ -27,6 +27,17 @@ class CropImagePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     bool isLoading = ref.watch(isLoadingProvider);
 
+    final imageWidth = width;
+    final imageHeight = height;
+
+    final initialWidth = imageWidth * 0.7;
+    final initialHeight = imageHeight * 0.7;
+
+    final left = (imageWidth - initialWidth) / 2;
+    final top = (imageHeight - initialHeight) / 2;
+
+    final initialArea = Rect.fromLTWH(left, top, initialWidth, initialHeight);
+
     return Scaffold(
         backgroundColor: ColorStyle.whiteBacground,
         appBar: AppBar(
@@ -104,8 +115,7 @@ class CropImagePage extends ConsumerWidget {
                       },
                       image: uint8List,
                       onCropped: onCropped,
-                      initialArea:
-                          Rect.fromLTWH(250, 250, width - 500, height - 500),
+                      initialArea: initialArea,
                     ),
                   ),
                 ),

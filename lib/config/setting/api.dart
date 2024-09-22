@@ -2,7 +2,7 @@ const String YOUTUBE_BASE = "www.googleapis.com";
 const String YOUTUBE_API = "youtube/v3/search";
 
 const String BASE_URL = "www.amoryrestauracionmorelia.com";
-const String CARPETA = "/icarm-back/public/api/";
+const String CARPETA = "/public/api/";
 const String LOGIN_URL = "${CARPETA}auth/login";
 const String REGISTER_USER_URL = "${CARPETA}auth/register";
 const String UPDATE_USER_URL = "${CARPETA}auth/update";

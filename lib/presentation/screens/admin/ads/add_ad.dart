@@ -1,10 +1,13 @@
 // ignore_for_file: unused_result
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/Material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/const.dart';
+import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/controllers/ad_controller.dart';
 import 'package:icarm/presentation/models/AdsModel.dart';
 import 'package:icarm/presentation/providers/ads_provider.dart';
@@ -45,9 +48,6 @@ class _AddAdAdminScreenState extends ConsumerState<AddAdAdminScreen> {
   @override
   void initState() {
     isEditing = (widget.type == 'edit');
-
-    print("widget.ad");
-    print(widget.ad);
 
     if (isEditing) {
       setState(() {
@@ -161,11 +161,35 @@ class _AddAdAdminScreenState extends ConsumerState<AddAdAdminScreen> {
                                 ClipRRect(
                                     borderRadius: BorderRadius.circular(15),
                                     child: (widget.type == "edit")
-                                        ? Image.network(
-                                            "${URL_MEDIA_ADS}${widget.ad!.img}",
-                                            fit: BoxFit.fitWidth,
-                                            width: 80.w,
-                                            height: 22.h,
+                                        ? Hero(
+                                            tag: widget.ad!.id,
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  "${URL_MEDIA_ADS}${widget.ad!.img}",
+                                              placeholder: (context, url) =>
+                                                  LoadingStandardWidget
+                                                      .loadingWidget(),
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
+                                                width: 80.w,
+                                                height: 22.h,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.fitWidth,
+                                                  ),
+                                                ),
+                                              ),
+                                              errorWidget: (context, url,
+                                                      error) =>
+                                                  SvgPicture.asset(
+                                                      "assets/icon/user-icon.svg"),
+                                              width: 80.w,
+                                              height: 22.h,
+                                            ),
                                           )
                                         : Image.asset(
                                             imageSelected!.path,

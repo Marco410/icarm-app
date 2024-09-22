@@ -29,7 +29,6 @@ class CustomImagePicker {
 
       if (!mounted) return false;
 
-      print("Entraaaaa");
       ref.read(loadingCropPageProvider.notifier).update((state) => false);
 
       // Push CropImagePage and wait for result
