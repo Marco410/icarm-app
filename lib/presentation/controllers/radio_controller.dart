@@ -52,7 +52,9 @@ class RadioController {
     });
 
     ref.read(radioServiceProvider).playbackEventStream.listen((event) async {
-      ref.read(dateBufferProvider.notifier).update((state2) => null);
+      if (mounted) {
+        ref.read(dateBufferProvider.notifier).update((state2) => null);
+      }
       switch (event.processingState) {
         case ProcessingState.buffering:
           onBuffering(event.updateTime);
@@ -77,14 +79,19 @@ class RadioController {
       }
     });
 
-    ref.read(radioServiceProvider).playingStream.listen((event) async {
-      //set the icon when is playing or when stops
-      ref.read(radioisPlayingProvider.notifier).update((state2) => event);
-    });
+    if (mounted) {
+      ref.read(radioServiceProvider).playingStream.listen((event) async {
+        //set the icon when is playing or when stops
+        ref.read(radioisPlayingProvider.notifier).update((state2) => event);
+      });
 
-    ref.read(radioServiceProvider).processingStateStream.listen((event) async {
-      ref.watch(prosessionStateProvider.notifier).update((state) => event);
-    });
+      ref
+          .read(radioServiceProvider)
+          .processingStateStream
+          .listen((event) async {
+        ref.watch(prosessionStateProvider.notifier).update((state) => event);
+      });
+    }
   }
 
   Future<void> playRadio() async {
@@ -95,7 +102,7 @@ class RadioController {
     }
 
     try {
-      final url = "https://stream.zeno.fm/5dsk2i7levzvv";
+      final url = "https://stream.zeno.fm/tvmiumji5uyvv";
 
       audioPlayer.setUrl(
         url,
@@ -112,9 +119,11 @@ class RadioController {
           displayTitle: "Radio En Vivo | Amor & Restauración Morelia",
         ),
       );
-      ref
-          .read(radioServiceProvider)
-          .setCanUseNetworkResourcesForLiveStreamingWhilePaused(true);
+      if (mounted) {
+        ref
+            .read(radioServiceProvider)
+            .setCanUseNetworkResourcesForLiveStreamingWhilePaused(true);
+      }
 
       AudioSession.instance.then((audioSession) async {
         await audioSession.configure(AudioSessionConfiguration.speech());

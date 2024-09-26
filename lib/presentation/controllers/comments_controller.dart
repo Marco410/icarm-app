@@ -124,7 +124,7 @@ class Comment {
           .orderBy('timestamp', descending: true)
           .where('isTesting', isEqualTo: false)
           .where('active', isEqualTo: true)
-          .limit(10)
+          .limit(30)
           .withConverter(
             fromFirestore: CommentF.fromFirestore,
             toFirestore: (CommentF co, options) => co.toFirestore(),

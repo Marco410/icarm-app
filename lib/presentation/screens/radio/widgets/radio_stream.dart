@@ -7,7 +7,7 @@ class StreamHandler {
 
   Stream<String> currentSongStream() async* {
     final url = Uri.parse(
-        "https://api.zeno.fm/mounts/metadata/subscribe/lcdmqnfduyqvv");
+        "https://api.zeno.fm/mounts/metadata/subscribe/tvmiumji5uyvv");
     final client = http.Client();
 
     try {

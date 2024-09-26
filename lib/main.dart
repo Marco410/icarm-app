@@ -9,6 +9,7 @@ import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/config/generated/l10n.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'presentation/providers/notification_provider.dart';
 import 'presentation/providers/providers.dart';
@@ -43,11 +44,12 @@ class myApp extends ConsumerStatefulWidget {
   _myAppState createState() => _myAppState();
 }
 
-class _myAppState extends ConsumerState<myApp> {
+class _myAppState extends ConsumerState<myApp> with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> navigatorKey =
       new GlobalKey<NavigatorState>();
   final GlobalKey<ScaffoldMessengerState> messengerKey =
       new GlobalKey<ScaffoldMessengerState>();
+  double? _originalBrightness;
 
   @override
   void initState() {
@@ -58,7 +60,27 @@ class _myAppState extends ConsumerState<myApp> {
           message.notification!.title!, message.notification!.body!);
     });
 
+    WidgetsBinding.instance.addObserver(this);
+    brightnessFunc();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    ScreenBrightness().setScreenBrightness(_originalBrightness!);
+    super.dispose();
+  }
+
+  void brightnessFunc() async {
+    _originalBrightness = await ScreenBrightness().current;
+    await ScreenBrightness().setScreenBrightness(_originalBrightness!);
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      brightnessFunc();
+    }
   }
 
   @override

@@ -33,7 +33,7 @@ class Home extends ConsumerStatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
+class _HomeState extends ConsumerState<Home> {
   bool loadCard = true;
   bool loading = false;
   Future delayedLoading = Future(() => null);
@@ -77,20 +77,12 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
     });
 
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     _controllerHomeVideo.dispose();
     super.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-  }
-
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      ref.refresh(liveProvider);
-    }
   }
 
   final prefs = new PreferenciasUsuario();

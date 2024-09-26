@@ -342,3 +342,7 @@ class NavigationRoutes {
     context.push('/home/perfil');
   }
 }
+
+final nameRouteProvider = StateProvider<String?>((ref) {
+  return null;
+});

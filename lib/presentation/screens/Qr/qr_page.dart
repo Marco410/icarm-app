@@ -2,7 +2,6 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -20,15 +19,17 @@ class QRPage extends ConsumerStatefulWidget {
   _QRPageState createState() => _QRPageState();
 }
 
-class _QRPageState extends ConsumerState<QRPage> {
+class _QRPageState extends ConsumerState<QRPage> with WidgetsBindingObserver {
   _QRPageState();
 
   double? _originalBrightness;
+  String? currentRouteName = null;
 
   @override
   void initState() {
     super.initState();
     brightnessFunc();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   void brightnessFunc() async {
@@ -38,9 +39,14 @@ class _QRPageState extends ConsumerState<QRPage> {
 
   @override
   void dispose() {
+    ScreenBrightness().setScreenBrightness(_originalBrightness!);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-    if (_originalBrightness != null) {
-      ScreenBrightness().setScreenBrightness(_originalBrightness!);
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      brightnessFunc();
     }
   }
 
