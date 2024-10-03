@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/setting/style.dart';
 
 class ContentAdWidget extends StatelessWidget {
@@ -24,7 +25,7 @@ class ContentAdWidget extends StatelessWidget {
           image: DecorationImage(
               colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
               fit: BoxFit.fitWidth,
-              image: AssetImage(image))),
+              image: NetworkImage("${URL_MEDIA_ADS}${image}"))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,

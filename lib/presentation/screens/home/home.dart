@@ -13,7 +13,6 @@ import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
 import 'package:icarm/presentation/components/carousel_widget.dart';
 import 'package:icarm/presentation/components/components.dart';
-import 'package:icarm/presentation/components/content_ad_widget.dart';
 import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/providers/evento_provider.dart';
@@ -44,7 +43,7 @@ class _HomeState extends ConsumerState<Home> {
   _HomeState();
 
   final CarouselSliderController _controllerC = CarouselSliderController();
-  int _current = 2;
+  int _current = 0;
 
   @override
   void initState() {
@@ -90,57 +89,6 @@ class _HomeState extends ConsumerState<Home> {
   Widget build(BuildContext context) {
     final lives = ref.watch(isLiveProvider);
     final listEventos = ref.watch(listEventosProvider);
-
-    List<Widget> textItems = [
-      ContentAdWidget(
-        image: "assets/image/home/hombres-radio.jpeg",
-        title: "Hombres Valientes",
-        subTitle: "Martes 6:00pm",
-        actionButton: () {},
-      ),
-      ContentAdWidget(
-        image: "assets/image/home/mujeres-radio.jpeg",
-        title: "Mujeres Entendidas",
-        subTitle: "Jueves 5:30pm",
-        actionButton: () {},
-      ),
-      ContentAdWidget(
-        image: "assets/image/home/jovenes-radio.jpeg",
-        title: "Jóvenes de Influencia",
-        subTitle: "Jueves 7:00pm",
-        actionButton: () {},
-      ),
-      ContentAdWidget(
-        image: "assets/image/home/refugio.png",
-        title: "Centros de restauración",
-        subTitle: "Conócelos",
-        actionButton: () {},
-      ),
-      ContentAdWidget(
-        image: "assets/image/home/iglesia.png",
-        title: "Somos",
-        subTitle: "A&R Morelia",
-        actionButton: () {},
-      ),
-      ContentAdWidget(
-        image: "assets/image/home/podcast.png",
-        title: "Escucha nuestro podcast",
-        subTitle: "Podcast",
-        actionButton: () {},
-      ),
-      ContentAdWidget(
-        image: "assets/image/home/online.png",
-        title: "Transmisiones en vivo",
-        subTitle: "Predicas online",
-        actionButton: () {},
-      ),
-      ContentAdWidget(
-        image: "assets/image/home/noches.png",
-        title: "Noches de Restauración",
-        subTitle: "Sábados",
-        actionButton: () {},
-      ),
-    ];
 
     final mediaHeight = MediaQuery.of(context).size.height;
     final eventoFavorite = ref.watch(eventoFavoriteProvider);
@@ -565,7 +513,6 @@ class _HomeState extends ConsumerState<Home> {
                         height: 20,
                       ),
                       CarouselWidget(
-                          textItems: textItems,
                           controller: _controllerC,
                           current: _current,
                           size: 75.sp,

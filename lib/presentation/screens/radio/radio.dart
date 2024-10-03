@@ -217,7 +217,6 @@ class _RadioPageState extends ConsumerState<RadioPage>
                       height: 10,
                     ),
                     CarouselWidget(
-                        textItems: textItems,
                         controller: _controllerC,
                         current: _current,
                         size: 90.sp,

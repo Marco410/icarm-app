@@ -39,9 +39,6 @@ class _MainHomeState extends ConsumerState<MainHome> {
   void catchVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-    print("appVersion");
-    print(packageInfo.version);
-
     final Map<String, dynamic>? version = await SettingsController.getVersion();
 
     if (version != null && version["value"] != packageInfo.version) {
