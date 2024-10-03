@@ -66,3 +66,5 @@ const String GET_ADS = "${CARPETA}app/ads";
 const String CREATE_AD = "${CARPETA}app/ads/create";
 const String EDIT_AD = "${CARPETA}app/ads/edit";
 const String DELETE_AD = "${CARPETA}app/ads/delete";
+
+const String GET_VERSION = "${CARPETA}app/settings/version";

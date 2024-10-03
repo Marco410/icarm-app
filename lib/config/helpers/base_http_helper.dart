@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../services/notification_ui_service.dart';
 
@@ -27,7 +27,7 @@ Future<String?> httpBase(
     bool isRadio = false}) async {
   http.Response response = http.Response("", 500);
   try {
-    if (await InternetConnectionChecker().hasConnection) {
+    if (await InternetConnection().hasInternetAccess) {
       var url = Uri.https(base_url, path, params);
 
       headers ??= {};
@@ -35,7 +35,7 @@ Future<String?> httpBase(
       headers["Content-type"] = (isRadio) ? 'audio/mpeg' : "application/json";
       headers["Accept"] = "*/*";
 
-      /*     if (authorization) {
+      /*  if (authorization) {
         String? token = (await storage.read(key: "tokenAuth"));
         headers["Authorization"] = 'Bearer $token';
       } */
@@ -115,6 +115,9 @@ Future<String?> httpBase(
         return data;
       }
     } else {
+      print("base_url");
+      print(base_url);
+      print(path);
       NotificationUI.instance.notificationNoInternet();
       return null;
     }
