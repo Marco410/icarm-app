@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_rte/flutter_rte.dart';
+import 'package:icarm/config/helpers/link_helper.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/controllers/radio_controller.dart';
 import 'package:icarm/presentation/providers/providers.dart';
@@ -16,6 +17,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:icarm/config/setting/style.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer_pro/sizer.dart';
 import '../../components/zcomponents.dart';
 
@@ -362,14 +364,48 @@ class _RadioPageState extends ConsumerState<RadioPage>
                         ),
                       ),
                     ),
-                    Stack(
-                      alignment: Alignment.center,
-                      clipBehavior: Clip.none,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Container(
+                          margin: EdgeInsets.only(right: 0),
+                          child: Bounceable(
+                            onTap: () {
+                              Share.share(
+                                "💒 ¡Descarga nuestra app! 📱\n\n Conéctate con nuestra comunidad, accede a eventos, podcast, radio, mensajes y más desde cualquier lugar. 🌎\n\n ${LinkHelper.linkApp()}",
+                                subject: '¡Comparte la aplicación! 📱',
+                              );
+                            },
+                            child: Container(
+                              height: 51,
+                              width: 51,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: ColorStyle.secondaryColor,
+                                      width: 3.5),
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: Icon(
+                                Icons.share_rounded,
+                                color: ColorStyle.secondaryColor,
+                                size: 25,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            PlayButtonRadio(
+                              radioIsPlaying: radioIsPlaying,
+                              radioController: radioController,
+                              loadingStreamRadio: loadingStreamRadio,
+                              connection: true,
+                            ),
+                          ],
+                        ),
+                        Container(
                           decoration: BoxDecoration(),
-                          margin: EdgeInsets.only(right: 40),
-                          alignment: Alignment.centerRight,
+                          margin: EdgeInsets.only(right: 0),
                           child: Bounceable(
                             onTap: () {
                               editorController.setFocus();
@@ -389,17 +425,6 @@ class _RadioPageState extends ConsumerState<RadioPage>
                               ),
                             ),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            PlayButtonRadio(
-                              radioIsPlaying: radioIsPlaying,
-                              radioController: radioController,
-                              loadingStreamRadio: loadingStreamRadio,
-                              connection: true,
-                            ),
-                          ],
                         ),
                       ],
                     ),

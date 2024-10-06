@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:icarm/config/helpers/link_helper.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/config/setting/const.dart';
 import 'package:icarm/config/share_prefs/prefs_usuario.dart';
@@ -19,6 +20,7 @@ import 'package:icarm/presentation/providers/evento_provider.dart';
 import 'package:icarm/presentation/providers/youtube_provider.dart';
 import 'package:icarm/presentation/screens/home/skeleton_home.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer_pro/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
@@ -552,8 +554,33 @@ class _HomeState extends ConsumerState<Home> {
                               ),
                             ),
                           ),
+                          Container(
+                            margin: EdgeInsets.only(right: 0),
+                            child: Bounceable(
+                              onTap: () {
+                                Share.share(
+                                  " ✨ ¡Descarga nuestra app! ✨\n Conéctate con nuestra comunidad, accede a eventos, podcast, radio, mensajes y más desde cualquier lugar. 🌎\n ${LinkHelper.linkApp()}",
+                                  subject: '¡Comparte lo que escuchas!',
+                                );
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: ColorStyle.primaryColor,
+                                        width: 3),
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: Icon(
+                                  Icons.share_rounded,
+                                  color: ColorStyle.primaryColor,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
