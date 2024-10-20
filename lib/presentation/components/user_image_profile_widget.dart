@@ -60,10 +60,10 @@ class _UserImageProfileWidgetState
               ? Container(
                   height: 130,
                   width: 130,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Hero(
-                      tag: prefs.usuarioID,
+                  child: Hero(
+                    tag: prefs.usuarioID,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
                         errorWidget: (context, url, error) => SvgPicture.asset(
                             "assets/icon/user-icon.svg",

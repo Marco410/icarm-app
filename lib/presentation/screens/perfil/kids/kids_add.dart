@@ -287,7 +287,7 @@ class _KidsAddPageState extends ConsumerState<KidsAddPage> {
                                       context.pop();
                                     });
                                   });
-                                });
+                                }, false);
                               },
                               loading: loadingDelete,
                               color: Colors.red[300],

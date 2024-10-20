@@ -92,7 +92,7 @@ class _NotiPreviewPageState extends ConsumerState<NotiPreviewPage> {
                                 notiSelected[0]['id'].toString()));
                             context.pop();
                             context.pop();
-                          });
+                          }, false);
 
                           /* NotificationService.showSnackBarDeleteNoti(
                               "¿Estás seguro de eliminar esta notificación?",

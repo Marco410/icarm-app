@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
@@ -153,75 +154,92 @@ class NotificationUI {
   }
 
   Future<void> notificationToAcceptAction(
-      BuildContext context, String msg, VoidCallback confirm) async {
+      BuildContext context, String msg, Function confirm, bool loading) async {
     await Haptics.vibrate(HapticsType.success);
 
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Container(
-                  height: 70,
-                  padding: const EdgeInsets.all(10),
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  Container(
+                    height: 70,
+                    padding: const EdgeInsets.all(10),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: Icon(
+                      Icons.warning_amber_rounded,
+                      size: 50,
+                      color: ColorStyle.secondaryColor,
+                    ),
+                  ),
+                  Text(
+                    msg,
+                    style: const TextStyle(color: Colors.black87, fontSize: 17),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              InkWell(
+                onTap: () {
+                  context.pop();
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
                   decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                  child: Icon(
-                    Icons.warning_amber_rounded,
-                    size: 50,
-                    color: ColorStyle.secondaryColor,
-                  ),
-                ),
-                Text(
-                  msg,
-                  style: const TextStyle(color: Colors.black87, fontSize: 17),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            InkWell(
-              onTap: () {
-                context.pop();
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                child: const Text(
-                  "Cancelar",
-                  style: TextStyle(
-                    color: ColorStyle.hintDarkColor,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: confirm,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
-                decoration: BoxDecoration(
-                    color: ColorStyle.secondaryColor,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Text(
-                  "Confirmar",
-                  style: TextStyle(
-                      color: Colors.white,
+                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                  child: const Text(
+                    "Cancelar",
+                    style: TextStyle(
+                      color: ColorStyle.hintDarkColor,
                       fontSize: 12,
-                      fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
               ),
-            )
-          ],
-        );
+              Bounceable(
+                onTap: () {
+                  setState(() {
+                    loading = true;
+                  });
+
+                  confirm();
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+                  decoration: BoxDecoration(
+                      color: ColorStyle.secondaryColor,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: (loading)
+                      ? const SizedBox(
+                          width: 15,
+                          height: 15,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          "Confirmar",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        ),
+                ),
+              )
+            ],
+          );
+        });
       },
     );
   }

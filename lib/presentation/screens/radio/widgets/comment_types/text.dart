@@ -155,7 +155,7 @@ Widget TextComment(
                           NotificationUI.instance.notificationError(
                               "No se pudo eliminar tu comentario.");
                         }
-                      });
+                      }, false);
                     },
                     child: Container(
                         height: 25,

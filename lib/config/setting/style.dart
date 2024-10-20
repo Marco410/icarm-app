@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:sizer_pro/sizer.dart';
 
 class ColorStyle {
-  static final primaryColor = Color(0xFF1A2228);
-  static final secondaryColor = Color(0xff454FD8);
-  static final thirdColor = Color(0xffA9BFE9);
+  static const primaryColor = Color(0xFF1A2228);
+  static const secondaryColor = Color(0xff454FD8);
+  static const thirdColor = Color(0xffA9BFE9);
   static const hintDarkColor = Color(0xFF8F9098);
   static const hintColor = Color(0xFFC5C6CC);
   static const hintLightColor = Color(0xFFE0E0E0);
-  static final background = Colors.white;
-  static final bible = Color(0xFF2A60FF);
-  static final alert = Color(0xFFF85046);
-  static final fontColorLight = Color(0xFF656565);
-  static final whiteBacground = Color(0xFFF4F5F7);
-  // static final grayBackground = Color(0xFF16223A);
-  static final blackBackground = Colors.white;
-  static final bottomBarDark = Color(0xFF202833);
+  static const background = Colors.white;
+  static const bible = Color(0xFF2A60FF);
+  static const alert = Color(0xFFF85046);
+  static const fontColorLight = Color(0xFF656565);
+  static const whiteBacground = Color(0xFFF4F5F7);
+  // static const grayBackground = Color(0xFF16223A);
+  static const blackBackground = Colors.white;
+  static const bottomBarDark = Color(0xFF202833);
 }
 
 class TxtStyle {

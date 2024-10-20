@@ -37,7 +37,7 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
 
   Widget build(BuildContext context) {
     ref.watch(newNotiSearchProvider);
-    final newNoti = ref.watch(newNotiProvider);
+    final listNotis = ref.watch(listNotificationsProvider);
     final prefs = PreferenciasUsuario();
 
     return Scaffold(
@@ -101,9 +101,10 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
               MenuItemWidget(
                 icon: 'noti.svg',
                 title: 'NOTIFICACIONES',
-                subtitle: 'Configura las notificaciones que recibirás.',
+                subtitle: 'Consulta tus notificaciones.',
                 onTap: () => context.pushNamed('notifications'),
-                showDot: newNoti,
+                showDot:
+                    (listNotis.isNotEmpty && listNotis.any((n) => n.seen == 0)),
               ),
               SizedBox(
                 height: 15,
@@ -169,7 +170,7 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                             "Tu sesión se cerrará. \n\n Tendrás que volver a agregar tu usuario y contraseña.",
                             () {
                           ref.refresh(logoutProvider(context));
-                        });
+                        }, false);
                       },
                       loading: false,
                       color: Colors.white,
@@ -187,7 +188,7 @@ class _PerfilPageState extends ConsumerState<PerfilPage> {
                             "¿Estás seguro de eliminar tu cuenta? Se perderán todos tus datos.",
                             () {
                           ref.refresh(deleteAccountProvider(context));
-                        });
+                        }, false);
                       },
                       child: Text(
                         "Eliminar mi cuenta",
@@ -261,7 +262,7 @@ class MenuItemWidget extends StatelessWidget {
                     child: Icon(
                       Icons.circle,
                       size: 12,
-                      color: ColorStyle.secondaryColor,
+                      color: Colors.redAccent,
                     ))
                 : SizedBox()
           ],

@@ -17,6 +17,7 @@ import 'package:icarm/presentation/components/components.dart';
 import 'package:icarm/presentation/components/custombutton.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
 import 'package:icarm/presentation/providers/evento_provider.dart';
+import 'package:icarm/presentation/providers/notification_provider.dart';
 import 'package:icarm/presentation/providers/youtube_provider.dart';
 import 'package:icarm/presentation/screens/home/skeleton_home.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +55,7 @@ class _HomeState extends ConsumerState<Home> {
     setState(() {
       loading = true;
     });
+    ref.refresh(notificationsProvider);
 
     _controllerHomeVideo = VideoPlayerController.asset(
       'assets/video/home.mp4',
@@ -559,8 +561,8 @@ class _HomeState extends ConsumerState<Home> {
                             child: Bounceable(
                               onTap: () {
                                 Share.share(
-                                  " ✨ ¡Descarga nuestra app! ✨\n Conéctate con nuestra comunidad, accede a eventos, podcast, radio, mensajes y más desde cualquier lugar. 🌎\n ${LinkHelper.linkApp()}",
-                                  subject: '¡Comparte lo que escuchas!',
+                                  "💒 ¡Descarga nuestra app! 📱\n\n Conéctate con nuestra comunidad, accede a eventos, podcast, radio, mensajes y más desde cualquier lugar. 🌎\n\n ${LinkHelper.linkApp()}",
+                                  subject: '¡Comparte la aplicación! 📱',
                                 );
                               },
                               child: Container(

@@ -54,7 +54,7 @@ class _myAppState extends ConsumerState<myApp> with WidgetsBindingObserver {
   @override
   void initState() {
     PushNotificationService.messagesStream.listen((message) {
-      ref.refresh(storeNotificationProvider(message));
+      ref.refresh(notificationsProvider);
 
       NotificationUI.instance.notificationAlert(
           message.notification!.title!, message.notification!.body!);

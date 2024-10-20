@@ -43,3 +43,7 @@ child: const AbsorbPointer(child: SizedBox.expand()));
 }
 }
 ```
+
+## Android Build
+
+flutter build appbundle --target-platform android-arm,android-arm64,android-x64

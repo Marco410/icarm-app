@@ -84,7 +84,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 GoRoute(
                     path: 'notifications',
                     name: 'notifications',
-                    builder: (context, state) => Notifications(),
+                    builder: (context, state) => NotificationsPage(),
                     routes: [
                       GoRoute(
                         path: 'preview',
