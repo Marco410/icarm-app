@@ -364,7 +364,7 @@ Future<void> showComment(BuildContext context, CommentF comment,
                                                                             .instance
                                                                             .notificationError("No se pudo eliminar tu respuesta.");
                                                                       }
-                                                                    });
+                                                                    }, false);
                                                                   },
                                                                   child:
                                                                       Container(

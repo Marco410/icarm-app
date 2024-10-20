@@ -35,10 +35,10 @@ Future<String?> httpBase(
       headers["Content-type"] = (isRadio) ? 'audio/mpeg' : "application/json";
       headers["Accept"] = "*/*";
 
-      /*  if (authorization) {
+      if (authorization) {
         String? token = (await storage.read(key: "tokenAuth"));
         headers["Authorization"] = 'Bearer $token';
-      } */
+      }
 
       if (type != "MULTIPART") {
         body = json.encode(body);

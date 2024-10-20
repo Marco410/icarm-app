@@ -1,158 +1,211 @@
-// ignore_for_file: unused_result
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/Material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:icarm/config/setting/style.dart';
+import 'package:icarm/config/services/notification_ui_service.dart';
 import 'package:icarm/presentation/components/loading_widget.dart';
-import 'package:intl/intl.dart';
+import 'package:icarm/presentation/components/zcomponents.dart';
+import 'package:icarm/presentation/controllers/notification_controller.dart';
+import 'package:icarm/presentation/providers/notification_provider.dart';
+import 'package:icarm/presentation/screens/perfil/notifications/widgets/noti_box_widget.dart';
+import 'package:sizer_pro/sizer.dart';
 
-import '../../../components/zcomponents.dart';
-import '../../../providers/notification_provider.dart';
+import '../../../../config/setting/style.dart';
 
-class Notifications extends ConsumerStatefulWidget {
+class NotificationsPage extends ConsumerStatefulWidget {
+  const NotificationsPage({super.key});
+
   @override
-  _NotificationsState createState() => _NotificationsState();
+  ConsumerState<NotificationsPage> createState() => _NotificationsPageState();
 }
 
-class NotificationList {
-  final String? message;
-  final String time;
+class _NotificationsPageState extends ConsumerState<NotificationsPage> {
+  bool loading = false;
 
-  NotificationList(this.message, this.time);
-}
+  @override
+  void initState() {
+    super.initState();
+  }
 
-class _NotificationsState extends ConsumerState<Notifications> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    ref.watch(getNotiListProvider);
-    final listNotis = ref.watch(notiListProvider);
-
+    final notis = ref.watch(notificationsProvider);
+    final listNotis = ref.watch(listNotificationsProvider);
     return Scaffold(
+      extendBodyBehindAppBar: false,
       backgroundColor: ColorStyle.whiteBacground,
       appBar: AppBarWidget(
         backButton: true,
         rightButtons: false,
       ),
-      body: FadedSlideAnimation(
-        child: Stack(
-          children: [
-            (listNotis.isEmpty)
-                ? Center(
-                    child: LoadingStandardWidget.loadingNoDataWidget(
-                        "notificaciones"),
-                  )
-                : ListView.builder(
-                    itemCount: listNotis.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      Map<String, Object?> noti = listNotis[index];
-
-                      return InkWell(
-                        onTap: () {
-                          ref.refresh(
-                              notiSelectedProvider(noti['id'].toString()));
-
-                          context.pushNamed("notiPreview");
-                        },
-                        child: FadedScaleAnimation(
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            margin: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: ColorStyle.whiteBacground,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black.withOpacity(0.5),
-                                    blurRadius: 10,
-                                    spreadRadius: -4,
-                                    offset: Offset(0, 0))
-                              ],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                      margin: EdgeInsets.only(right: 20),
-                                      padding: EdgeInsets.all(15),
-                                      width: 70,
-                                      height: 70,
-                                      decoration: BoxDecoration(
-                                          color: ColorStyle.whiteBacground,
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      child: Image.asset(
-                                        "assets/image/logo.png",
-                                        scale: 6,
-                                      )),
-                                ),
-                                Expanded(
-                                  flex: 6,
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          width: 250,
-                                          child: Text(
-                                            noti['title'].toString(),
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 250,
-                                          child: Text(
-                                            noti['body'].toString(),
-                                            textAlign: TextAlign.left,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 250,
-                                          child: Text(
-                                            DateFormat.yMMMd('es_MX').format(
-                                                DateTime.parse(noti['sentTime']
-                                                    .toString())),
-                                            textAlign: TextAlign.left,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.black54),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                (noti['seen'].toString() != "0")
-                                    ? Expanded(flex: 1, child: SizedBox())
-                                    : Expanded(
-                                        flex: 1,
-                                        child: Icon(
-                                          Icons.circle,
-                                          size: 13,
-                                          color: ColorStyle.secondaryColor,
-                                        ),
-                                      )
-                              ],
-                            ),
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  (listNotis.isNotEmpty && listNotis.any((n) => n.seen == 0))
+                      ? Bounceable(
+                          onTap: () {
+                            NotificationUI.instance.notificationToAcceptAction(
+                                context, "Se marcarán como leídas.", () {
+                              NotificationController.seeAll().whenComplete(() {
+                                setState(() {
+                                  loading = false;
+                                });
+                                _refresh();
+                                if (mounted) {
+                                  context.pop();
+                                }
+                              });
+                            }, loading);
+                          },
+                          child: Text(
+                            "Marcar como leídas",
+                            style: TxtStyle.labelText.copyWith(
+                                decoration: TextDecoration.underline,
+                                decorationColor: ColorStyle.hintDarkColor,
+                                color: ColorStyle.hintDarkColor),
                           ),
-                        ),
-                      );
-                    })
-          ],
+                        )
+                      : SizedBox(),
+                  (listNotis.isNotEmpty)
+                      ? IconButton(
+                          onPressed: () {
+                            NotificationUI.instance.notificationToAcceptAction(
+                                context,
+                                "¿Deseas borrar todas tus notificaciones?", () {
+                              NotificationController.deleteAll()
+                                  .whenComplete(() {
+                                setState(() {
+                                  loading = false;
+                                });
+                                _refresh();
+                                if (mounted) {
+                                  context.pop();
+                                }
+                              });
+                            }, loading);
+                          },
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.redAccent,
+                            size: 10.f,
+                          ))
+                      : SizedBox()
+                ],
+              ),
+              Container(
+                  height: 90.h,
+                  padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.only(bottom: 60),
+                  child: notis.when(
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Center(
+                              child: LoadingStandardWidget.loadingNoDataWidget(
+                                  'notificaciones')),
+                        );
+                      }
+
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: data.length,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Dismissible(
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 40),
+                                decoration: BoxDecoration(
+                                    color: Colors.redAccent,
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: const Icon(
+                                  Icons.delete_rounded,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              confirmDismiss: (direction) {
+                                NotificationUI.instance
+                                    .notificationToAcceptAction(context,
+                                        "¿Quieres eliminar esta notificación?",
+                                        () {
+                                  NotificationController.delete(
+                                          data[index].id.toString())
+                                      .whenComplete(() {
+                                    setState(() {
+                                      loading = false;
+                                    });
+                                    _refresh();
+                                    if (mounted) {
+                                      context.pop();
+                                    }
+                                  });
+                                }, loading);
+                                return Future.value(false);
+                              },
+                              movementDuration:
+                                  const Duration(milliseconds: 50),
+                              resizeDuration: const Duration(milliseconds: 50),
+                              dismissThresholds: const {
+                                DismissDirection.startToEnd: 0.1
+                              },
+                              key: Key(data[index].id.toString()),
+                              child: NotiBoxWidget(
+                                icon: "notification.svg",
+                                noti: data[index],
+                                onTap: () {
+                                  if (data[index].seen == 0) {
+                                    setState(() {
+                                      data[index].seen = 1;
+                                    });
+                                    NotificationController.seen(
+                                            data[index].id.toString())
+                                        .whenComplete(() {
+                                      _refresh();
+                                    });
+                                  }
+
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => DialogNoti(
+                                            noti: data[index],
+                                            ctx: context,
+                                            ref: ref,
+                                          ));
+                                },
+                              ),
+                            );
+                          });
+                    },
+                    error: (error, stackTrace) {
+                      return Center(
+                          child: LoadingStandardWidget.loadingErrorWidget());
+                    },
+                    loading: () =>
+                        Center(child: LoadingStandardWidget.loadingWidget()),
+                  )),
+            ],
+          ),
         ),
-        beginOffset: Offset(0, 0.3),
-        endOffset: Offset(0, 0),
-        slideCurve: Curves.linearToEaseOut,
       ),
     );
+  }
+
+  Future<void> _refresh() async {
+    // ignore: unused_result
+    ref.refresh(notificationsProvider);
   }
 }

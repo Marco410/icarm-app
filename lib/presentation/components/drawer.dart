@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icarm/config/setting/const.dart';
@@ -36,9 +37,27 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InkWell(
+                Bounceable(
                     onTap: () => context.pop(),
-                    child: Icon(Icons.arrow_back_ios)),
+                    child: Container(
+                        alignment: Alignment.center,
+                        width: 40,
+                        height: 35,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: ShadowStyle.boxShadow,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Icon(Icons.arrow_back_rounded))),
+                Hero(
+                  tag: 'logo',
+                  child: ImageIcon(
+                    AssetImage("assets/image/logo.png"),
+                    color: Colors.black,
+                    size: 18.sp,
+                  ),
+                )
               ],
             ),
           ),
@@ -309,7 +328,7 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
             content: Text("En construcción"),
           ),
           const SizedBox(
-            height: 100,
+            height: 50,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -375,6 +394,9 @@ class _MaterialDrawerState extends ConsumerState<MaterialDrawer> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(
+            height: 40,
           ),
         ]),
       ),

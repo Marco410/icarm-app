@@ -68,3 +68,10 @@ const String EDIT_AD = "${CARPETA}app/ads/edit";
 const String DELETE_AD = "${CARPETA}app/ads/delete";
 
 const String GET_VERSION = "${CARPETA}app/settings/version";
+
+const String NOTIFICATION_LIST = "${CARPETA}app/notification/list";
+const String NOTIFICATION_SEND_USER = "${CARPETA}app/users/send-noti";
+const String NOTIFICATION_SEEN = "${CARPETA}app/notification/seen";
+const String NOTIFICATION_DELETE = "${CARPETA}app/notification/delete";
+const String NOTIFICATION_DELETE_ALL = "${CARPETA}app/notification/delete_all";
+const String NOTIFICATION_SEEN_ALL = "${CARPETA}app/notification/seen_all";

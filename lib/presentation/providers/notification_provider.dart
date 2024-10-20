@@ -4,7 +4,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icarm/config/DB/database.dart';
 import 'package:icarm/config/services/notification_ui_service.dart';
+import 'package:icarm/config/setting/api.dart';
+import 'package:icarm/presentation/models/NotificationModel.dart';
+import 'package:icarm/presentation/providers/pase_lista_service.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../../config/services/http_general_service.dart';
 
 var databaseFuture = DatabaseHelper.db.database;
 const TABLE = "notificaciones";
@@ -93,4 +98,25 @@ final storeNotificationProvider =
   batch.commit();
   ref.refresh(getNotiListProvider);
   ref.refresh(newNotiSearchProvider);
+});
+
+final notificationsProvider =
+    FutureProvider.autoDispose<List<Notificacione>>((ref) async {
+  final dataBody = {
+    "user_id": prefs.usuarioID,
+  };
+
+  String resp = await BaseHttpService.baseGet(
+      url: NOTIFICATION_LIST, authorization: true, params: dataBody);
+  NotificacionesModel resultados = notificacionesModelFromJson(resp);
+
+  ref
+      .read(listNotificationsProvider.notifier)
+      .update((state) => resultados.data.notificaciones);
+
+  return resultados.data.notificaciones;
+});
+
+final listNotificationsProvider = StateProvider<List<Notificacione>>((ref) {
+  return [];
 });

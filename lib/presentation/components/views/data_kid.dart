@@ -241,7 +241,7 @@ Future<void> DataKid(BuildContext context, WidgetRef ref, Classroom kidClass,
                             context: context)));
                         onExitKidFromClass();
                         context.pop();
-                      });
+                      }, false);
                     },
                     loading: false,
                     textColor: Colors.white,
